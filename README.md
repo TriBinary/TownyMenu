@@ -30,6 +30,9 @@
 - **Directories** — Browse and rank every town and nation by residents, claims, bank balance, and more; visit, join,
   donate, buy a town that is for sale, or propose alliances.
 - **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place.
+- **Admin menus** — Server admins can edit every setting in Towny's `config.yml` (grouped by section, searchable,
+  applied instantly), change per-world settings, run new days, backups, and reloads, manage any town, nation, or
+  resident, and change TownyMenu's own settings. Open them with `/tm admin` or from the main menu.
 - **English and Chinese** — Every menu, dialog, and message follows each player's Minecraft language (English or
   Simplified Chinese). Server owners can edit the translations or add new languages.
 - **Respects Towny** — Every action runs the matching Towny command, so Towny's permissions, costs, cooldowns, and
@@ -66,6 +69,7 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `/tm`        | Open the main menu                                  |
 | `/tm help`   | List all available commands                         |
 | `/tm reload` | Reload the configuration and translations (OP only) |
+| `/tm admin`  | Open the admin menu (OP only)                       |
 
 ## Configuration
 

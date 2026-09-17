@@ -2,8 +2,6 @@ package net.trilleo.mc.plugins.townymenu.commands.moderation
 
 import net.trilleo.mc.plugins.townymenu.Main
 import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
-import net.trilleo.mc.plugins.townymenu.utils.Lang
-import net.trilleo.mc.plugins.townymenu.utils.MessageUtil
 import net.trilleo.mc.plugins.townymenu.utils.sendPrefixed
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.command.CommandSender
@@ -31,9 +29,7 @@ class ReloadCommand(private val plugin: JavaPlugin) : PluginCommand(
             }
             return true
         }
-        main.pluginConfig.reload()
-        MessageUtil.init(main.pluginConfig.messagePrefix)
-        Lang.load(main, main.pluginConfig.language)
+        main.reload()
         if (sender is Player) {
             sender.sendPrefixed(sender.tr("command.reload.done"))
         } else {

@@ -25,6 +25,13 @@ class Main : JavaPlugin() {
         ListenerRegistrar.registerAll(this)
     }
 
+    /** Re-reads `config.yml` and the language files, applying the message prefix and language. */
+    fun reload() {
+        pluginConfig.reload()
+        MessageUtil.init(pluginConfig.messagePrefix)
+        Lang.load(this, pluginConfig.language)
+    }
+
     override fun onDisable() {
         // Menu items are only protected while this plugin's listeners run, so no menu may outlive it.
         server.onlinePlayers

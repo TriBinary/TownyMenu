@@ -46,6 +46,27 @@
 + Added every personal toggle, including border titles, auto map, auto claim, plot borders, and the info tool.
 + Added profiles for other residents with friend, trust, outlaw, and invite actions.
 
+#### Admin Menu
+
++ Added admin menus, opened with `/tm admin` or a button in the main menu, for players with `townymenu.admin` (OP by
+  default).
++ Added a Towny config editor covering every setting in Towny's `config.yml`, grouped by section with Towny's own
+  descriptions and a search.
+    + Click a switch to flip it, or enter a new number or text; right-click restores the default. Changes are saved and
+      applied immediately.
++ Added per-world settings: PvP, explosions, fire, mobs, war, jailing, land repair, claiming, wilderness permissions,
+  the wilderness name, and resetting a world to defaults.
++ Added server actions: new day, new hour, backup, database save, outpost check, Towny reloads, bank withdrawal,
+  debug, and developer mode toggles, and wilderness use and land repair for every world at once.
++ Added town administration for any town: teleport, rename, set mayor, add and kick residents, bonus and bought
+  claims, bank deposits and withdrawals, leaving its nation, restoring a ruined town, deleting, and admin-only settings
+  (forced PvP and mobs, unlimited claims, upkeep, war, top lists).
++ Added nation administration: rename, leader, capital, adding and kicking towns, bank, settings, and deleting.
++ Added resident administration with a searchable list: town membership, rename, title, surname, NPC flag, releasing
+  from jail, and deleting.
++ Added TownyMenu settings: menu language, message prefix, and the sneak + swap-hand shortcut, applied without
+  `/tm reload`.
+
 #### Misc
 
 + Added a chunk map around the player, coloured by relation, with claim and unclaim buttons.
@@ -83,3 +104,7 @@
     + Added `LangFilesTest`, which checks that every bundled language has the same keys and placeholders as English and
       that every key the code uses exists and is used.
 + `LoreUtil` now measures width in columns, counting CJK characters as two and breaking lines between them.
++ Added `TownyConfig`, which exposes Towny's `config.yml` as a tree of sections and typed settings built from Towny's
+  `ConfigNodes`.
++ `PluginConfig` properties can now be assigned, which saves `config.yml`. `Main.reload()` applies the config and
+  translations and is shared by `/tm reload` and the admin menu. Added `Lang.ids`.

@@ -350,6 +350,28 @@ override fun entries(): List<MenuEntry> =
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.              |
 | `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                    |
 
+### Admin Menus (`guis/admin`)
+
+`AdminMenu` is the server admin hub, opened by `/townymenu admin` or a main-menu button. Both entry points require
+`AdminMenu.PERMISSION` (`townymenu.admin`, OP by default), and every button inside is still `guarded` by the Towny
+node of the `/townyadmin` or `/townyworld` command it runs.
+
+| Class                   | Purpose                                                                                    |
+|:------------------------|:-------------------------------------------------------------------------------------------|
+| `TownyConfigMenu`       | Browses Towny's `config.yml` section by section through `TownyConfig`, with search.        |
+| `AdminWorldMenu`        | One world's `/townyworld` toggles, wilderness permissions and name, and reset to defaults. |
+| `AdminServerMenu`       | New day and hour, backup, database save, reloads, and global `/townyadmin toggle`s.        |
+| `AdminTownMenu`         | Any town through `/townyadmin town`: mayor, residents, claims, bank, overrides, deletion.  |
+| `AdminNationMenu`       | Any nation through `/townyadmin nation`: leader, capital, towns, bank, toggles, deletion.  |
+| `AdminResidentListMenu` | Every resident, online first, with a name filter.                                          |
+| `AdminResidentMenu`     | Any resident: town, rename, title, surname, NPC flag, unjail, deletion.                    |
+| `PluginSettingsMenu`    | Edits TownyMenu's own `config.yml` through `PluginConfig`, then calls `Main.reload()`.     |
+
+Towny has no command that edits its config, so `TownyConfigMenu` is the one place that writes Towny state directly:
+`TownyConfig.write` saves the value, then the menu runs `/townyadmin reload config` as the player. Editing is therefore
+gated by `towny.command.townyadmin.reload`, and the probe is `TownySettings.getConfig()`, which a successful reload
+replaces.
+
 ### Icons
 
 `Icons` builds the standard icons: `icon(material, name, description, extraLines…)` from already-translated text, and
@@ -986,7 +1008,7 @@ player.sendPlayerListHeaderAndFooter(Component.empty(), Component.empty())
 ## Utilities
 
 The `utils` package (`net.trilleo.mc.plugins.townymenu.utils`) contains the `itemStack` DSL, `LoreUtil`, `MessageUtil`,
-`TownyUtil`, and `DialogUtil`. See the [Utility Guide](UTILITY_GUIDE.md) for full documentation.
+`TownyUtil`, `TownyConfig`, and `DialogUtil`. See the [Utility Guide](UTILITY_GUIDE.md) for full documentation.
 
 ---
 
@@ -999,7 +1021,8 @@ lives in the `net.trilleo.mc.plugins.townymenu.config` package and is created au
 
 1. On first run, the default `config.yml` bundled inside the JAR (`src/main/resources/config.yml`) is copied to the
    plugin's data folder.
-2. `PluginConfig` exposes each setting as a typed property that reads the loaded configuration.
+2. `PluginConfig` exposes each setting as a typed property that reads the loaded configuration. Assigning a property
+   saves `config.yml` at once; the admin menu's TownyMenu settings use this.
 3. `reload()` re-reads the file from disk, picking up changes made while the server is running.
 
 `Main` exposes the instance as `pluginConfig`, reachable anywhere through `Main.instance.pluginConfig`.
@@ -1030,8 +1053,9 @@ sneak-swap-hand-shortcut: true
 To add a setting, add the key to `config.yml` and a matching property to `PluginConfig`:
 
 ```kotlin
-val menuSounds: Boolean
+var menuSounds: Boolean
     get() = plugin.config.getBoolean("menu-sounds", true)
+    set(value) = save("menu-sounds", value)
 ```
 
 ### Reloading
@@ -1043,4 +1067,10 @@ into the file and saves it:
 Main.instance.pluginConfig.reload()
 ```
 
-The built-in `/townymenu reload` command already calls this method, then reloads `MessageUtil` and `Lang`.
+`Main.reload()` calls this method, then re-initialises `MessageUtil` and `Lang`. Use it after changing a setting, as
+`/townymenu reload` and the admin menu do:
+
+```kotlin
+Main.instance.pluginConfig.language = "zh_CN"
+Main.instance.reload()
+```

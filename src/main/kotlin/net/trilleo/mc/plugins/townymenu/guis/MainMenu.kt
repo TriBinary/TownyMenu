@@ -1,6 +1,7 @@
 package net.trilleo.mc.plugins.townymenu.guis
 
 import com.palmergames.bukkit.towny.TownyAPI
+import net.trilleo.mc.plugins.townymenu.guis.admin.AdminMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NationListMenu
@@ -63,6 +64,10 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
         button(33, Icons.icon(Material.PAPER, if (invites > 0) tr("main.invites-count", "count" to invites) else tr("main.invites"),
             tr("main.invites-description"))) {
             InvitesMenu(player, this).open()
+        }
+
+        if (player.hasPermission(AdminMenu.PERMISSION)) {
+            button(44, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) { AdminMenu(player, this).open() }
         }
 
         backButton(40)

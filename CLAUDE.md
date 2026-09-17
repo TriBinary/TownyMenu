@@ -69,11 +69,12 @@ src/main/kotlin/net/trilleo/mc/plugins/townymenu/
 ├── guis/                    # Inventory menus (created on demand, not registered)
 │   ├── framework/           # Menu, PagedMenu, MenuActions, Icons
 │   ├── common/              # ToggleMenu, PermissionMenu, BankMenu, RankMenu, Pickers
+│   ├── admin/               # Admin menus (/tm admin): Towny config editor, worlds, server, towns, nations
 │   ├── town/  nation/  plot/  resident/
 │   └── MainMenu.kt, MapMenu.kt, InvitesMenu.kt
 ├── listeners/               # Event listeners (auto-registered)
 ├── registration/            # Auto-registration engine (do not modify lightly)
-└── utils/                   # itemStack DSL, Lang, TownyUtil, DialogUtil, MessageUtil, LoreUtil
+└── utils/                   # itemStack DSL, Lang, TownyUtil, TownyConfig, DialogUtil, MessageUtil, LoreUtil
 src/main/resources/
 ├── config.yml  plugin.yml
 └── lang/                    # en_US.yml, zh_CN.yml — every player-facing string
@@ -134,6 +135,9 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
   so Towny's permission checks, costs, confirmations, and messages still apply. Always use the `towny:` namespace.
   Only call Towny's mutating API directly when no command covers the action, and then enforce the same permission
   nodes Towny would.
+- **Towny's config is the one exception** — no command edits it, so the admin config editor writes through
+  `TownyConfig` and then runs `/townyadmin reload config` as the player. Every other admin action runs a
+  `/townyadmin` or `/townyworld` command.
 - **GUIs are views, not a second source of truth** — never cache Towny data; re-read it from `TownyAPI` when a menu
   opens or refreshes.
 - **Towny's package `com.palmergames.bukkit.towny.object` needs backticks in Kotlin imports** (`` `object` ``).

@@ -54,6 +54,10 @@ object Lang {
         }
     }
 
+    /** Ids of every loaded language file, such as `en_US`, sorted by file name. */
+    val ids: List<String>
+        get() = languages.values.map { it.id }
+
     /** The translation of [key] for [sender], with each `{name}` replaced by its argument. */
     fun tr(sender: CommandSender?, key: String, vararg args: Pair<String, Any?>): String {
         val template = language(sender).values[key] ?: key

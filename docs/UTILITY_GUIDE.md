@@ -7,6 +7,7 @@ This guide covers the utility helpers provided in `net.trilleo.mc.plugins.townym
 | `itemStack`   | DSL builder for menu icons                                                    |
 | `Lang`        | Translations: per-player language files and the `tr()` helper                |
 | `TownyUtil`   | Safe formatting of Towny data, money and dates, permission checks, input args |
+| `TownyConfig` | Towny's `config.yml` as a browsable, editable tree of sections and settings  |
 | `DialogUtil`  | Native text-input and confirmation dialogs (Paper Dialog API)                 |
 | `MessageUtil` | Prefix-decorated message sender for players                                   |
 | `LoreUtil`    | Word-aware text wrapping for item lore with style carry-over                  |
@@ -54,6 +55,7 @@ val icon = itemStack(Material.EMERALD) {
 | `Lang.load(plugin, language)`        | Copies the bundled files to `plugins/TownyMenu/lang/` if missing and loads every language file.      |
 | `Lang.tr(sender, key, vararg args)`  | The translation of `key` for `sender`, with `{name}` placeholders filled; the key itself if missing. |
 | `Lang.find(sender, key)`             | The raw translation, or `null` when no language defines `key` (for runtime-built keys).              |
+| `Lang.ids`                           | Ids of every loaded language file (`en_US`, `zh_CN`, and any the server owner added).                |
 | `CommandSender.tr(key, vararg args)` | Extension shorthand for `Lang.tr(this, key, *args)`.                                                 |
 | `Menu.tr(key, vararg args)`          | The same, for the menu's viewer.                                                                     |
 
@@ -114,6 +116,36 @@ dialog closes any open inventory. Callbacks always run on the main server thread
 | `confirm(player, title: Component, body?, onYes, onNo)`                          | Confirm/Cancel dialog that cannot be closed with Escape, so exactly one callback runs.           |
 
 Inside a menu, prefer `Menu.prompt(...)`, which reopens the menu on cancel.
+
+---
+
+## TownyConfig
+
+`TownyConfig` presents Towny's `config.yml` as a tree built from Towny's `ConfigNodes` enum, so every setting Towny
+knows about is listed in Towny's own order with its comment. It powers the admin config editor.
+
+| Method / Type               | Description                                                                                      |
+|:----------------------------|:-------------------------------------------------------------------------------------------------|
+| `sections(section)`         | Direct child `Section`s of a dotted section path (`""` for the top level).                       |
+| `settings(section)`         | `Setting`s directly inside a section.                                                            |
+| `count(section)`            | Number of settings anywhere below a section.                                                     |
+| `search(query)`             | Settings whose path or comment contains every word of `query`.                                   |
+| `write(setting, value)`     | Sets the value in Towny's loaded config and saves the file with Towny's comments.                |
+| `Setting.kind`              | `BOOLEAN`, `INTEGER`, `DECIMAL`, or `TEXT` from Towny's default; `READ_ONLY` for lists and maps. |
+| `Setting.value` / `default` | The loaded value (the default when the file lacks it) and Towny's default, as strings.           |
+| `Setting.parse(input)`      | `input` normalised for the setting's kind, or `null` when it is not a valid value.               |
+| `Setting.description`       | Towny's English comment, already escaped for MiniMessage.                                        |
+
+`write` does not apply the change: run `/townyadmin reload config` as the player afterwards, so Towny re-reads its
+settings and its permission check applies.
+
+```kotlin
+val setting = TownyConfig.search("town creation cost").first()
+setting.parse(input)?.let { value ->
+    TownyConfig.write(setting, value)
+    run("towny:townyadmin reload config", { TownySettings.getConfig() })
+}
+```
 
 ---
 
