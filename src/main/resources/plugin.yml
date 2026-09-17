@@ -1,11 +1,15 @@
-name: ExamplePlugin
-main: com.example.exampleplugin.Main
+name: TownyMenu
+main: net.trilleo.mc.plugins.townymenu.Main
 version: ${projectVersion}
 api-version: 1.21
+author: Trilleo
+description: A GUI addon for Towny
+depend:
+  - Towny
 
 commands:
-  exampleplugin:
-    description: Main command for the ExamplePlugin plugin
-    usage: /exampleplugin <subcommand> [args]
+  townymenu:
+    description: Main command for the TownyMenu plugin
+    usage: /townymenu <subcommand> [args]
     aliases:
-      - ep
+      - tm

@@ -1,43 +1,37 @@
-# ExamplePlugin - Developer Guide
+# TownyMenu - Developer Guide
 
-This guide explains how to create **commands**, **listeners**, **GUIs**, **tasks**, **custom items**, **recipes**, and
-work with the **configuration** system using ExamplePlugin's registration system. Commands, listeners, GUIs, tasks,
-custom items, and recipes all follow the same pattern: extend a base class (or implement an interface), place the file
-in the correct package, and the plugin handles the rest automatically at startup. The configuration system provides
-typed access to `config.yml` values.
+This guide explains how TownyMenu is put together and how to extend it: **commands** and **listeners** (discovered
+automatically), **menus** (the inventory GUIs that front Towny), **translations**, and the **configuration** system.
 
 ## How Auto-Registration Works
 
-ExamplePlugin uses a `PackageScanner` to discover classes at runtime. When the plugin starts, it scans specific packages
-for concrete (non-abstract) classes and registers them automatically. You never need to edit `plugin.yml` or manually
-wire anything up.
+TownyMenu uses a `PackageScanner` to discover classes at startup. It scans specific packages for concrete (non-abstract)
+classes and registers them automatically. You never need to edit `plugin.yml` or manually wire anything up.
 
-| System        | Base Class / Interface    | Package                               |
-|:--------------|:--------------------------|:--------------------------------------|
-| Commands      | `PluginCommand`           | `com.example.exampleplugin.commands`  |
-| Permissions   | *(derived from commands)* | *(automatic — no package needed)*     |
-| Listeners     | `Listener`                | `com.example.exampleplugin.listeners` |
-| GUIs          | `PluginGUI`               | `com.example.exampleplugin.guis`      |
-| Tasks         | `PluginTask`              | `com.example.exampleplugin.tasks`     |
-| Custom Items  | `PluginItem`              | `com.example.exampleplugin.items`     |
-| Recipes       | `PluginRecipe`            | `com.example.exampleplugin.recipes`   |
-| Configuration | `PluginConfig`            | `com.example.exampleplugin.config`    |
-| Player Data   | `PlayerData`              | `com.example.exampleplugin.data`      |
-| Server Data   | `ServerData`              | `com.example.exampleplugin.data`      |
+| System        | Base Class / Interface    | Package                                      |
+|:--------------|:--------------------------|:---------------------------------------------|
+| Commands      | `PluginCommand`           | `net.trilleo.mc.plugins.townymenu.commands`  |
+| Permissions   | *(derived from commands)* | *(automatic — no package needed)*            |
+| Listeners     | `Listener`                | `net.trilleo.mc.plugins.townymenu.listeners` |
+| Configuration | `PluginConfig`            | `net.trilleo.mc.plugins.townymenu.config`    |
 
-Subpackages are also scanned, so you can freely organize classes into folders like `commands/game/`,
-`listeners/player/`, or `guis/menus/`.
+Subpackages are also scanned, so you can freely organize classes into folders like `commands/info/` or
+`listeners/player/`.
+
+Menus are **not** auto-registered: each menu is a short-lived object created with the context it needs (see
+[Menus](#menus)).
 
 ## Constructor Requirements
 
-Every command, listener, GUI, and task class must have one of the following constructors:
+Every command and listener class must have one of the following constructors:
 
 | Constructor                          | When to Use                                   |
 |:-------------------------------------|:----------------------------------------------|
 | No-arg constructor                   | When you don't need a reference to the plugin |
 | Constructor accepting a `JavaPlugin` | When you need to access the plugin instance   |
 
-The plugin instance is injected automatically when a `JavaPlugin` constructor is available.
+The plugin instance is injected automatically when a `JavaPlugin` constructor is available. Code that is not constructed
+by a registrar (menus, utilities) can use `Main.instance`.
 
 ---
 
@@ -45,16 +39,16 @@ The plugin instance is injected automatically when a `JavaPlugin` constructor is
 
 To create a command, extend `PluginCommand` and place the class anywhere inside the `commands` package or a subpackage.
 
-By default every command is registered as a **sub-command** of `/exampleplugin` (alias `/ep`). For example, a command
-with `name = "reload"` becomes `/exampleplugin reload`. Set `isMainCommand = true` to register the command as a
-standalone top-level command instead.
+By default every command is registered as a **sub-command** of `/townymenu` (alias `/tm`). For example, a command with
+`name = "reload"` becomes `/townymenu reload`. Set `isMainCommand = true` to register the command as a standalone
+top-level command instead.
 
-When a player types `/exampleplugin` in-game, tab-completion automatically lists all available sub-commands.
+When a player types `/townymenu` in-game, tab-completion automatically lists all available sub-commands.
 
 ### Categories
 
 Commands are automatically categorised based on their **subpackage** (folder) inside the `commands` package. The
-category is used by the built-in `/exampleplugin help` command to group commands for display.
+category is used by the built-in `/townymenu help` command to group commands for display.
 
 | Command Location                | Category |
 |:--------------------------------|:---------|
@@ -64,16 +58,20 @@ category is used by the built-in `/exampleplugin help` command to group commands
 
 ### Help Command
 
-The plugin ships with a built-in `/exampleplugin help` command. It lists every registered command grouped by category,
+The plugin ships with a built-in `/townymenu help` command. It lists every registered command grouped by category,
 sorted alphabetically within each group, and formatted with colours for readability. Every command should provide a
 meaningful `description` so the help output is informative.
+
+The help list is translated: it shows `command.<name>.description` and `command.category.<category>` from the language
+files when they exist (plain text, no MiniMessage tags), and the English `description` or category name otherwise. Add
+both keys for every new command.
 
 ### PluginCommand Properties
 
 | Property        | Type           | Default        | Description                                                              |
 |:----------------|:---------------|:---------------|:-------------------------------------------------------------------------|
-| `name`          | `String`       | *(required)*   | The command name (e.g. `"reload"` for `/exampleplugin reload`)           |
-| `description`   | `String`       | `""`           | A brief description shown in `/exampleplugin help` — always provide one  |
+| `name`          | `String`       | *(required)*   | The command name (e.g. `"reload"` for `/townymenu reload`)               |
+| `description`   | `String`       | `""`           | A brief description shown in `/townymenu help` — always provide one      |
 | `usage`         | `String`       | `"/<command>"` | Usage hint shown when the command fails                                  |
 | `aliases`       | `List<String>` | `emptyList()`  | Alternative names for the command (applicable to main commands only)     |
 | `permission`    | `String?`      | `null`         | Permission node required to use the command (auto-registered at startup) |
@@ -101,20 +99,20 @@ system handles the rest.
 
 ### Example (Sub-Command)
 
-This command is registered as `/exampleplugin ping` (the default behavior):
+This command is registered as `/townymenu ping` (the default behavior):
 
 ```kotlin
-package com.example.exampleplugin.commands
+package net.trilleo.mc.plugins.townymenu.commands
 
-import com.example.exampleplugin.registration.PluginCommand
+import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class PingCommand : PluginCommand(
     name = "ping",
     description = "Check your latency",
-    usage = "/exampleplugin ping",
-    permission = "exampleplugin.ping"
+    usage = "/townymenu ping",
+    permission = "townymenu.ping"
 ) {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         if (sender !is Player) {
@@ -129,26 +127,26 @@ class PingCommand : PluginCommand(
 
 ### Example with Tab Completion (Sub-Command)
 
-This command is registered as `/exampleplugin team`:
+This command is registered as `/townymenu team`:
 
 ```kotlin
-package com.example.exampleplugin.commands.game
+package net.trilleo.mc.plugins.townymenu.commands.game
 
-import com.example.exampleplugin.registration.PluginCommand
+import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class TeamCommand : PluginCommand(
     name = "team",
     description = "Join a team",
-    usage = "/exampleplugin team <hunters|runners>",
-    permission = "exampleplugin.team"
+    usage = "/townymenu team <hunters|runners>",
+    permission = "townymenu.team"
 ) {
     private val teams = listOf("hunters", "runners")
 
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         if (args.isEmpty() || args[0] !in teams) {
-            sender.sendMessage("Usage: /exampleplugin team <hunters|runners>")
+            sender.sendMessage("Usage: /townymenu team <hunters|runners>")
             return false
         }
         sender.sendMessage("You joined the ${args[0]} team!")
@@ -166,22 +164,22 @@ class TeamCommand : PluginCommand(
 
 ### Example with Plugin Instance (Sub-Command)
 
-This command is registered as `/exampleplugin reload`:
+This command is registered as `/townymenu reload`:
 
 ```kotlin
-package com.example.exampleplugin.commands
+package net.trilleo.mc.plugins.townymenu.commands
 
-import com.example.exampleplugin.registration.PluginCommand
+import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 
 class ReloadCommand(private val plugin: JavaPlugin) : PluginCommand(
     name = "reload",
     description = "Reload the plugin configuration",
-    permission = "exampleplugin.reload"
+    permission = "townymenu.reload"
 ) {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
-        val main = plugin as? com.example.exampleplugin.Main
+        val main = plugin as? net.trilleo.mc.plugins.townymenu.Main
         if (main == null) {
             sender.sendMessage("Error: Plugin instance type mismatch. Unable to reload configuration.")
             return true
@@ -198,9 +196,9 @@ class ReloadCommand(private val plugin: JavaPlugin) : PluginCommand(
 Set `isMainCommand = true` to register a standalone top-level command. This command is registered as `/globaltool`:
 
 ```kotlin
-package com.example.exampleplugin.commands
+package net.trilleo.mc.plugins.townymenu.commands
 
-import com.example.exampleplugin.registration.PluginCommand
+import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
 import org.bukkit.command.CommandSender
 
 class GlobalToolCommand : PluginCommand(
@@ -230,7 +228,7 @@ Annotate each event handler method with `@EventHandler`. The method must accept 
 ### Example
 
 ```kotlin
-package com.example.exampleplugin.listeners
+package net.trilleo.mc.plugins.townymenu.listeners
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -250,7 +248,7 @@ class JoinListener : Listener {
 ### Example with Subpackage and Plugin Instance
 
 ```kotlin
-package com.example.exampleplugin.listeners.player
+package net.trilleo.mc.plugins.townymenu.listeners.player
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -268,632 +266,253 @@ class DeathListener(private val plugin: JavaPlugin) : Listener {
 
 ---
 
-## GUIs
+## Menus
 
-To create a GUI (chest-based inventory menu), extend `PluginGUI` and place the class anywhere inside the `guis` package
-or a subpackage.
+Every GUI lives in `net.trilleo.mc.plugins.townymenu.guis`. The framework is in `guis/framework`, shared menus (toggles,
+permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/town`, `guis/nation`,
+`guis/plot`, and `guis/resident`. `MainMenu` is the entry point opened by `/townymenu` and sneak + swap-hand.
 
-### PluginGUI Properties
+### Design Rules
 
-| Property   | Type        | Default         | Description                                                      |
-|:-----------|:------------|:----------------|:-----------------------------------------------------------------|
-| `id`       | `String`    | *(required)*    | Unique identifier used to open the GUI                           |
-| `title`    | `Component` | *(required)*    | Title displayed at the top of the chest                          |
-| `rows`     | `Int`       | `3`             | Number of rows (1–6, each row = 9 slots)                         |
-| `fillMode` | `FillMode`  | `FillMode.NONE` | Controls how empty slots are pre-filled before `setup` is called |
+- **Menus are views, not a source of truth.** `build()` runs on every render and reads fresh data from `TownyAPI`. Never
+  cache Towny objects' state in a menu field; hold the object (a `Town`, a `Resident`) and re-read it.
+- **Changes go through Towny commands.** Buttons call `run("towny:town toggle pvp", probe)` so Towny's permission
+  checks, costs, confirmations, and messages all apply. Always use the `towny:` namespace so other plugins' aliases
+  can't intercept the command.
+- **Grey out what the player can't do.** Use `guarded(slot, PermissionNodes.X, item) { … }` (or `Layout.add(node, …)`)
+  with the same node Towny's command checks.
+- **Escape player-written text.** Pass names, boards, titles, and tags through `TownyUtil.name()` / `TownyUtil.text()`
+  before embedding them in MiniMessage.
+- **Translate every string.** Icon names, lore, titles, and prompts come from `tr("key")`, never from Kotlin literals.
+  See [Translations](#translations).
 
-#### FillMode values
+### Menu
 
-| Value            | Filler item              | Description                                                                    |
-|:-----------------|:-------------------------|:-------------------------------------------------------------------------------|
-| `FillMode.NONE`  | *(none)*                 | No filler is placed; the inventory is left empty before `setup` is called      |
-| `FillMode.LIGHT` | White stained glass pane | All slots are pre-filled with white glass before `setup` — override in `setup` |
-| `FillMode.DARK`  | Black stained glass pane | All slots are pre-filled with black glass before `setup` — override in `setup` |
+`Menu(player, title, rows, back)` is the base class. The title is already translated, so subclasses pass
+`player.tr("my-menu.title")`. The menu is its own `InventoryHolder`, so `MenuListener` routes clicks by checking the
+open inventory's holder — there is no registry and nothing to clean up when a menu closes.
 
-### Methods to Override
+| Member                                   | Description                                                                      |
+|:-----------------------------------------|:---------------------------------------------------------------------------------|
+| `build()`                                | Abstract. Place items and click actions. Called on every `render()`.             |
+| `open()`                                 | Renders and opens the menu, or re-renders in place if it is already open.        |
+| `render()`                               | Clears the inventory (grey filler) and calls `build()`.                          |
+| `button(slot, item, action?)`            | Places an item; `action` receives the `ClickType`.                               |
+| `guarded(slot, node, item, action)`      | Like `button`, but shows a grey "no permission" icon without `node`.             |
+| `layout(vararg slots)`                   | Returns a `Layout` that fills the given slots in order, for optional buttons.    |
+| `backButton(slot)`                       | Back arrow to `back`, or a close button when `back` is `null`.                   |
+| `tutorialButton(slot, chapter)`          | Help button opening the tutorial `Chapter` that explains this menu.              |
+| `run(command, probe?, returnTo?, delay)` | Runs a Towny command as the player (see below).                                  |
+| `runAndClose(command)`                   | Closes the menu, then runs the command (teleports, books, chat output).          |
+| `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel reopens the menu.                              |
+| `tr(key, "name" to value, …)`            | Translates `key` into the viewer's language (see [Translations](#translations)). |
+| `resident`                               | The viewer's Towny `Resident`, or `null`.                                        |
 
-| Method    | Required | Description                                           |
-|:----------|:---------|:------------------------------------------------------|
-| `setup`   | Yes      | Populate the inventory with items before it opens     |
-| `onClick` | No       | Handle click events (clicks are cancelled by default) |
-| `onClose` | No       | Handle cleanup when the GUI is closed                 |
+### Running Commands: `MenuActions`
 
-### Opening a GUI
+Towny only reports results in chat, which is hidden behind an open inventory. `run` therefore takes a **probe** — a
+lambda reading the state the command should change — and `MenuActions` compares it after `delayTicks` (default 4; use
+~20 for claims, which Towny processes asynchronously):
 
-Use `GUIManager.open(player, id)` to open a registered GUI for a player:
+- probe **changed** → `returnTo` (default: this menu) is re-opened, showing the new state;
+- probe **unchanged**, or no probe → the menu closes so the player can read Towny's chat reply (an error, a cost).
+
+If the command raises a Towny confirmation, `MenuActions` suppresses the chat prompt (`ConfirmationSendEvent`) and shows
+a native confirmation dialog instead; accepting runs Towny's confirm command and then settles the probe as usual.
+
+Use `returnTo = MainMenu(player)` for actions after which the current menu no longer makes sense (leaving or deleting a
+town, joining a town).
+
+### PagedMenu and ListMenu
+
+`PagedMenu(player, title, back)` is a six-row menu. Override `entries()` to return `MenuEntry` objects; the top five
+rows show one page, slot 45/53 page back and forth, 49 is the back button, and `controls()` may place extra buttons in
+46–48 and 50–52. `MenuEntry` takes a **lambda** that builds the icon, so only entries on the visible page are built:
 
 ```kotlin
-import com.example.exampleplugin.registration.GUIManager
-
-// Returns true if the GUI was found and opened, false otherwise
-GUIManager.open(player, "settings")
+override fun entries(): List<MenuEntry> =
+    town.residents.map { member ->
+        MenuEntry({ Icons.resident(player, member, "", tr("common.click-view")) }) {
+            ResidentProfileMenu(player, member, this).open()
+        }
+    }
 ```
 
-### Example
+`ListMenu(player, title, back) { menu -> entries }` is a `PagedMenu` built from a lambda, for one-off lists.
+
+### Shared Menus (`guis/common`)
+
+| Class            | Purpose                                                                                       |
+|:-----------------|:----------------------------------------------------------------------------------------------|
+| `ToggleMenu`     | A grid of `Toggle`s (material, translated name and description, node, command, value reader). |
+| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command.                            |
+| `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                     |
+| `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                |
+| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                      |
+
+### Tutorial (`guis/tutorial`)
+
+`TutorialMenu` is the tutorial hub (main menu button, `/townymenu tutorial`, or the join hint). It lists every
+`Chapter`; `TutorialChapterMenu` shows a chapter's `Lesson`s. Left-clicking a lesson marks it read and opens the menu it
+explains, with the chapter as its back button; right-clicking toggles whether it is read.
+
+All content lives in the `Tutorial` object:
+
+| Type      | Purpose                                                                                                  |
+|:----------|:---------------------------------------------------------------------------------------------------------|
+| `Chapter` | Icon, title and description keys, an optional `Link`, its lessons, and an optional visibility check.     |
+| `Lesson`  | A stable `id` (`chapter/topic`), icon, title and body keys, an optional `Link`, visibility, and `facts`. |
+| `Link`    | A condition, the translation key shown when it fails (`tutorial.requires-town`, …), and a menu factory.  |
+
+- **`facts`** returns translated lines with this server's live values (`TownySettings` prices, limits, the viewer's
+  town). Hide money lines when the economy is off; the private `money(amount, key)` helper does this.
+- **Links build menus only when clicked.** `always`, `withTown`, and `withNation` cover most links; menus whose
+  sub-menus a lesson opens directly expose them (`TownMenu.toggles()`, `TownMenu.permissions()`,
+  `NationMenu.toggles()`, `ResidentMenu.toggles()`, `ResidentMenu.permissions()`).
+- **Read progress** is a string list of lesson ids in the player's persistent data (`townymenu:tutorial-read`). Never
+  rename a lesson id, or players lose that lesson's progress. Ids use `/` so `LangFilesTest` doesn't read them as
+  translation keys.
+- Lessons and chapters whose visibility check fails (economy topics without an economy) are hidden and don't count
+  towards progress.
+- `TutorialHintListener` suggests the tutorial to players without a town when they join, unless
+  `tutorial-join-hint` is `false` or they have read every lesson.
+
+When a change adds a Towny feature to a menu, add or update its lesson in `Tutorial` and in both language files
+(`tutorial.<chapter>.<topic>` and `tutorial.<chapter>.<topic>-body`). New feature menus should place a
+`tutorialButton` in a free bottom-row slot (the bottom-right corner, or slot 52 in a `PagedMenu`).
+
+### Admin Menus (`guis/admin`)
+
+`AdminMenu` is the server admin hub, opened by `/townymenu admin` or a main-menu button. Both entry points require
+`AdminMenu.PERMISSION` (`townymenu.admin`, OP by default), and every button inside is still `guarded` by the Towny node
+of the `/townyadmin` or `/townyworld` command it runs.
+
+| Class                   | Purpose                                                                                    |
+|:------------------------|:-------------------------------------------------------------------------------------------|
+| `TownyConfigMenu`       | Browses Towny's `config.yml` section by section through `TownyConfig`, with search.        |
+| `AdminWorldMenu`        | One world's `/townyworld` toggles, wilderness permissions and name, and reset to defaults. |
+| `AdminServerMenu`       | New day and hour, backup, database save, reloads, and global `/townyadmin toggle`s.        |
+| `AdminTownMenu`         | Any town through `/townyadmin town`: mayor, residents, claims, bank, overrides, deletion.  |
+| `AdminNationMenu`       | Any nation through `/townyadmin nation`: leader, capital, towns, bank, toggles, deletion.  |
+| `AdminResidentListMenu` | Every resident, online first, with a name filter.                                          |
+| `AdminResidentMenu`     | Any resident: town, rename, title, surname, NPC flag, unjail, deletion.                    |
+| `PluginSettingsMenu`    | Edits TownyMenu's own `config.yml` through `PluginConfig`, then calls `Main.reload()`.     |
+
+Towny has no command that edits its config, so `TownyConfigMenu` is the one place that writes Towny state directly:
+`TownyConfig.write` saves the value, then the menu runs `/townyadmin reload config` as the player. Editing is therefore
+gated by `towny.command.townyadmin.reload`, and the probe is `TownySettings.getConfig()`, which a successful reload
+replaces.
+
+### Icons
+
+`Icons` builds the standard icons: `icon(material, name, description, extraLines…)` from already-translated text, and
+`toggle(player, …)` plus the summary icons `resident(player, …)`, `town(player, …)`, `nation(player, …)`, which add
+their own labels in `player`'s language and accept extra lore lines.
+
+### Example: A New Menu
 
 ```kotlin
-package com.example.exampleplugin.guis
+package net.trilleo.mc.plugins.townymenu.guis.town
 
-import com.example.exampleplugin.enums.FillMode
-import com.example.exampleplugin.registration.PluginGUI
-import net.kyori.adventure.text.Component
+import com.palmergames.bukkit.towny.permissions.PermissionNodes
+import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
+import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
 
-class SettingsGUI : PluginGUI(
-    id = "settings",
-    title = Component.text("Settings"),
-    rows = 3,
-    fillMode = FillMode.DARK
-) {
-    override fun setup(player: Player, inventory: Inventory) {
-        val compass = ItemStack(Material.COMPASS)
-        val meta = compass.itemMeta
-        meta.displayName(Component.text("Tracker"))
-        compass.itemMeta = meta
-        inventory.setItem(13, compass)
-    }
+class TownPvpMenu(player: Player, back: Menu) : Menu(player, player.tr("town-pvp.title"), 3, back) {
 
-    override fun onClick(event: InventoryClickEvent) {
-        event.isCancelled = true
-        val player = event.whoClicked as? Player ?: return
-        if (event.slot == 13) {
-            player.sendMessage("Tracker selected!")
+    override fun build() {
+        val town = resident?.townOrNull ?: return backButton(22)
+        guarded(13, PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP,
+            Icons.toggle(player, Material.IRON_SWORD, tr("toggle.pvp"), town.isPVP, tr("toggle.town-pvp-description"))) {
+            run("towny:town toggle pvp", { town.isPVP })
         }
+        backButton(22)
     }
 }
 ```
 
-### Opening a GUI from a Command
+with the new title in both language files:
 
-A common pattern is opening a GUI when a player runs a command. This command is registered as `/exampleplugin settings`:
+```yaml
+# src/main/resources/lang/en_US.yml
+town-pvp:
+  title: "Town PvP"
 
-```kotlin
-package com.example.exampleplugin.commands
-
-import com.example.exampleplugin.registration.GUIManager
-import com.example.exampleplugin.registration.PluginCommand
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-
-class SettingsCommand : PluginCommand(
-    name = "settings",
-    description = "Open the settings menu",
-    permission = "exampleplugin.settings"
-) {
-    override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
-        if (sender !is Player) {
-            sender.sendMessage("This command can only be used by players.")
-            return true
-        }
-        GUIManager.open(sender, "settings")
-        return true
-    }
-}
+# src/main/resources/lang/zh_CN.yml
+town-pvp:
+  title: "城镇 PvP"
 ```
+
+Open it from another menu's button with `TownPvpMenu(player, this).open()`.
+
+### Dialogs
+
+`DialogUtil` wraps Paper's Dialog API. Menus normally use `prompt(...)`; call `DialogUtil.input` or
+`DialogUtil.confirm` directly only outside a menu. Callbacks always run on the main thread.
+
+### Opening Shortcuts
+
+`MenuListener` opens `MainMenu` when a player presses swap-hand (F) while sneaking, unless
+`sneak-swap-hand-shortcut` is `false` in `config.yml`. It also cancels every click and drag while a menu is on top, and
+closes all menus when the plugin disables.
 
 ---
 
-## Paged GUIs
+## Translations
 
-To create a multi-page inventory menu with automatic navigation, extend `PagedPluginGUI` and place the class anywhere
-inside the `guis` package or a subpackage. `PagedPluginGUI` is a subclass of `PluginGUI` that handles page state per
-player and renders **Previous** / **Next** buttons automatically.
+Every player-facing string lives in `src/main/resources/lang/<id>.yml`. TownyMenu bundles `en_US` and `zh_CN`, and
+**every change that adds or removes text updates both files**.
 
-The bottom row of the inventory is reserved for navigation controls. Content slots are every slot except the last row.
-For example, a 6-row GUI provides 45 content slots per page (rows 1–5).
+### How It Works
 
-### PagedPluginGUI Properties
+1. On startup (and `/townymenu reload`), `Lang.load` copies any missing bundled file into `plugins/TownyMenu/lang/`
+   and loads every `.yml` there. Keys missing from a file fall back to the bundled copy of that language, then to
+   English, so plugin updates never break edited files.
+2. `language` in `config.yml` is `auto` or a language id. With `auto`, each player gets the file matching their client
+   locale exactly (`zh_cn`), else one sharing its language prefix (`zh_tw` → `zh_CN`), else `en_US`. The console uses
+   the configured language, or `en_US` under `auto`.
+3. `tr(key, "name" to value)` looks the key up and replaces each `{name}` with `value.toString()`. A key no file defines
+   is returned as-is, so a missing translation is visible in game.
 
-`PagedPluginGUI` inherits all properties from `PluginGUI` and adds one of its own:
-
-| Property   | Type           | Default             | Description                                                                        |
-|:-----------|:---------------|:--------------------|:-----------------------------------------------------------------------------------|
-| `id`       | `String`       | *(required)*        | Unique identifier used to open the GUI                                             |
-| `title`    | `Component`    | *(required)*        | Title displayed at the top of the chest                                            |
-| `rows`     | `Int`          | `6`                 | Number of rows (2–6, each row = 9 slots)                                           |
-| `fillMode` | `FillMode`     | `FillMode.NONE`     | Controls background filler; re-applied on every page render, not just initial open |
-| `mode`     | `PagedGUIMode` | `PagedGUIMode.LIST` | Controls how items are supplied — see [Modes](#modes) below                        |
-
-### Modes
-
-`PagedPluginGUI` supports two item-supply modes controlled by the `mode` constructor parameter:
-
-| Mode                | Override      | Description                                                                                      |
-|:--------------------|:--------------|:-------------------------------------------------------------------------------------------------|
-| `PagedGUIMode.LIST` | `getItems`    | Items are provided as a flat list and distributed automatically across pages (one item per slot) |
-| `PagedGUIMode.SET`  | `getSetItems` | Items are placed manually by page and slot, giving full control over each item's exact position  |
-
-### Methods to Override
-
-| Method           | Mode   | Required | Description                                                      |
-|:-----------------|:-------|:---------|:-----------------------------------------------------------------|
-| `getItems`       | `LIST` | Yes      | Return the full list of items to paginate for a player           |
-| `getSetItems`    | `SET`  | Yes      | Return a map of `page → (slot → item)` for manual placement      |
-| `onContentClick` | Both   | No       | Handle clicks on content slots (clicks are cancelled by default) |
-
-You do **not** need to override `setup`, `onClick`, or `onClose` — `PagedPluginGUI` handles them internally for
-pagination. If you need custom close logic, override `onClose` and call `super.onClose(event)` to ensure page state is
-cleaned up.
-
-### Navigation Layout
-
-The last row of the inventory contains:
-
-| Slot (in last row) | Item  | Description                                  |
-|:-------------------|:------|:---------------------------------------------|
-| 0                  | Arrow | **Previous Page** — hidden on the first page |
-| 4                  | Paper | **Page indicator** — displays "Page X/Y"     |
-| 8                  | Arrow | **Next Page** — hidden on the last page      |
-
-### Example (LIST mode)
+### Writing Keys
 
 ```kotlin
-package com.example.exampleplugin.guis
+// In a menu (Menu.tr uses the viewer's language)
+button(11, Icons.icon(Material.EMERALD, tr("bank.deposit"), tr("bank.deposit-description")))
+lore(tr("icon.town.residents", "count" to town.numResidents))
 
-import com.example.exampleplugin.registration.PagedPluginGUI
-import net.kyori.adventure.text.Component
-import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
-
-class RewardsGUI : PagedPluginGUI(
-    id = "rewards",
-    title = Component.text("Rewards"),
-    rows = 6
-) {
-    override fun getItems(player: Player): List<ItemStack> {
-        return List(100) { index ->
-            val item = ItemStack(Material.DIAMOND)
-            val meta = item.itemMeta
-            meta.displayName(Component.text("Reward #${index + 1}"))
-            item.itemMeta = meta
-            item
-        }
-    }
-
-    override fun onContentClick(event: InventoryClickEvent, page: Int) {
-        val player = event.whoClicked as? Player ?: return
-        player.sendMessage("You clicked slot ${event.slot} on page ${page + 1}!")
-    }
-}
+// Anywhere else
+sender.sendPrefixed(sender.tr("command.reload.done"))
 ```
 
-### Example (SET mode)
-
-Use `PagedGUIMode.SET` when you need precise control over which slot on which page each item appears in. The outer map
-key is the **zero-based page index**; the inner map key is the **zero-based content-slot index** (0–
-`contentSlots - 1`).
-
-```kotlin
-package com.example.exampleplugin.guis
-
-import com.example.exampleplugin.enums.PagedGUIMode
-import com.example.exampleplugin.registration.PagedPluginGUI
-import net.kyori.adventure.text.Component
-import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-
-class StagesGUI : PagedPluginGUI(
-    id = "stages",
-    title = Component.text("Stages"),
-    rows = 4,
-    mode = PagedGUIMode.SET
-) {
-    override fun getSetItems(player: Player): Map<Int, Map<Int, ItemStack>> {
-        return mapOf(
-            0 to mapOf(
-                4 to ItemStack(Material.DIAMOND)    // page 0 (first page), slot 4
-            ),
-            1 to mapOf(
-                4 to ItemStack(Material.EMERALD),   // page 1 (second page), slot 4
-                13 to ItemStack(Material.GOLD_INGOT) // page 1 (second page), slot 13
-            )
-        )
-    }
-}
+```yaml
+bank:
+  deposit: "<green>Deposit"
+  deposit-description: "Move money from your balance into the bank."
 ```
 
-### Opening a Paged GUI from a Command
-
-Paged GUIs are opened the same way as regular GUIs, using `GUIManager.open(player, id)`:
-
-```kotlin
-package com.example.exampleplugin.commands
-
-import com.example.exampleplugin.registration.GUIManager
-import com.example.exampleplugin.registration.PluginCommand
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
-
-class RewardsCommand : PluginCommand(
-    name = "rewards",
-    description = "Browse available rewards",
-    permission = "exampleplugin.rewards"
-) {
-    override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
-        if (sender !is Player) {
-            sender.sendMessage("This command can only be used by players.")
-            return true
-        }
-        GUIManager.open(sender, "rewards")
-        return true
-    }
-}
-```
-
----
-
-## Tasks
-
-To create a scheduled task, extend `PluginTask` and place the class anywhere inside the `tasks` package or a subpackage.
-The task is automatically discovered, instantiated, and scheduled by `TaskRegistrar` when the plugin enables. All tasks
-are cancelled automatically when the plugin disables.
-
-### PluginTask Properties
-
-| Property | Type      | Default | Description                                                                                   |
-|:---------|:----------|:--------|:----------------------------------------------------------------------------------------------|
-| `delay`  | `Long`    | `0`     | Delay in ticks before the task first runs (20 ticks = 1 second)                               |
-| `period` | `Long`    | `-1`    | Ticks between subsequent runs; use any negative value to schedule the task as a one-shot task |
-| `async`  | `Boolean` | `false` | When `true`, the task runs off the main server thread (suitable for I/O or heavy computation) |
-
-### Scheduling Behaviour
-
-The combination of `period` and `async` determines which Bukkit scheduler method is used:
-
-| `async` | `period >= 0` | Bukkit call                  |
-|:--------|:--------------|:-----------------------------|
-| `false` | Yes           | `runTaskTimer`               |
-| `true`  | Yes           | `runTaskTimerAsynchronously` |
-| `false` | No            | `runTaskLater`               |
-| `true`  | No            | `runTaskLaterAsynchronously` |
-
-### Methods to Override
-
-| Method | Required | Description                                                          |
-|:-------|:---------|:---------------------------------------------------------------------|
-| `run`  | Yes      | Called once (one-shot) or repeatedly (repeating) when the task fires |
-
-### Example (Repeating Sync Task)
-
-This task broadcasts a message to all players every 5 minutes:
-
-```kotlin
-package com.example.exampleplugin.tasks
-
-import com.example.exampleplugin.registration.PluginTask
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Bukkit
-
-class BroadcastTask : PluginTask(
-    delay = 6000L,
-    period = 6000L
-) {
-    override fun run() {
-        Bukkit.broadcast(
-            Component.text("[ExamplePlugin] ", NamedTextColor.GOLD)
-                .append(Component.text("The server is running smoothly!", NamedTextColor.YELLOW))
-        )
-    }
-}
-```
-
-### Example (One-Shot Async Task)
-
-This task runs once 5 seconds after the plugin enables, off the main thread:
-
-```kotlin
-package com.example.exampleplugin.tasks
-
-import com.example.exampleplugin.registration.PluginTask
-
-class CleanupTask : PluginTask(
-    delay = 100L,
-    async = true
-) {
-    override fun run() {
-        // perform I/O or heavy computation here without blocking the server
-    }
-}
-```
-
-### Example with Plugin Instance
-
-When you need access to the plugin, declare a `JavaPlugin` constructor parameter:
-
-```kotlin
-package com.example.exampleplugin.tasks
-
-import com.example.exampleplugin.registration.PluginTask
-import org.bukkit.plugin.java.JavaPlugin
-
-class MetricsTask(private val plugin: JavaPlugin) : PluginTask(
-    delay = 200L,
-    period = 200L
-) {
-    override fun run() {
-        plugin.logger.info("Online players: ${plugin.server.onlinePlayers.size}")
-    }
-}
-```
-
----
-
-## Custom Items
-
-To create a custom item, extend `PluginItem` and place the class anywhere inside the `items` package or a subpackage.
-The item is automatically discovered by `ItemRegistrar` at startup and added to an in-memory registry keyed by its ID.
-
-Each stack produced by `create()` has the item's `id` embedded in its
-[Persistent Data Container](https://docs.papermc.io/paper/dev/pdc) under the key
-`exampleplugin:custom_item_id`. This marker is used by `matches()` to identify the item in inventory checks, and by
-`asChoice()` to match the item as a recipe ingredient.
-
-### Declaring Items as Kotlin Objects
-
-The recommended pattern is to declare items as **Kotlin `object`s** (singletons). This lets you reference the item
-directly by name in recipe files and other code without going through the registry:
-
-```kotlin
-val stack = MyItem.create()    // one item
-val stack3 = MyItem.create(3)  // three items
-```
-
-`ItemRegistrar` detects Kotlin objects automatically via the compiler-generated `INSTANCE` field — no special
-constructor is needed.
-
-### PluginItem Properties and Methods
-
-| Member        | Signature                  | Description                                                                       |
-|:--------------|:---------------------------|:----------------------------------------------------------------------------------|
-| `id`          | `String` *(constructor)*   | Unique lower-case identifier stored in every produced stack's PDC                 |
-| `ITEM_ID_KEY` | `NamespacedKey` *(static)* | The PDC key used to stamp the ID; namespace `exampleplugin`, key `custom_item_id` |
-| `create`      | `create(amount: Int = 1)`  | Returns a fully configured, ID-stamped `ItemStack`                                |
-| `buildItem`   | `buildItem(amount: Int)`   | **Override** — define material, name, lore, etc. using the `itemStack` DSL        |
-| `matches`     | `matches(ItemStack)`       | Returns `true` when the stack carries this item's ID in its PDC                   |
-| `asChoice`    | `asChoice()`               | Returns a `RecipeChoice.ExactChoice` for use as a recipe ingredient               |
-
-### Example (Kotlin Object)
-
-```kotlin
-package com.example.exampleplugin.items
-
-import com.example.exampleplugin.registration.PluginItem
-import com.example.exampleplugin.utils.itemStack
-import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.ItemStack
-
-object ExcaliburItem : PluginItem("excalibur") {
-
-    override fun buildItem(amount: Int): ItemStack = itemStack(Material.DIAMOND_SWORD) {
-        amount(amount)
-        name("<bold><gradient:gold:yellow>Excalibur</gradient></bold>")
-        lore(
-            "<gray>A legendary blade of myth,",
-            "<gray>Damage: <red>+20"
-        )
-        enchant(Enchantment.SHARPNESS, 5)
-        unbreakable(true)
-    }
-}
-```
-
-### Example (Regular Class with Plugin Instance)
-
-When you need access to the plugin (e.g. for a `NamespacedKey` beyond the built-in ID key), declare a `JavaPlugin`
-constructor parameter:
-
-```kotlin
-package com.example.exampleplugin.items
-
-import com.example.exampleplugin.registration.PluginItem
-import com.example.exampleplugin.utils.itemStack
-import org.bukkit.Material
-import org.bukkit.NamespacedKey
-import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
-import org.bukkit.plugin.java.JavaPlugin
-
-class TrackedItem(private val plugin: JavaPlugin) : PluginItem("tracked_item") {
-
-    override fun buildItem(amount: Int): ItemStack = itemStack(Material.COMPASS) {
-        amount(amount)
-        name("<aqua>Tracking Compass")
-        pdc(NamespacedKey(plugin, "tracker_version"), PersistentDataType.INTEGER, 1)
-    }
-}
-```
-
-### Checking for a Custom Item at Runtime
-
-Use `matches` in a listener to detect when a player is holding or using a specific custom item:
-
-```kotlin
-import com.example.exampleplugin.items.ExcaliburItem
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.entity.Player
-
-class ExcaliburListener : Listener {
-
-    @EventHandler
-    fun onHit(event: EntityDamageByEntityEvent) {
-        val attacker = event.damager as? Player ?: return
-        val held = attacker.inventory.itemInMainHand
-        if (ExcaliburItem.matches(held)) {
-            event.damage *= 2.0
-        }
-    }
-}
-```
-
-### Looking Up Items by ID
-
-When you only have the item ID as a string (e.g. from config), use `ItemRegistrar.get`:
-
-```kotlin
-import com.example.exampleplugin.registration.ItemRegistrar
-
-val item = ItemRegistrar.get("excalibur") ?: return
-player.inventory.addItem(item.create())
-```
-
----
-
-## Recipes
-
-To create a recipe, extend `PluginRecipe` and place the class anywhere inside the `recipes` package or a subpackage. The
-recipe is automatically discovered by `RecipeRegistrar` at startup, built, and registered with the server. All Minecraft
-crafting containers are supported — the container type is determined by the
-[`Recipe`](https://jd.papermc.io/paper/1.21/) subtype returned by `build`.
-
-All registered recipes are removed cleanly when the plugin disables (via `RecipeRegistrar.unregisterAll`), preventing
-stale recipes from persisting across reloads.
-
-### Supported Containers
-
-| Container                   | Recipe type               | Notes                                 |
-|:----------------------------|:--------------------------|:--------------------------------------|
-| Crafting table / player 2×2 | `ShapedRecipe`            | Fixed ingredient layout               |
-| Crafting table / player 2×2 | `ShapelessRecipe`         | Ingredients in any order              |
-| Furnace                     | `FurnaceRecipe`           | —                                     |
-| Blast furnace               | `BlastingRecipe`          | —                                     |
-| Smoker                      | `SmokingRecipe`           | —                                     |
-| Campfire                    | `CampfireRecipe`          | —                                     |
-| Stonecutter                 | `StonecuttingRecipe`      | —                                     |
-| Smithing table              | `SmithingTransformRecipe` | Requires template, base, and addition |
-
-### PluginRecipe Properties and Methods
-
-| Member          | Signature                        | Description                                                                        |
-|:----------------|:---------------------------------|:-----------------------------------------------------------------------------------|
-| `key`           | `String` *(constructor)*         | Unique name used to build the recipe's `NamespacedKey` via `namespacedKey(plugin)` |
-| `build`         | `build(plugin: JavaPlugin)`      | **Override** — build and return the Bukkit `Recipe` to register                    |
-| `namespacedKey` | `namespacedKey(plugin)`          | Helper — returns `NamespacedKey(plugin, key)` for the recipe constructor           |
-| `vanillaChoice` | `vanillaChoice(material)`        | Helper — returns a `RecipeChoice.MaterialChoice` for a vanilla `Material`          |
-| `customChoice`  | `customChoice(item: PluginItem)` | Helper — returns a `RecipeChoice.ExactChoice` that matches only stacks of `item`   |
-
-### Constructor Requirements
-
-Recipe classes follow the same constructor rules as commands and tasks:
-
-| Constructor                          | When to Use                                   |
-|:-------------------------------------|:----------------------------------------------|
-| No-arg constructor                   | When you don't need a reference to the plugin |
-| Constructor accepting a `JavaPlugin` | When you need to access the plugin instance   |
-
-### Example (Shaped Crafting Recipe — Custom Item Result)
-
-```kotlin
-package com.example.exampleplugin.recipes
-
-import com.example.exampleplugin.items.ExcaliburItem
-import com.example.exampleplugin.registration.PluginRecipe
-import org.bukkit.Material
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.plugin.java.JavaPlugin
-
-class ExcaliburRecipe : PluginRecipe("excalibur_recipe") {
-
-    override fun build(plugin: JavaPlugin): Recipe {
-        val recipe = ShapedRecipe(namespacedKey(plugin), ExcaliburItem.create())
-        recipe.shape(
-            "DDD",
-            "D D",
-            "DDD"
-        )
-        recipe.setIngredient('D', vanillaChoice(Material.DIAMOND))
-        return recipe
-    }
-}
-```
-
-### Example (Shapeless Crafting Recipe — Custom Item Ingredient)
-
-Use `customChoice(item)` to require a plugin custom item as an ingredient:
-
-```kotlin
-package com.example.exampleplugin.recipes
-
-import com.example.exampleplugin.items.ExcaliburItem
-import com.example.exampleplugin.registration.PluginRecipe
-import org.bukkit.Material
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.ShapelessRecipe
-import org.bukkit.plugin.java.JavaPlugin
-
-class ExcaliburRepairRecipe : PluginRecipe("excalibur_repair") {
-
-    override fun build(plugin: JavaPlugin): Recipe {
-        val recipe = ShapelessRecipe(namespacedKey(plugin), ExcaliburItem.create())
-        recipe.addIngredient(customChoice(ExcaliburItem))
-        recipe.addIngredient(vanillaChoice(Material.DIAMOND))
-        return recipe
-    }
-}
-```
-
-### Example (Furnace Recipe)
-
-```kotlin
-package com.example.exampleplugin.recipes
-
-import com.example.exampleplugin.registration.PluginRecipe
-import org.bukkit.Material
-import org.bukkit.inventory.FurnaceRecipe
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Recipe
-import org.bukkit.plugin.java.JavaPlugin
-
-class IronNuggetRecipe : PluginRecipe("iron_nugget_smelt") {
-
-    override fun build(plugin: JavaPlugin): Recipe {
-        return FurnaceRecipe(
-            namespacedKey(plugin),
-            ItemStack(Material.IRON_NUGGET),
-            vanillaChoice(Material.IRON_INGOT),
-            0.1f,  // experience
-            200    // cooking time (ticks)
-        )
-    }
-}
-```
-
-### Example (Smithing Table Recipe)
-
-```kotlin
-package com.example.exampleplugin.recipes
-
-import com.example.exampleplugin.items.ExcaliburItem
-import com.example.exampleplugin.registration.PluginRecipe
-import org.bukkit.Material
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.SmithingTransformRecipe
-import org.bukkit.plugin.java.JavaPlugin
-
-class ExcaliburUpgradeRecipe : PluginRecipe("excalibur_upgrade") {
-
-    override fun build(plugin: JavaPlugin): Recipe {
-        return SmithingTransformRecipe(
-            namespacedKey(plugin),
-            ExcaliburItem.create(),
-            vanillaChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE), // template
-            customChoice(ExcaliburItem),                                  // base
-            vanillaChoice(Material.NETHERITE_INGOT)                      // addition
-        )
-    }
-}
-```
+- **Colours go in the translation**, so translators see the whole line.
+- **Placeholders are inserted verbatim.** Escape player-written text with `TownyUtil.name()` / `TownyUtil.text()`.
+- **Group keys by menu** (`town-details.*`) and reuse `common.*`, `icon.*`, and `toggle.*` for shared text.
+- **Write keys as whole string literals.** `tr(if (held) "rank.assigned" else "rank.not-assigned")` is fine;
+  `tr("rank.$state")` is not, because the test below cannot see it. `plot-type.*` and `command.*` are the only
+  runtime-built keys (read with `Lang.find`, which returns `null` instead of the key).
+- **Quote YAML keys that YAML 1.1 reads as booleans**: `"on"`, `"off"`, `"yes"`, `"no"`.
+
+### LangFilesTest
+
+`./gradlew build` runs `LangFilesTest`, which fails when:
+
+- a bundled language is missing a key English has, or has one English lacks;
+- a translation's `{placeholders}` differ from English;
+- a key-shaped string literal in `src/main/kotlin` is not in `en_US.yml`;
+- a key in `en_US.yml` is not used by any code (outside the runtime-built prefixes).
+
+To bundle another language, add `lang/<id>.yml` to the resources and its id to `Lang.BUNDLED` and to the test's language
+list.
 
 ---
 
@@ -1059,7 +678,7 @@ val headerStyle = Style.style(
     TextDecoration.BOLD
 )
 
-val header = Component.text("ExamplePlugin", headerStyle)
+val header = Component.text("TownyMenu", headerStyle)
 sender.sendMessage(header)
 ```
 
@@ -1089,7 +708,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 
-val message = Component.text("[ExamplePlugin] ", NamedTextColor.GOLD, TextDecoration.BOLD)
+val message = Component.text("[TownyMenu] ", NamedTextColor.GOLD, TextDecoration.BOLD)
     .append(Component.text("Welcome to the server!", NamedTextColor.YELLOW))
 
 sender.sendMessage(message)
@@ -1404,7 +1023,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 
 player.sendPlayerListHeaderAndFooter(
-    Component.text("ExamplePlugin Server", NamedTextColor.GOLD, TextDecoration.BOLD),
+    Component.text("TownyMenu Server", NamedTextColor.GOLD, TextDecoration.BOLD),
     Component.text("${player.ping}ms", NamedTextColor.GRAY)
 )
 ```
@@ -1419,342 +1038,70 @@ player.sendPlayerListHeaderAndFooter(Component.empty(), Component.empty())
 
 ## Utilities
 
-The `utils` package (`com.example.exampleplugin.utils`) contains helper classes and functions that reduce boilerplate
-across the plugin. See the [Utility Guide](UTILITY_GUIDE.md) for full documentation on the
-`itemStack` DSL builder and `CountdownUtil`.
-
-### Enums
-
-Plugin-wide enums live in `com.example.exampleplugin.enums`.
-
-#### DisplayLocation
-
-`DisplayLocation` is used by `CountdownUtil` to control where countdown messages are rendered for the player.
-
-| Value        | Behaviour                                              |
-|:-------------|:-------------------------------------------------------|
-| `NONE`       | No message is displayed                                |
-| `CHAT`       | Message is sent to the player's chat                   |
-| `TITLE`      | Message is shown as a screen title                     |
-| `BOSS_BAR`   | Message is shown in a boss bar that depletes over time |
-| `ACTION_BAR` | Message is shown above the hotbar                      |
-
-#### FillMode
-
-`FillMode` is used by `PluginGUI` and `PagedPluginGUI` to control how empty inventory slots are pre-filled before
-`setup` is called. See the [GUIs section](#guis) for details.
-
-#### PagedGUIMode
-
-`PagedGUIMode` is used by `PagedPluginGUI` to control how items are supplied to the paged inventory. See the
-[Paged GUIs section](#paged-guis) for details.
-
-| Value  | Description                                                                    |
-|:-------|:-------------------------------------------------------------------------------|
-| `LIST` | Items are provided as a flat list via `getItems` and distributed automatically |
-| `SET`  | Items are placed manually by page and slot via `getSetItems`                   |
+The `utils` package (`net.trilleo.mc.plugins.townymenu.utils`) contains the `itemStack` DSL, `LoreUtil`, `MessageUtil`,
+`TownyUtil`, `TownyConfig`, and `DialogUtil`. See the [Utility Guide](UTILITY_GUIDE.md) for full documentation.
 
 ---
 
 ## Configuration
 
-ExamplePlugin provides a typed configuration wrapper — `PluginConfig` — around the standard Bukkit `config.yml`. It
-lives in the `com.example.exampleplugin.config` package and is created automatically when the plugin starts.
+TownyMenu provides a typed configuration wrapper — `PluginConfig` — around the standard Bukkit `config.yml`. It lives in
+the `net.trilleo.mc.plugins.townymenu.config` package and is created automatically when the plugin starts.
 
 ### How It Works
 
 1. On first run, the default `config.yml` bundled inside the JAR (`src/main/resources/config.yml`) is copied to the
    plugin's data folder.
-2. `PluginConfig` loads the YAML values into memory and exposes them through typed getter methods.
-3. At any time you can call `reload()` to re-read the file from disk, picking up changes made while the server is
-   running.
+2. `PluginConfig` exposes each setting as a typed property that reads the loaded configuration. Assigning a property
+   saves `config.yml` at once; the admin menu's TownyMenu settings use this.
+3. `reload()` re-reads the file from disk, picking up changes made while the server is running.
 
-The plugin's `Main` class exposes the instance as `pluginConfig`:
-
-```kotlin
-class Main : JavaPlugin() {
-    lateinit var pluginConfig: PluginConfig
-        private set
-
-    override fun onEnable() {
-        pluginConfig = PluginConfig(this)
-        // ...
-    }
-}
-```
+`Main` exposes the instance as `pluginConfig`, reachable anywhere through `Main.instance.pluginConfig`.
 
 ### Default config.yml
 
-Place default values in `src/main/resources/config.yml`. They are copied to the server's plugin data folder on first
-run:
-
 ```yaml
-# ExamplePlugin Configuration
+# TownyMenu Configuration
 
 # A friendly prefix shown before plugin messages
-message-prefix: "[ExamplePlugin]"
+message-prefix: "<click:run_command:/townymenu><gradient:yellow:gold>[TownyMenu]"
+
+# Menu language: "auto" follows each player's client, or a language id such as "zh_CN" for everyone.
+language: auto
+
+# Open the main menu when a player presses the swap-hand key (F by default) while sneaking.
+sneak-swap-hand-shortcut: true
 ```
 
-### Typed Getters
+### Properties
 
-`PluginConfig` provides the following typed getter methods. Each method accepts a YAML path and a default value that is
-returned when the key is absent or has the wrong type:
+| Property                | Key                        | Description                                    |
+|:------------------------|:---------------------------|:-----------------------------------------------|
+| `messagePrefix`         | `message-prefix`           | MiniMessage prefix used by `MessageUtil`       |
+| `language`              | `language`                 | `auto` or the language id given to `Lang.load` |
+| `sneakSwapHandShortcut` | `sneak-swap-hand-shortcut` | Whether sneak + swap-hand opens the main menu  |
 
-| Method          | Signature                           | Description                                       |
-|:----------------|:------------------------------------|:--------------------------------------------------|
-| `getString`     | `getString(path, default = "")`     | Returns a `String` value                          |
-| `getInt`        | `getInt(path, default = 0)`         | Returns an `Int` value                            |
-| `getDouble`     | `getDouble(path, default = 0.0)`    | Returns a `Double` value                          |
-| `getBoolean`    | `getBoolean(path, default = false)` | Returns a `Boolean` value                         |
-| `getStringList` | `getStringList(path)`               | Returns a `List<String>` (empty list if absent)   |
-| `contains`      | `contains(path)`                    | Returns `true` when the path exists in the config |
+To add a setting, add the key to `config.yml` and a matching property to `PluginConfig`:
+
+```kotlin
+var menuSounds: Boolean
+    get() = plugin.config.getBoolean("menu-sounds", true)
+    set(value) = save("menu-sounds", value)
+```
 
 ### Reloading
 
 Call `reload()` to re-read `config.yml` from disk without restarting the server. The method copies any new default keys
-into the file, saves it, and refreshes the in-memory values:
+into the file and saves it:
 
 ```kotlin
-pluginConfig.reload()
+Main.instance.pluginConfig.reload()
 ```
 
-The built-in `/exampleplugin reload` command already calls this method.
-
-### Accessing the Config from a Command
-
-Cast the injected `JavaPlugin` to `Main` to reach `pluginConfig`:
+`Main.reload()` calls this method, then re-initialises `MessageUtil` and `Lang`. Use it after changing a setting, as
+`/townymenu reload` and the admin menu do:
 
 ```kotlin
-package com.example.exampleplugin.commands
-
-import com.example.exampleplugin.Main
-import com.example.exampleplugin.registration.PluginCommand
-import org.bukkit.command.CommandSender
-import org.bukkit.plugin.java.JavaPlugin
-
-class PrefixCommand(private val plugin: JavaPlugin) : PluginCommand(
-    name = "prefix",
-    description = "Show the configured message prefix",
-    permission = "exampleplugin.prefix"
-) {
-    override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
-        val main = plugin as? Main ?: return true
-        val prefix = main.pluginConfig.getString("message-prefix", "[ExamplePlugin]")
-        sender.sendMessage("Current prefix: $prefix")
-        return true
-    }
-}
-```
-
-### Accessing the Config from a Listener
-
-The same pattern works for listeners — accept a `JavaPlugin` constructor parameter and cast to `Main`:
-
-```kotlin
-package com.example.exampleplugin.listeners
-
-import com.example.exampleplugin.Main
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.plugin.java.JavaPlugin
-
-class WelcomeListener(private val plugin: JavaPlugin) : Listener {
-
-    @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
-        val main = plugin as? Main ?: return
-        val prefix = main.pluginConfig.getString("message-prefix", "[ExamplePlugin]")
-        event.player.sendMessage("$prefix Welcome, ${event.player.name}!")
-    }
-}
-```
-
----
-
-## Player Data
-
-`PlayerDataManager` provides automatic, per-player JSON persistence. Data is loaded from disk when a player joins and
-written back when they quit. A fallback `saveAll()` call in `onDisable` protects data for any players still online when
-the server shuts down.
-
-JSON files are stored at `<dataFolder>/playerdata/<uuid>.json`.
-
-The manager is already initialised in `Main.onEnable` and requires no further setup for basic use.
-
-### Basic Usage
-
-Retrieve a player's data container from anywhere with a `Player` reference:
-
-```kotlin
-import com.example.exampleplugin.data.PlayerDataManager
-
-val data = PlayerDataManager.get(player)
-val kills = data.getInt("kills")
-data.set("kills", kills + 1)
-```
-
-### Typed Getters and Setters
-
-| Method         | Signature                          | Description                                                                 |
-|:---------------|:-----------------------------------|:----------------------------------------------------------------------------|
-| `getString`    | `getString(key, default = "")`     | Returns a `String` value                                                    |
-| `getInt`       | `getInt(key, default = 0)`         | Returns an `Int` value                                                      |
-| `getDouble`    | `getDouble(key, default = 0.0)`    | Returns a `Double` value                                                    |
-| `getBoolean`   | `getBoolean(key, default = false)` | Returns a `Boolean` value                                                   |
-| `getJsonArray` | `getJsonArray(key)`                | Returns a `JsonArray` value, or an empty `JsonArray` when absent            |
-| `set`          | `set(key, value)`                  | Stores a `String`, `Int`, `Double`, `Boolean`, `JsonArray`, or `JsonObject` |
-| `remove`       | `remove(key)`                      | Removes the entry at `key`                                                  |
-| `has`          | `has(key)`                         | Returns `true` when `key` exists                                            |
-
-### Custom Subclass
-
-Extend `PlayerData` to add strongly-typed Kotlin properties:
-
-```kotlin
-package com.example.exampleplugin.data
-
-import java.util.UUID
-
-class MyPlayerData(uuid: UUID) : PlayerData(uuid) {
-    var kills: Int
-        get() = getInt("kills")
-        set(value) = set("kills", value)
-
-    var lastSeen: String
-        get() = getString("lastSeen")
-        set(value) = set("lastSeen", value)
-}
-```
-
-Register the factory **before** `PlayerDataManager.init` is called (i.e. before it is called in `Main.onEnable`). The
-best place to do this is at the top of `onEnable`, before the call chain reaches the data manager:
-
-```kotlin
-override fun onEnable() {
-    PlayerDataManager.setFactory { uuid -> MyPlayerData(uuid) }
-    // ... rest of onEnable
-}
-```
-
-Then cast the result of `get`:
-
-```kotlin
-val data = PlayerDataManager.get(player) as MyPlayerData
-data.kills++
-```
-
-### Example Listener
-
-```kotlin
-package com.example.exampleplugin.listeners
-
-import com.example.exampleplugin.data.PlayerDataManager
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.entity.PlayerDeathEvent
-
-class KillTracker : Listener {
-
-    @EventHandler
-    fun onPlayerDeath(event: PlayerDeathEvent) {
-        val killer = event.player.killer ?: return
-        val data = PlayerDataManager.get(killer)
-        data.set("kills", data.getInt("kills") + 1)
-    }
-}
-```
-
----
-
-## Server Data
-
-`ServerDataManager` provides a single server-wide JSON data container. The data is loaded when the plugin enables and
-saved when it disables.
-
-The JSON file is stored at `<dataFolder>/serverdata.json`.
-
-The manager is already initialised in `Main.onEnable` and requires no further setup for basic use.
-
-### Basic Usage
-
-Retrieve the server data container from anywhere:
-
-```kotlin
-import com.example.exampleplugin.data.ServerDataManager
-
-val data = ServerDataManager.get()
-val events = data.getInt("eventCount")
-data.set("eventCount", events + 1)
-```
-
-### Typed Getters and Setters
-
-`ServerData` exposes the same typed methods as `PlayerData`:
-
-| Method         | Signature                          | Description                                                                 |
-|:---------------|:-----------------------------------|:----------------------------------------------------------------------------|
-| `getString`    | `getString(key, default = "")`     | Returns a `String` value                                                    |
-| `getInt`       | `getInt(key, default = 0)`         | Returns an `Int` value                                                      |
-| `getDouble`    | `getDouble(key, default = 0.0)`    | Returns a `Double` value                                                    |
-| `getBoolean`   | `getBoolean(key, default = false)` | Returns a `Boolean` value                                                   |
-| `getJsonArray` | `getJsonArray(key)`                | Returns a `JsonArray` value, or an empty `JsonArray` when absent            |
-| `set`          | `set(key, value)`                  | Stores a `String`, `Int`, `Double`, `Boolean`, `JsonArray`, or `JsonObject` |
-| `remove`       | `remove(key)`                      | Removes the entry at `key`                                                  |
-| `has`          | `has(key)`                         | Returns `true` when `key` exists                                            |
-
-### Custom Subclass
-
-Extend `ServerData` to add strongly-typed Kotlin properties:
-
-```kotlin
-package com.example.exampleplugin.data
-
-class MyServerData : ServerData() {
-    var totalKills: Int
-        get() = getInt("totalKills")
-        set(value) = set("totalKills", value)
-
-    var serverSeason: String
-        get() = getString("serverSeason", "1")
-        set(value) = set("serverSeason", value)
-}
-```
-
-Register the factory **before** `ServerDataManager.init` is called in `Main.onEnable`:
-
-```kotlin
-override fun onEnable() {
-    ServerDataManager.setFactory { MyServerData() }
-    // ... rest of onEnable
-}
-```
-
-Then cast the result of `get`:
-
-```kotlin
-val data = ServerDataManager.get() as MyServerData
-data.totalKills++
-```
-
-### Example Command
-
-```kotlin
-package com.example.exampleplugin.commands
-
-import com.example.exampleplugin.data.ServerDataManager
-import com.example.exampleplugin.registration.PluginCommand
-import org.bukkit.command.CommandSender
-
-class StatsCommand : PluginCommand(
-    name = "stats",
-    description = "Show server-wide statistics",
-    permission = "exampleplugin.stats"
-) {
-    override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
-        val data = ServerDataManager.get()
-        sender.sendMessage("Total kills on this server: ${data.getInt("totalKills")}")
-        return true
-    }
-}
+Main.instance.pluginConfig.language = "zh_CN"
+Main.instance.reload()
 ```
