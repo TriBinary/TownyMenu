@@ -1,9 +1,14 @@
 # TownyMenu - Changelog & Releasing
 
 This guide covers how to maintain [CHANGELOG.md](../CHANGELOG.md) during development and how to publish a release on
-GitHub. The release itself is automated by [.github/workflows/release.yml](../.github/workflows/release.yml) — pushing a
-version tag builds the plugin, extracts the matching changelog section, and creates the GitHub Release with the jar
-attached. Every push and pull request is also built by [.github/workflows/build.yml](../.github/workflows/build.yml).
+GitHub. The release itself is automated by [.github/workflows/release.yml](../.github/workflows/release.yml) — when a
+commit that changes `plugin_version` lands on `master`, the workflow builds the plugin, extracts the matching changelog
+section, and creates the `vX.Y.Z` tag and GitHub Release with the jar attached. Every push and pull request is also built
+by [.github/workflows/build.yml](../.github/workflows/build.yml).
+
+Releases are created in the repository the commit is merged into. Development happens on a fork, and the release
+workflow skips forks entirely, so merging a version-bump pull request into the organization repository publishes the
+release there — not in the fork it came from.
 
 ## Changelog format
 
@@ -53,7 +58,7 @@ Rules of thumb:
 - Write entries for players and server owners, not developers: "Added a town bank menu", not
   "Refactored TownMenuGUI". Developer-facing changes go under `Technical Details`.
 - With outside contributors, append attribution like SkyHanni does:
-  `+ Added X. - Name (https://github.com/Trilleo/TownyMenu/pull/123)`
+  `+ Added X. - Name (https://github.com/TriBinary/TownyMenu/pull/123)`
 
 ## Versioning
 
@@ -87,41 +92,42 @@ Example: releasing version `1.1.0`.
    ./gradlew build
    ```
 
-4. **Commit and tag** — the tag must be the version prefixed with `v`:
+4. **Commit and open a pull request** — commit the bump on your fork and open a pull request against the organization
+   repository:
 
    ```
    git commit -am "Update: Plugin version 1.1.0 release"
-   git tag v1.1.0
+   git push
    ```
 
-5. **Push** — this is the publish step; the release workflow fires on the tag:
+   Do **not** create the tag yourself — the workflow creates `v1.1.0` when it publishes the release.
 
-   ```
-   git push && git push --tags
-   ```
+5. **Merge** — merging the pull request into `master` is the publish step; the release workflow fires because
+   `gradle.properties` changed.
 
-6. **Check the result** — the `release` workflow under the repo's *Actions* tab builds the jar and creates the GitHub
-   Release. Verify the release page shows the changelog text and has `TownyMenu-1.1.0.jar` attached.
+6. **Check the result** — the `release` workflow under the organization repo's *Actions* tab builds the jar and creates
+   the GitHub Release. Verify the release page shows the changelog text and has `TownyMenu-1.1.0.jar` attached.
 
-> **Never tag or push tags unless you have been explicitly asked to.** Pushing a tag publishes a release.
+> **Never merge a version bump into the organization repository unless you have been explicitly asked to.** Merging it
+> publishes a release.
 
 ## How the automation matches things up
 
-- The workflow strips the `v` from the tag (`v1.1.0` → `1.1.0`) and extracts everything between `## Version 1.1.0` and
-  the next `## ` heading in `CHANGELOG.md`. That text becomes the release body.
+- The workflow runs on pushes to `master` that touch `gradle.properties`, and can be started by hand from the *Actions*
+  tab (*Run workflow*). It never runs its release steps in a fork.
+- It reads `plugin_version` (e.g. `1.1.0`). If the tag `v1.1.0` already exists, it does nothing — changing other
+  properties such as `towny_version` never re-releases.
+- Otherwise it extracts everything between `## Version 1.1.0` and the next `## ` heading in `CHANGELOG.md`. That text
+  becomes the release body.
 - **If no matching section exists, the workflow fails** — a release cannot ship with an empty changelog. Fix the heading
-  (exact match: `## Version 1.1.0`) and re-run the workflow, or delete and re-push the tag.
-- The plugin jar from `build/libs/` is attached.
+  (exact match: `## Version 1.1.0`) and re-run the workflow.
+- The plugin jar from `build/libs/` is attached, and the `v1.1.0` tag is created on the merged commit.
 
 ## Fixing a botched release
 
-- **Wrong changelog / missing section**: fix `CHANGELOG.md`, commit, then move the tag and re-push it:
+- **Wrong changelog / missing section**: if the workflow failed, fix `CHANGELOG.md` through another pull request, then
+  start the `release` workflow by hand (*Actions* → *release* → *Run workflow*). If a release was already published with
+  the wrong text, edit the release notes on GitHub.
 
-  ```
-  git tag -f v1.1.0
-  git push -f origin v1.1.0
-  ```
-
-  Delete the draft/failed release on GitHub first if one was created.
-
-- **Wrong version in the jar**: you tagged before bumping `plugin_version`. Bump it, commit, move the tag as above.
+- **Wrong version in the jar / release on the wrong commit**: delete the release and its tag on the organization
+  repository (the *Releases* page offers both), fix things through a pull request, then run the workflow by hand.
