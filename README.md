@@ -1,52 +1,58 @@
 <h1 align="center">
-  PaperExamplePlugin
+  TownyMenu
 </h1>
 
-A template repository for creating Paper (Minecraft) plugins with Kotlin. It comes with an auto-registration system for
-commands, listeners, permissions, GUIs and tasks — just extend a base class, drop it in the right package, and the
-plugin
-handles the rest.
+<p align="center">
+  A GUI addon for <a href="https://github.com/TownyAdvanced/Towny">Towny</a> — manage your town, nation, and plots
+  through in-game menus instead of commands.
+</p>
 
-## Getting Started
+---
 
-1. Click **"Use this template"** on GitHub to create your own repository.
-2. Replace the placeholder values below with your own:
+## Features
 
-| Placeholder                 | File(s)                                                       | Description                               |
-|:----------------------------|:--------------------------------------------------------------|:------------------------------------------|
-| `ExamplePlugin`             | `settings.gradle.kts`, `plugin.yml`, source files, docs       | Your plugin's display name                |
-| `exampleplugin`             | `plugin.yml`, source files, docs                              | Lowercase plugin name (used for commands) |
-| `ep`                        | `plugin.yml`, `CommandRegistrar.kt`                           | Short command alias                       |
-| `com.example`               | `build.gradle.kts`                                            | Your Maven group ID                       |
-| `com.example.exampleplugin` | All source files under `src/main/kotlin/`, `plugin.yml`, docs | Your full base package path               |
+- **Towny, without the commands** — Clickable inventory menus for the Towny actions players use every day.
 
-3. Rename the source directory `src/main/kotlin/com/example/exampleplugin/` to match your package.
-4. Update the `FUNDING.yml` with your own sponsorship links (or remove it).
+## Requirements
 
-## Project Structure
+| Dependency | Version    |
+|:-----------|:-----------|
+| Paper      | 26.2+      |
+| Java       | 25+        |
+| Towny      | 0.103.2.7+ |
 
-```
-src/main/kotlin/com/example/exampleplugin/
-├── Main.kt                  # Plugin entry point
-├── commands/                # Auto-registered commands (extend PluginCommand)
-├── config/                  # Typed configuration wrapper (PluginConfig)
-├── data/                    # JSON-persisted player and server data (PlayerData, ServerData)
-├── enums/                   # Plugin-wide enums (e.g. FillMode, DisplayLocation)
-├── guis/                    # Auto-registered GUIs (extend PluginGUI)
-├── items/                   # Plugin-wide custom items (extend PluginItem)
-├── listeners/               # Auto-registered listeners (implement Listener)
-├── recipes/                 # Auto-registered recipes (implement PluginRecipe)
-├── registration/            # Auto-registration framework
-├── tasks/                   # Auto-registered tasks (extend PluginTask)
-└── utils/                   # Utility helpers (e.g. ItemStack DSL)
+TownyMenu is an addon: Towny must be installed on the server, or TownyMenu will not load.
+
+## Building
+
+```powershell
+./gradlew build
 ```
 
-See [`docs/DEVELOPER_GUIDE.md`](docs/DEVELOPER_GUIDE.md) for detailed instructions on creating commands, listeners,
-GUIs, working with the configuration system, and managing player and server data.
+The compiled JAR is placed in `build/libs/`. Run `./gradlew copyPlugin` to copy it into `run/plugins/` for the local
+test server, or `./gradlew startServer` to copy it and start the server.
 
-See [`docs/UTILITY_GUIDE.md`](docs/UTILITY_GUIDE.md) for documentation on the built-in utility helpers such as
-the `itemStack` DSL builder and `CountdownUtil`.
+Prebuilt jars are attached to every [GitHub release](https://github.com/Trilleo/TownyMenu/releases); see the
+[change log](CHANGELOG.md) for what changed in each one.
 
-See [`docs/DEVELOPER_GUIDE.md`](docs/DEVELOPER_GUIDE.md#enums) for documentation on plugin-wide enums such as
-`DisplayLocation` and `FillMode`.
+## Commands
 
+All commands are sub-commands of `/townymenu` (alias `/tm`).
+
+| Command      | Description                               |
+|:-------------|:------------------------------------------|
+| `/tm help`   | List all available commands               |
+| `/tm reload` | Reload the plugin configuration (OP only) |
+
+## Developer Documentation
+
+Full development guides are in the `docs/` directory:
+
+- [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) — How to add commands, listeners, GUIs, tasks, items, recipes, and
+  player/server data.
+- [UTILITY_GUIDE.md](docs/UTILITY_GUIDE.md) — Reference for all utility helpers (`itemStack` DSL, `MessageUtil`,
+  `PDCUtil`, etc.).
+- [COMMIT_STRUCTURE.md](docs/COMMIT_STRUCTURE.md) — Commit message conventions.
+- [RELEASING.md](docs/RELEASING.md) — Writing the changelog and publishing a release.
+
+For AI-assisted development, see [CLAUDE.md](CLAUDE.md).
