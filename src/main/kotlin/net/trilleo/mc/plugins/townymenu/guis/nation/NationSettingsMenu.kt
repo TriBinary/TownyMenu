@@ -47,7 +47,7 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 prompt(
                     tr("nation-details.board-title"),
                     tr("common.message"),
-                    initial = nation.board,
+                    initial = TownyUtil.board(nation).orEmpty(),
                     maxLength = 256,
                     multiline = true
                 ) { board ->

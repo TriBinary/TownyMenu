@@ -33,7 +33,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
                     )
                 )
             }
-            if (resident.about.isNotBlank()) add(tr("profile.about-line", "about" to TownyUtil.text(resident.about)))
+            TownyUtil.about(resident)?.let { add(tr("profile.about-line", "about" to TownyUtil.text(it))) }
             if (resident.isJailed) {
                 add(
                     tr(
@@ -69,7 +69,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
                 prompt(
                     tr("profile.about-title"),
                     tr("profile.bio"),
-                    initial = resident.about,
+                    initial = TownyUtil.about(resident).orEmpty(),
                     maxLength = 159
                 ) { text ->
                     run("towny:resident set about $text", { resident.about })

@@ -45,7 +45,7 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                 prompt(
                     tr("town-details.board-title"),
                     tr("common.message"),
-                    initial = town.board,
+                    initial = TownyUtil.board(town).orEmpty(),
                     maxLength = 256,
                     multiline = true
                 ) { board ->

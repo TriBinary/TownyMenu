@@ -1,9 +1,12 @@
 package net.trilleo.mc.plugins.townymenu.utils
 
 import com.palmergames.bukkit.towny.TownyEconomyHandler
+import com.palmergames.bukkit.towny.TownySettings
 import com.palmergames.bukkit.towny.TownyUniverse
 import com.palmergames.bukkit.towny.`object`.Government
+import com.palmergames.bukkit.towny.`object`.Nation
 import com.palmergames.bukkit.towny.`object`.Resident
+import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
@@ -33,6 +36,19 @@ object TownyUtil {
     /** A plot type name in [player]'s language (`plot-type.<type>`), or the raw name for custom types. */
     fun plotType(player: Player, type: String): String =
         Lang.find(player, "plot-type.${type.lowercase()}") ?: name(type)
+
+    /** [government]'s board, or `null` when unset or still Towny's `/town set board [msg]` placeholder from `config.yml`. */
+    fun board(government: Government): String? = government.board.takeUnless {
+        it.isNullOrBlank() || it == when (government) {
+            is Town -> TownySettings.getTownDefaultBoard()
+            is Nation -> TownySettings.getNationDefaultBoard()
+            else -> null
+        }
+    }
+
+    /** [resident]'s about text, or `null` when unset or still Towny's `/res set about [msg]` placeholder. */
+    fun about(resident: Resident): String? =
+        resident.about.takeUnless { it.isNullOrBlank() || it == TownySettings.getDefaultResidentAbout() }
 
     /** Formats [amount] with the server economy's currency, or `-` when no economy is active. */
     fun money(amount: Double): String =

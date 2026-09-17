@@ -14,6 +14,8 @@
 #### Misc
 
 + Fixed the back button covering the Outsiders: Switch button in the permissions menu.
++ Town and nation boards and resident about texts no longer show Towny's placeholder (`/town set board [msg]`,
+  `/res set about [msg]`) when none has been set, and the edit dialogs start empty instead of with the placeholder.
 
 ## Version 0.1.1
 
