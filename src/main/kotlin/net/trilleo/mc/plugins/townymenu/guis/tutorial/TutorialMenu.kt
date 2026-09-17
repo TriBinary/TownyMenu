@@ -33,7 +33,7 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
         val next = Tutorial.nextUnread(player)
         if (next != null) {
             button(
-                38, Icons.icon(
+                47, Icons.icon(
                     Material.SPECTRAL_ARROW, tr("tutorial.continue"), tr("tutorial.continue-description"),
                     tr("tutorial.chapter-line", "chapter" to tr(next.title))
                 )
