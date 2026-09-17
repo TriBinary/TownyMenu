@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.`object`.TownyPermission.PermLevel
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -67,6 +68,7 @@ class PermissionMenu(
         guarded(25, node, Icons.icon(Material.WATER_BUCKET, tr("perm.reset"), tr("perm.reset-description"))) {
             run("$command reset", ::snapshot)
         }
+        tutorialButton(53, Tutorial.PROTECTION)
         backButton(49)
     }
 

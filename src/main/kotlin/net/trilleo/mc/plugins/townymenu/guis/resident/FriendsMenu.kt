@@ -5,6 +5,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -27,6 +28,7 @@ class FriendsMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("fri
         }
 
     override fun controls() {
+        tutorialButton(52, Tutorial.PROTECTION)
         button(47, Icons.icon(Material.PLAYER_HEAD, tr("friends.add-online"), tr("friends.add-online-description"))) {
             Pickers.resident(this, tr("friends.add-title"), { candidate -> resident?.hasFriend(candidate) == false }) { picked ->
                 run("towny:resident friend add ${picked.name}", ::friendNames)

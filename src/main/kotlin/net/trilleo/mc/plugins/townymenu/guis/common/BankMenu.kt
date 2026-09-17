@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -44,6 +45,7 @@ class BankMenu(
             Icons.icon(Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"))) {
             runAndClose("$command bankhistory")
         }
+        tutorialButton(26, Tutorial.ECONOMY)
         backButton(22)
     }
 

@@ -9,6 +9,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
 import net.trilleo.mc.plugins.townymenu.guis.resident.ResidentProfileMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -29,6 +30,7 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
             .map { member -> MenuEntry({ Icons.resident(player, member, "", tr("common.click-view")) }) { ResidentProfileMenu(player, member, this).open() } }
 
     override fun controls() {
+        tutorialButton(52, Tutorial.TOWN)
         if (!isMember) return
         val sent = { town.sentInvites.size }
         guarded(47, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,

@@ -13,6 +13,7 @@ import net.trilleo.mc.plugins.townymenu.guis.common.ToggleMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -31,6 +32,7 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         val plot = plot
         if (plot == null) wilderness() else claimed(plot)
         button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"))) { render() }
+        tutorialButton(53, Tutorial.PLOTS)
         backButton(49)
     }
 

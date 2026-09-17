@@ -7,6 +7,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -28,6 +29,7 @@ class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) : P
         }
 
     override fun controls() {
+        tutorialButton(52, Tutorial.PLOTS)
         guarded(47, PermissionNodes.TOWNY_COMMAND_PLOT_TRUST,
             Icons.icon(Material.PLAYER_HEAD, tr("common.trust-online"), tr("plot-trust.trust-online-description"))) {
             Pickers.resident(this, tr("plot-trust.trust-title"), { !plot.hasTrustedResident(it) }) { picked ->

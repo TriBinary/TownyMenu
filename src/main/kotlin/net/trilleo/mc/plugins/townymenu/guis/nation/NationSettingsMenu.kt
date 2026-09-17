@@ -8,6 +8,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.ListMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -92,6 +93,7 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 TownyUtil.money(nation.spawnCost)) { nation.spawnCost }
         }
 
+        tutorialButton(44, Tutorial.NATIONS)
         backButton(40)
     }
 

@@ -22,9 +22,14 @@ repositories {
     }
 }
 
+val serverPlugins: Configuration by configurations.creating {
+    isTransitive = false
+}
+
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     compileOnly("com.palmergames.bukkit.towny:towny:${providers.gradleProperty("towny_version").get()}")
+    serverPlugins("com.palmergames.bukkit.towny:towny:${providers.gradleProperty("towny_version").get()}")
     testImplementation(kotlin("test"))
     testImplementation("net.kyori:adventure-api:5.2.0")
     testImplementation("net.kyori:adventure-text-minimessage:5.2.0")
@@ -60,8 +65,16 @@ tasks.jar {
     }
 }
 
+// Copies Towny into the test server, replacing any other Towny version left behind by a version bump.
+tasks.register<Copy>("copyServerPlugins") {
+    val pluginsDir = layout.projectDirectory.dir("run/plugins")
+    doFirst { delete(fileTree(pluginsDir) { include("towny-*.jar") }) }
+    from(serverPlugins)
+    into(pluginsDir)
+}
+
 tasks.register<Copy>("copyPlugin") {
-    dependsOn("jar")
+    dependsOn("jar", "copyServerPlugins")
     from(tasks.jar.get().archiveFile)
     into(layout.projectDirectory.dir("run/plugins"))
 }
@@ -70,4 +83,9 @@ tasks.register<JavaExec>("startServer") {
     dependsOn("copyPlugin")
     workingDir(layout.projectDirectory.dir("run"))
     classpath(fileTree(layout.projectDirectory.dir("run")) { include("paper-*.jar") })
+    doFirst {
+        check(!classpath.isEmpty) { "No paper-*.jar in run/. Download Paper 26.2 from https://papermc.io/downloads/paper into run/." }
+    }
+    args("--nogui")
+    standardInput = System.`in`
 }

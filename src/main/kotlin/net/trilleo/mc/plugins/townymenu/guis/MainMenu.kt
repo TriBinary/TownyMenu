@@ -12,6 +12,7 @@ import net.trilleo.mc.plugins.townymenu.guis.resident.ResidentMenu
 import net.trilleo.mc.plugins.townymenu.guis.town.NoTownMenu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownListMenu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.TutorialMenu
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -57,6 +58,9 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
 
         button(29, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("main.map-description"))) { MapMenu(player, this).open() }
         button(30, Icons.icon(Material.BELL, tr("main.towns"), tr("main.towns-description"))) { TownListMenu(player, this).open() }
+        button(31, Icons.icon(Material.KNOWLEDGE_BOOK, tr("main.tutorial"), tr("main.tutorial-description"))) {
+            TutorialMenu(player, this).open()
+        }
         button(32, Icons.icon(Material.BEACON, tr("main.nations"), tr("main.nations-description"))) { NationListMenu(player, this).open() }
 
         val invites = resident.receivedInvites.size +

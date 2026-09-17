@@ -12,6 +12,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.ListMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.resident.ResidentProfileMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -76,6 +77,7 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
             }
         }
 
+        tutorialButton(53, Tutorial.NATIONS)
         backButton(49)
     }
 
@@ -88,7 +90,7 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                 .map { member -> MenuEntry({ Icons.resident(player, member, "", tr("common.click-view")) }) { ResidentProfileMenu(player, member, menu).open() } }
         }
 
-    private fun toggles(): Menu {
+    fun toggles(): Menu {
         fun toggle(material: Material, key: String, label: String, description: String, node: PermissionNodes, read: (Nation) -> Boolean) =
             Toggle(material, label, description, node, "towny:nation toggle $key") { nation?.let(read) }
 

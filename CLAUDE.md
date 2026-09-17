@@ -51,11 +51,13 @@ Before finishing any task that changes the plugin, do all of the following:
 
 ```powershell
 ./gradlew build        # Builds build/libs/TownyMenu-<version>.jar
-./gradlew copyPlugin   # Copies the jar into run/plugins/
+./gradlew copyPlugin   # Copies the jar and Towny (towny_version) into run/plugins/
 ./gradlew startServer  # Runs copyPlugin, then launches the paper-*.jar in run/
 ```
 
-The local test server in `run/` (gitignored) also needs a Towny jar in `run/plugins/`, or TownyMenu will not enable.
+The local test server lives in `run/` (gitignored). `copyPlugin` puts the matching Towny jar in `run/plugins/`, but the
+Paper 26.2 jar (`run/paper-*.jar`) must be downloaded by hand from https://papermc.io/downloads/paper, and `eula.txt`
+accepted, before `startServer` works. The server console reads commands from the terminal running Gradle.
 
 ## Repository Layout
 
@@ -71,6 +73,7 @@ src/main/kotlin/net/trilleo/mc/plugins/townymenu/
 │   ├── common/              # ToggleMenu, PermissionMenu, BankMenu, RankMenu, Pickers
 │   ├── admin/               # Admin menus (/tm admin): Towny config editor, worlds, server, towns, nations
 │   ├── town/  nation/  plot/  resident/
+│   ├── tutorial/            # Tutorial hub, chapter menu, and all lesson content (Tutorial.kt)
 │   └── MainMenu.kt, MapMenu.kt, InvitesMenu.kt
 ├── listeners/               # Event listeners (auto-registered)
 ├── registration/            # Auto-registration engine (do not modify lightly)
@@ -108,6 +111,8 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
   embedding it in MiniMessage.
 - **Translate everything with `tr("key", "placeholder" to value)`** — `Menu.tr` uses the viewer's language; outside
   a menu use `sender.tr(...)`. Menu titles are translated in the constructor call: `Menu(player, player.tr("x.title"), …)`.
+- **Keep the tutorial in sync** — a new or changed Towny feature updates its lesson in `guis/tutorial/Tutorial.kt`,
+  and a new feature menu gets a `tutorialButton` for its chapter.
 - **Keep `PagedMenu` entries lazy** — pass the icon as a lambda to `MenuEntry` so off-page icons are never built.
 
 ## Translations

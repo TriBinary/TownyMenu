@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -97,6 +98,7 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
             }
         }
 
+        tutorialButton(53, Tutorial.TOWN)
         backButton(49)
     }
 

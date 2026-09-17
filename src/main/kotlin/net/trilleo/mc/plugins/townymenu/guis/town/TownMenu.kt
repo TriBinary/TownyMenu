@@ -13,6 +13,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NationMenu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NoNationMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -68,8 +69,7 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
         }
         grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_PERM,
             Icons.icon(Material.IRON_DOOR, tr("common.permissions"), tr("town.permissions-description"))) {
-            PermissionMenu(player, tr("town.permissions-title"), this, "towny:town set perm",
-                PermissionNodes.TOWNY_COMMAND_TOWN_SET_PERM, false) { TownyAPI.getInstance().getResident(player)?.townOrNull?.permissions }.open()
+            permissions().open()
         }
         grid.add(Icons.icon(Material.TRIPWIRE_HOOK, tr("common.trusted"), tr("town.trusted-description"))) {
             TownTrustMenu(player, town, this).open()
@@ -103,10 +103,15 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
             }
         }
 
+        tutorialButton(53, Tutorial.TOWN)
         backButton(49)
     }
 
-    private fun toggles(): Menu {
+    fun permissions(): Menu =
+        PermissionMenu(player, tr("town.permissions-title"), this, "towny:town set perm",
+            PermissionNodes.TOWNY_COMMAND_TOWN_SET_PERM, false) { TownyAPI.getInstance().getResident(player)?.townOrNull?.permissions }
+
+    fun toggles(): Menu {
         fun toggle(material: Material, key: String, label: String, description: String, node: PermissionNodes, read: (Town) -> Boolean) =
             Toggle(material, label, description, node, "towny:town toggle $key") { town?.let(read) }
 

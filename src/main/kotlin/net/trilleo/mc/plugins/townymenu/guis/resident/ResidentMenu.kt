@@ -8,6 +8,7 @@ import net.trilleo.mc.plugins.townymenu.guis.common.Toggle
 import net.trilleo.mc.plugins.townymenu.guis.common.ToggleMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -44,8 +45,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         }
         row.add(PermissionNodes.TOWNY_COMMAND_RESIDENT_SET_PERM,
             Icons.icon(Material.IRON_DOOR, tr("profile.permissions"), tr("profile.permissions-description"))) {
-            PermissionMenu(player, tr("profile.permissions-title"), this, "towny:resident set perm",
-                PermissionNodes.TOWNY_COMMAND_RESIDENT_SET_PERM, true) { TownyAPI.getInstance().getResident(player)?.permissions }.open()
+            permissions().open()
         }
         row.add(PermissionNodes.TOWNY_COMMAND_RESIDENT_SET_ABOUT,
             Icons.icon(Material.WRITABLE_BOOK, tr("profile.about"), tr("profile.about-description"))) { click ->
@@ -68,10 +68,15 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             }
         }
 
+        tutorialButton(44, Tutorial.PROFILE)
         backButton(40)
     }
 
-    private fun toggles(): Menu {
+    fun permissions(): Menu =
+        PermissionMenu(player, tr("profile.permissions-title"), this, "towny:resident set perm",
+            PermissionNodes.TOWNY_COMMAND_RESIDENT_SET_PERM, true) { TownyAPI.getInstance().getResident(player)?.permissions }
+
+    fun toggles(): Menu {
         fun perm(material: Material, key: String, label: String, description: String, node: PermissionNodes, read: (Resident) -> Boolean) =
             Toggle(material, label, description, node, "towny:resident toggle $key") { TownyAPI.getInstance().getResident(player)?.let(read) }
 

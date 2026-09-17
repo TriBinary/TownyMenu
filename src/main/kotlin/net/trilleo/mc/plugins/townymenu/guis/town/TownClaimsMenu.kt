@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.MapMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -83,6 +84,7 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             MapMenu(player, this).open()
         }
 
+        tutorialButton(44, Tutorial.CLAIMS)
         backButton(40)
     }
 

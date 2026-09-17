@@ -6,6 +6,7 @@ import net.trilleo.mc.plugins.townymenu.guis.InvitesMenu
 import net.trilleo.mc.plugins.townymenu.guis.MainMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -29,6 +30,7 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
         button(15, Icons.icon(Material.PAPER, tr("main.invites"), tr("no-town.invites-description"), tr("common.pending", "count" to invites))) {
             InvitesMenu(player, this).open()
         }
+        tutorialButton(26, Tutorial.FINDING_A_TOWN)
         backButton(22)
     }
 }

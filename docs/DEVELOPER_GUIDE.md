@@ -302,6 +302,7 @@ clicks by checking the open inventory's holder — there is no registry and noth
 | `guarded(slot, node, item, action)`     | Like `button`, but shows a grey "no permission" icon without `node`.            |
 | `layout(vararg slots)`                  | Returns a `Layout` that fills the given slots in order, for optional buttons.   |
 | `backButton(slot)`                      | Back arrow to `back`, or a close button when `back` is `null`.                  |
+| `tutorialButton(slot, chapter)`         | Help button opening the tutorial `Chapter` that explains this menu.             |
 | `run(command, probe?, returnTo?, delay)`| Runs a Towny command as the player (see below).                                 |
 | `runAndClose(command)`                  | Closes the menu, then runs the command (teleports, books, chat output).         |
 | `prompt(title, label, …) { text -> }`   | Shows a text-input dialog; Cancel reopens the menu.                             |
@@ -349,6 +350,37 @@ override fun entries(): List<MenuEntry> =
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                   |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.              |
 | `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                    |
+
+### Tutorial (`guis/tutorial`)
+
+`TutorialMenu` is the tutorial hub (main menu button, `/townymenu tutorial`, or the join hint). It lists every
+`Chapter`; `TutorialChapterMenu` shows a chapter's `Lesson`s. Left-clicking a lesson marks it read and opens the menu it
+explains, with the chapter as its back button; right-clicking toggles whether it is read.
+
+All content lives in the `Tutorial` object:
+
+| Type      | Purpose                                                                                                      |
+|:----------|:-------------------------------------------------------------------------------------------------------------|
+| `Chapter` | Icon, title and description keys, an optional `Link`, its lessons, and an optional visibility check.         |
+| `Lesson`  | A stable `id` (`chapter/topic`), icon, title and body keys, an optional `Link`, visibility, and `facts`.     |
+| `Link`    | A condition, the translation key shown when it fails (`tutorial.requires-town`, …), and a menu factory.      |
+
+- **`facts`** returns translated lines with this server's live values (`TownySettings` prices, limits, the viewer's
+  town). Hide money lines when the economy is off; the private `money(amount, key)` helper does this.
+- **Links build menus only when clicked.** `always`, `withTown`, and `withNation` cover most links; menus whose
+  sub-menus a lesson opens directly expose them (`TownMenu.toggles()`, `TownMenu.permissions()`,
+  `NationMenu.toggles()`, `ResidentMenu.toggles()`, `ResidentMenu.permissions()`).
+- **Read progress** is a string list of lesson ids in the player's persistent data (`townymenu:tutorial-read`). Never
+  rename a lesson id, or players lose that lesson's progress. Ids use `/` so `LangFilesTest` doesn't read them as
+  translation keys.
+- Lessons and chapters whose visibility check fails (economy topics without an economy) are hidden and don't count
+  towards progress.
+- `TutorialHintListener` suggests the tutorial to players without a town when they join, unless
+  `tutorial-join-hint` is `false` or they have read every lesson.
+
+When a change adds a Towny feature to a menu, add or update its lesson in `Tutorial` and in both language files
+(`tutorial.<chapter>.<topic>` and `tutorial.<chapter>.<topic>-body`). New feature menus should place a
+`tutorialButton` in a free bottom-row slot (the bottom-right corner, or slot 52 in a `PagedMenu`).
 
 ### Admin Menus (`guis/admin`)
 

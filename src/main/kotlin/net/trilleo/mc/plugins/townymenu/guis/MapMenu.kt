@@ -8,6 +8,7 @@ import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
 import net.trilleo.mc.plugins.townymenu.utils.tr
@@ -57,6 +58,7 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
         }
         backButton(49)
         button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("map.refresh-description"))) { render() }
+        tutorialButton(53, Tutorial.GETTING_STARTED)
     }
 
     private fun cell(coord: WorldCoord, plot: TownBlock?, viewer: Resident?, here: Boolean): ItemStack {

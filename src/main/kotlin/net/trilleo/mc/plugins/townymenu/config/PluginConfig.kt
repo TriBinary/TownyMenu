@@ -41,6 +41,11 @@ class PluginConfig(private val plugin: JavaPlugin) {
         get() = plugin.config.getBoolean("sneak-swap-hand-shortcut", true)
         set(value) = save("sneak-swap-hand-shortcut", value)
 
+    /** Whether players without a town are pointed to the tutorial when they join (`tutorial-join-hint`). */
+    var tutorialJoinHint: Boolean
+        get() = plugin.config.getBoolean("tutorial-join-hint", true)
+        set(value) = save("tutorial-join-hint", value)
+
     private fun save(path: String, value: Any) {
         plugin.config.set(path, value)
         plugin.saveConfig()

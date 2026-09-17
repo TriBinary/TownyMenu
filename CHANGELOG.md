@@ -11,6 +11,20 @@
 + Added native confirm/cancel dialogs for Towny confirmations started from a menu.
 + Added native text-input dialogs for names, amounts, boards, and other values.
 
+#### Tutorial
+
++ Added a tutorial covering every Towny feature worth knowing, in nine chapters: getting started, finding a town,
+  running a town, claiming land, plots, permissions and protection, nations, money and taxes, and your profile.
+    + Open it with `/tm tutorial`, the Tutorial button in the main menu, or the Tutorial button in each feature menu,
+      which jumps straight to the chapter explaining that menu.
+    + Left-click a lesson to open the menu it explains; lessons say what you need first, such as joining a town.
+    + Lessons show this server's live values, such as the cost of founding a town, claim prices, upkeep, and the time
+      of the new day. Money topics are hidden when the server has no economy.
+    + Your progress is saved: read lessons are ticked, chapters show how many you have read, and Continue Reading
+      opens the next unread chapter.
++ Players without a town are pointed to the tutorial when they join, until they have read every lesson. Turn this off
+  with `tutorial-join-hint` in `config.yml` or in the admin TownyMenu settings.
+
 #### Town Menu
 
 + Added a town menu covering residents, ranks, titles, invites, kicking, and handing over the mayorship.
@@ -89,6 +103,8 @@
 
 #### Misc
 
++ `copyPlugin` now also copies the Towny version from `gradle.properties` into the test server, replacing any other
+  Towny version. `startServer` passes `--nogui`, forwards console input, and explains when `run/` has no Paper jar.
 + Set up the TownyMenu project from the Paper plugin template.
     + Added Towny as a required dependency.
     + Added build and release workflows.

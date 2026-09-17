@@ -6,6 +6,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
 import net.trilleo.mc.plugins.townymenu.utils.tr
@@ -32,6 +33,7 @@ class TownListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("to
             .map { town -> MenuEntry({ Icons.town(player, town, "", tr("common.click-details")) }) { TownInfoMenu(player, town, this).open() } }
 
     override fun controls() {
+        tutorialButton(52, Tutorial.FINDING_A_TOWN)
         val sorts = Sort.entries.filter { it != Sort.BALANCE || TownyUtil.economy }
         button(47, itemStack(Material.HOPPER) {
             name(tr("sort.current", "sort" to tr(sort.label)))

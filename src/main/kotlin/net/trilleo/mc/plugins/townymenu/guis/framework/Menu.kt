@@ -6,6 +6,8 @@ import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.Chapter
+import net.trilleo.mc.plugins.townymenu.guis.tutorial.TutorialChapterMenu
 import net.trilleo.mc.plugins.townymenu.utils.DialogUtil
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
@@ -109,6 +111,15 @@ abstract class Menu(
             button(slot, itemStack(Material.BARRIER) { name(tr("menu.close")) }) { player.closeInventory() }
         } else {
             button(slot, itemStack(Material.ARROW) { name(tr("menu.back")) }) { target.open() }
+        }
+    }
+
+    /** Places a help button opening the tutorial [chapter] that explains this menu. */
+    protected fun tutorialButton(slot: Int, chapter: Chapter) {
+        button(slot, Icons.icon(Material.KNOWLEDGE_BOOK, tr("tutorial.help"), tr("tutorial.help-description"),
+            tr("tutorial.chapter-line", "chapter" to tr(chapter.title)),
+            tr("tutorial.progress", "read" to chapter.readCount(player), "total" to chapter.lessons.size))) {
+            TutorialChapterMenu(player, chapter, this).open()
         }
     }
 
