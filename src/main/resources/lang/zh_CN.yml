@@ -165,6 +165,7 @@ map:
   outpost: "<light_purple>前哨"
   for-sale: "<green>出售中: <white>{price}"
   click-town: "<yellow>点击查看城镇"
+  right-buy: "<green>右键购买此地块"
 
 invites:
   title: "邀请"
@@ -595,7 +596,7 @@ plot:
   type-description: "商店、大使馆、竞技场、农场、监狱等。"
   rename: "<yellow>重命名地块"
   rename-title: "重命名地块"
-  rename-description: "玩家走进地块时会显示此名称。"
+  rename-description: "玩家走进地块时会显示此名称。右键移除名称。"
   plot-name: "地块名称"
   settings: "<yellow>地块设置"
   settings-title: "地块设置"
@@ -624,6 +625,15 @@ plot:
   jail-cells: "<gold>牢房"
   jail-cells-description: "左键在你所站位置添加牢房，右键移除你所站位置的牢房。"
   jail-cells-count: "<gray>牢房：<white>{count}"
+  hud: "<aqua>地块信息面板"
+  hud-description: "显示或隐藏侧边栏，展示你所在地块的主人、类型、价格和权限。"
+  area: "<gold>批量地块操作"
+  area-description: "购买、出售或放弃你周围一片区域内的所有地块。"
+  click-info: "<yellow>点击在聊天栏显示 Towny 的地块信息"
+  make-outpost: "<light_purple>设为前哨"
+  make-outpost-description: "把此领地设为前哨，并以你所站位置作为前哨出生点。"
+  outpost-spawn: "<light_purple>移动前哨出生点"
+  outpost-spawn-description: "把此前哨的出生点移到你所站的位置。"
 
 # Towny 内置的地块类型。Towny 配置中的自定义类型会显示其原名，除非在此添加。
 plot-type:
@@ -670,6 +680,28 @@ plot-trust:
   trust-online-description: "允许一名在线玩家在此地块上建造。"
   group: "<gold>地块组：{group}"
   group-description: "此地块的信任作用于其所在组的全部 {count} 个地块。"
+
+plot-area:
+  title: "批量地块操作"
+  info: "<gold>你周围的区域"
+  info-description: "选择形状和半径，然后对该区域内的所有地块执行操作。半径 1 覆盖你周围 3×3 个区块。"
+  shape: "<yellow>形状"
+  square: "方形"
+  circle: "圆形"
+  radius: "<yellow>半径"
+  radius-title: "区域半径"
+  radius-description: "区域从你所在位置向外延伸的区块数。"
+  buy: "<green>购买地块"
+  buy-description: "购买区域内所有你可以购买的出售中地块。"
+  sell: "<gold>出售地块"
+  sell-title: "出售区域内地块"
+  sell-description: "以同一价格出售区域内所有你可以出售的地块。"
+  not-for-sale: "<red>停止出售地块"
+  not-for-sale-description: "停止出售区域内所有你可以管理的地块。"
+  give-up: "<red>放弃地块"
+  give-up-description: "把你在区域内拥有的地块归还城镇。"
+  give-up-all: "<dark_red>放弃我的所有地块"
+  give-up-all-description: "把你在任何地方拥有的所有地块归还给所属城镇。"
 
 plot-overrides:
   title: "玩家单独权限"
@@ -1132,7 +1164,7 @@ tutorial:
     wilderness: "荒野"
     wilderness-body: "未被占领的土地不属于任何人。视世界设置而定，你也许可以在那里建造，但建筑不受任何保护。加入城镇才能保护你的成果。"
     map: "地图"
-    map-body: "地图显示你周围的区块，并按归属着色：你的城镇、你的地块、你的国家、盟友、敌人以及其他城镇。发光的格子正在出售。点击已占领的格子可查看所属城镇。"
+    map-body: "地图显示你周围的区块，并按归属着色：你的城镇、你的地块、你的国家、盟友、敌人以及其他城镇。发光的格子正在出售。点击已占领的格子可查看所属城镇，右键出售中的格子即可购买。"
     invites: "邀请"
     invites-body: "城镇邀请玩家，国家邀请城镇，国家之间还会发送结盟请求。所有待处理的邀请都在邀请菜单中，你可以在那里接受或拒绝。"
 
@@ -1184,7 +1216,7 @@ tutorial:
     unclaim: "放弃土地"
     unclaim-body: "放弃不再需要的区块可以腾出领地名额。主区块不能被放弃。有些服务器会慢慢把被放弃的土地恢复原貌。"
     outposts: "前哨"
-    outposts-body: "前哨是远离城镇的领地，例如远处的矿场或农场。每个前哨都有居民可以传送过去的出生点，还可以在其周围继续占领土地。"
+    outposts-body: "前哨是远离城镇的领地，例如远处的矿场或农场。每个前哨都有居民可以传送过去的出生点，还可以在其周围继续占领土地。镇长也可以在地块菜单中把现有领地设为前哨，或移动前哨的出生点。"
     bonus: "额外领地"
     bonus-body: "领地达到上限了？用城镇银行的钱购买额外领地。每次购买后价格可能上涨。"
     cede: "割让土地"
@@ -1194,11 +1226,11 @@ tutorial:
 
   plots:
     title: "<yellow>地块"
-    description: "拥有、购买与出售地块，地块类型、设置、信任、入镇天数限制以及地块组。"
+    description: "拥有、购买与出售地块，批量地块操作，地块类型、设置、信任、入镇天数限制以及地块组。"
     what: "什么是地块？"
-    what-body: "城镇占领的每个区块都是一个地块。在居民购买之前，地块归城镇所有；购买后由地块主决定谁可以在上面建造。站在地块中打开地块菜单即可查看其主人。"
+    what-body: "城镇占领的每个区块都是一个地块。在居民购买之前，地块归城镇所有；购买后由地块主决定谁可以在上面建造。站在地块中打开地块菜单即可查看其主人，点击地块图标可查看 Towny 的完整地块信息，或开启地块信息面板在行走时查看。"
     buy: "购买地块"
-    buy-body: "出售中的地块在地图上会发光。走进地块，打开地块菜单并选择购买地块，支付价格后即可成为地块主。"
+    buy-body: "出售中的地块在地图上会发光，在地图上右键即可远程购买。也可以走进地块，打开地块菜单并选择购买地块，支付价格后即可成为地块主。"
     sell: "出售与放弃"
     sell-body: "地块主和镇长可以出售地块，价格设为 0 即免费赠送。放弃地块会把它归还城镇。镇长可以驱逐地块主，右键“驱逐所有者”还会立即重新出售该地块。"
     types: "地块类型"
@@ -1211,6 +1243,8 @@ tutorial:
     groups-body: "地块组把多个地块捆绑在一起，统一出售和管理，就像一座大房子。地块属于某个组时，它的出售、类型、设置、权限、信任和入镇天数限制都会作用于整个组。街区则为一片更大的地块区域命名，例如商业区。"
     join-days: "入镇天数限制"
     join-days-body: "镇长可以把地块留给新居民或老居民：设置购买者至少或最多需要在城镇居住的天数，也可以两者都设。"
+    area: "批量地块操作"
+    area-body: "在地块菜单中选择你周围的方形或圆形区域及半径，即可购买其中所有出售中的地块、出售或停止出售你的地块，或放弃这些地块。你也可以一次放弃自己拥有的所有地块。"
 
   protection:
     title: "<red>权限与保护"

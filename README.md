@@ -28,13 +28,13 @@
   colour, and leaving or deleting the nation.
 - **Plot menu** — For the plot you stand in: buy, sell, give up, evict (and resell), plot type, name,
   PvP/fire/explosion/mob/tax settings, build permissions and per-player overrides, trusted players, join-day limits,
-  jail cells, plot groups and districts, and clearing the plot. On a plot in a group, these settings change the whole
-  group.
+  jail cells, outposts, plot groups and districts, clearing the plot, the plot HUD, and buying, selling, or giving up
+  every plot in an area at once. On a plot in a group, these settings change the whole group.
 - **Profile menu** — Friends, personal plot permissions, a bio, bail, spawn, every personal toggle (border titles,
   auto map, auto claim, plot borders, info tool, chat spy, admin bypass, and more), and clearing or resetting all
   modes at once.
 - **Map** — A 9×5 chunk map around you, coloured by your town, your plots, your nation, allies, and enemies, with plots
-  for sale highlighted.
+  for sale highlighted; right-click one to buy it.
 - **Directories** — Browse and rank every town and nation by residents, claims, bank balance, and more; visit, join,
   donate, buy a town that is for sale, or propose alliances.
 - **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place.

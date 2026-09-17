@@ -28,6 +28,16 @@
 + Added Player Overrides to plot permissions: add or remove players with their own permissions on a plot, and open
   Towny's editor to change them.
 + Right-clicking Evict Owner now evicts the owner and puts the plot back up for sale.
++ Added Many Plots at Once: buy, sell, stop selling, or give up every plot in a square or circle around you, or give up
+  all your plots.
++ Added Make Outpost and Move Outpost Spawn for your town's claims.
++ Added a Plot HUD switch, and clicking the plot icon shows Towny's plot info in chat.
++ Right-clicking Rename Plot removes the plot's name.
++ Putting a plot up for sale now suggests the town's price for that plot type instead of 0.
+
+#### Map
+
++ Right-clicking a plot for sale on the map buys it without walking there.
 
 #### Resident Menu
 
@@ -36,10 +46,11 @@
 
 #### Tutorial
 
-+ Added lessons on announcements, merging towns, ceding land, taking over claims, join-day limits, player overrides,
-  jailing players, and nation sanctions.
++ Added lessons on announcements, merging towns, ceding land, taking over claims, many plots at once, join-day limits,
+  player overrides, jailing players, and nation sanctions.
     + The ruins, plot selling, plot groups, and display lessons now cover reclaiming, evicting for resale, group-wide
       settings, and display modes.
+    + The map, plot, buying, and outpost lessons now cover buying from the map, the Plot HUD, and making outposts.
 
 ### Improvements
 

@@ -13,6 +13,7 @@ import net.trilleo.mc.plugins.townymenu.guis.MapMenu
 import net.trilleo.mc.plugins.townymenu.guis.common.BankMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.*
+import net.trilleo.mc.plugins.townymenu.guis.plot.PlotAreaMenu
 import net.trilleo.mc.plugins.townymenu.guis.plot.PlotGroupMenu
 import net.trilleo.mc.plugins.townymenu.guis.plot.PlotMenu
 import net.trilleo.mc.plugins.townymenu.guis.resident.FriendsMenu
@@ -413,6 +414,9 @@ object Tutorial {
             Lesson(
                 "plots/sell", Material.GREEN_BANNER, "tutorial.plots.sell", "tutorial.plots.sell-body",
                 always { player, back -> PlotMenu(player, back) }),
+            Lesson(
+                "plots/area", Material.MAP, "tutorial.plots.area", "tutorial.plots.area-body",
+                always { player, back -> PlotAreaMenu(player, back) }),
             Lesson(
                 "plots/types", Material.OAK_SIGN, "tutorial.plots.types", "tutorial.plots.types-body",
                 always { player, back -> PlotMenu(player, back) }),

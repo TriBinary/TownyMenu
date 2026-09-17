@@ -165,6 +165,7 @@ map:
   outpost: "<light_purple>Outpost"
   for-sale: "<green>For sale: <white>{price}"
   click-town: "<yellow>Click to view town"
+  right-buy: "<green>Right-click to buy this plot"
 
 invites:
   title: "Invites"
@@ -595,7 +596,7 @@ plot:
   type-description: "Shops, embassies, arenas, farms, jails, and more."
   rename: "<yellow>Rename Plot"
   rename-title: "Rename Plot"
-  rename-description: "Shown to players as they walk in."
+  rename-description: "Shown to players as they walk in. Right-click to remove the name."
   plot-name: "Plot name"
   settings: "<yellow>Plot Settings"
   settings-title: "Plot Settings"
@@ -624,6 +625,15 @@ plot:
   jail-cells: "<gold>Jail Cells"
   jail-cells-description: "Left-click to add a cell where you stand. Right-click to remove the cell where you stand."
   jail-cells-count: "<gray>Cells: <white>{count}"
+  hud: "<aqua>Plot HUD"
+  hud-description: "Show or hide a sidebar with the plot you are in: owner, type, price, and permissions."
+  area: "<gold>Many Plots at Once"
+  area-description: "Buy, sell, or give up every plot in an area around you."
+  click-info: "<yellow>Click to show Towny's plot info in chat"
+  make-outpost: "<light_purple>Make Outpost"
+  make-outpost-description: "Turn this claim into an outpost with a spawn where you stand."
+  outpost-spawn: "<light_purple>Move Outpost Spawn"
+  outpost-spawn-description: "Move this outpost's spawn to where you stand."
 
 # Towny's built-in plot types. Custom types from Towny's config show their own name unless added here.
 plot-type:
@@ -670,6 +680,28 @@ plot-trust:
   trust-online-description: "Let an online player build on this plot."
   group: "<gold>Group: {group}"
   group-description: "Trust on this plot applies to all {count} plots in its group."
+
+plot-area:
+  title: "Many Plots at Once"
+  info: "<gold>Area Around You"
+  info-description: "Choose a shape and radius, then act on every plot in that area. A radius of 1 covers the 3×3 chunks around you."
+  shape: "<yellow>Shape"
+  square: "Square"
+  circle: "Circle"
+  radius: "<yellow>Radius"
+  radius-title: "Area Radius"
+  radius-description: "How many chunks the area reaches from you."
+  buy: "<green>Buy Plots"
+  buy-description: "Buy every plot for sale in the area that you are allowed to buy."
+  sell: "<gold>Sell Plots"
+  sell-title: "Sell Plots in Area"
+  sell-description: "Put every plot you may sell in the area up for sale at one price."
+  not-for-sale: "<red>Stop Selling Plots"
+  not-for-sale-description: "Take every plot you may manage in the area off sale."
+  give-up: "<red>Give Up Plots"
+  give-up-description: "Return the plots you own in the area to the town."
+  give-up-all: "<dark_red>Give Up All My Plots"
+  give-up-all-description: "Return every plot you own, anywhere, to its town."
 
 plot-overrides:
   title: "Player Overrides"
@@ -1132,7 +1164,7 @@ tutorial:
     wilderness: "The Wilderness"
     wilderness-body: "Unclaimed land belongs to no one. Depending on the world, you may be able to build there, but nothing you build is protected. Settle in a town to keep your work safe."
     map: "The Map"
-    map-body: "The map shows the chunks around you, coloured by who owns them: your town, your plots, your nation, allies, enemies, and other towns. Glowing tiles are for sale. Click a claimed tile to view its town."
+    map-body: "The map shows the chunks around you, coloured by who owns them: your town, your plots, your nation, allies, enemies, and other towns. Glowing tiles are for sale. Click a claimed tile to view its town, or right-click a tile for sale to buy it."
     invites: "Invites"
     invites-body: "Towns invite players, nations invite towns, and nations send each other alliance requests. Every pending invitation waits in the Invites menu, where you can accept or decline it."
 
@@ -1184,7 +1216,7 @@ tutorial:
     unclaim: "Unclaiming Land"
     unclaim-body: "Unclaim chunks you no longer need to free their claim slots. The home block can't be unclaimed. Some servers slowly restore unclaimed land to how it looked before."
     outposts: "Outposts"
-    outposts-body: "An outpost is a claim away from your town, such as a distant mine or farm. Each outpost has a spawn that residents can teleport to, and more land can be claimed around it."
+    outposts-body: "An outpost is a claim away from your town, such as a distant mine or farm. Each outpost has a spawn that residents can teleport to, and more land can be claimed around it. A mayor can also turn an existing claim into an outpost, or move an outpost's spawn, from the Plot menu."
     bonus: "Bonus Claims"
     bonus-body: "Reached your claim limit? Buy bonus claims with money from the town bank. The price can rise with each one you buy."
     cede: "Ceding Land"
@@ -1194,11 +1226,11 @@ tutorial:
 
   plots:
     title: "<yellow>Plots"
-    description: "Owning, buying, and selling plots, plot types, settings, trust, join-day limits, and groups."
+    description: "Owning, buying, and selling plots, many plots at once, plot types, settings, trust, join-day limits, and groups."
     what: "What Is a Plot?"
-    what-body: "Every chunk a town claims is a plot. The town owns it until a resident buys it, and then the owner decides who may build there. Open the Plot menu while standing in a plot to see who owns it."
+    what-body: "Every chunk a town claims is a plot. The town owns it until a resident buys it, and then the owner decides who may build there. Open the Plot menu while standing in a plot to see who owns it, click its icon for Towny's full plot info, or turn on the Plot HUD to see it while you walk."
     buy: "Buying a Plot"
-    buy-body: "Plots for sale glow on the map. Walk into one, open the Plot menu, and choose Buy Plot to pay the price and become its owner."
+    buy-body: "Plots for sale glow on the map; right-click one there to buy it from afar. Or walk into it, open the Plot menu, and choose Buy Plot to pay the price and become its owner."
     sell: "Selling and Giving Up"
     sell-body: "Owners and mayors can put a plot up for sale; a price of 0 gives it away. Give Up returns your plot to the town. Mayors can evict an owner, and right-clicking Evict Owner puts the plot straight back up for sale."
     types: "Plot Types"
@@ -1211,6 +1243,8 @@ tutorial:
     groups-body: "A plot group bundles several plots so they are sold and managed together, like one big house. While a plot is in a group, its sale, type, settings, permissions, trust, and join-day limits change the whole group. A district names a larger area of plots, such as a market quarter."
     join-days: "Join-Day Limits"
     join-days-body: "Mayors can keep a plot for newcomers or for long-time residents by setting the fewest days, the most days, or both, that a buyer must have lived in the town."
+    area: "Many Plots at Once"
+    area-body: "From the Plot menu, pick a square or circle and a radius around you, then buy every plot for sale in it, put your plots up for sale or take them off sale, or give them up. You can also give up every plot you own at once."
 
   protection:
     title: "<red>Permissions & Protection"
