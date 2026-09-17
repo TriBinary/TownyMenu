@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Technical Details
+
+#### Misc
+
++ Releases are now published by the repository a version bump is merged into, instead of by pushing a tag.
+    + The release workflow creates the `vX.Y.Z` tag itself, skips forks, and can be re-run by hand.
+
 ## Version 0.1.0
 
 ### New Features

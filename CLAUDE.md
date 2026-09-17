@@ -158,10 +158,12 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
   flows into the jar filename and, through `processResources`, into `plugin.yml` (`version: ${projectVersion}`) — never
   hardcode a version in `plugin.yml` or `build.gradle.kts`.
 - [.github/workflows/build.yml](.github/workflows/build.yml) builds every push and pull request.
-- Releases are made by tagging `vX.Y.Z`: [.github/workflows/release.yml](.github/workflows/release.yml) builds the jar,
-  uses the matching `## Version X.Y.Z` section of `CHANGELOG.md` as the release notes, and attaches the jar. See
-  [docs/RELEASING.md](docs/RELEASING.md). **Never tag or push tags unless explicitly asked** — pushing a tag publishes a
-  release.
+- Releases are published when a commit that changes `plugin_version` lands on `master`:
+  [.github/workflows/release.yml](.github/workflows/release.yml) builds the jar, uses the matching
+  `## Version X.Y.Z` section of `CHANGELOG.md` as the release notes, creates the `vX.Y.Z` tag, and attaches the jar.
+  It skips forks, so the release appears in the organization repository the pull request is merged into. It does
+  nothing if the tag already exists. See [docs/RELEASING.md](docs/RELEASING.md). **Never create tags, and never merge
+  a version bump into the organization repository, unless explicitly asked** — that publishes a release.
 
 ## Commit Convention
 
