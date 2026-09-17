@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
 
 /** Manages any resident as an admin (`/townyadmin resident`, `/townyadmin set`). */
 class AdminResidentMenu(player: Player, private val target: Resident, back: Menu) :
-    Menu(player, player.tr("admin-resident.title", "name" to TownyUtil.name(target.name)), 5, back) {
+    Menu(player, player.tr("admin-resident.title", "name" to TownyUtil.name(target.name)), 6, back) {
 
     private val exists: Boolean
         get() = TownyAPI.getInstance().getResident(target.uuid) != null
@@ -21,7 +21,7 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
     override fun build() {
         if (!exists) {
             button(22, Icons.icon(Material.BARRIER, tr("admin.gone")))
-            return backButton(40)
+            return backButton(49)
         }
 
         button(4, Icons.resident(player, target, *buildList {
@@ -126,7 +126,7 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
             run("towny:townyadmin resident ${target.name} delete", ::exists, returnTo = back ?: this)
         }
 
-        backButton(40)
+        backButton(49)
     }
 
     private fun editTitle(field: String, clear: Boolean, title: String, label: String, current: () -> String) {

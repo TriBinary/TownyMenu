@@ -12,12 +12,12 @@ import org.bukkit.entity.Player
 
 /** Public view of any town: visit, join, donate, buy, or invite it to the viewer's nation. */
 class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
-    Menu(player, TownyUtil.name(town.name), 4, back) {
+    Menu(player, TownyUtil.name(town.name), 5, back) {
 
     override fun build() {
         if (!town.exists()) {
             button(13, Icons.icon(Material.BARRIER, tr("town-info.gone")))
-            return backButton(31)
+            return backButton(40)
         }
         button(4, Icons.town(player, town, tr("common.founded", "date" to TownyUtil.date(town.registered))))
 
@@ -106,6 +106,6 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
             }
         }
 
-        backButton(31)
+        backButton(40)
     }
 }

@@ -13,7 +13,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Shown to players without a town: found one, browse towns to join, or answer invites. */
-class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.title"), 3, back) {
+class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.title"), 4, back) {
 
     override fun build() {
         val price =
@@ -45,7 +45,7 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
         ) {
             InvitesMenu(player, this).open()
         }
-        tutorialButton(26, Tutorial.FINDING_A_TOWN)
-        backButton(22)
+        tutorialButton(35, Tutorial.FINDING_A_TOWN)
+        backButton(31)
     }
 }

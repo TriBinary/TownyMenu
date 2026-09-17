@@ -11,7 +11,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Edits TownyMenu's own `config.yml`; every change is saved and reloaded like `/townymenu reload`. */
-class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-plugin.title"), 3, back) {
+class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-plugin.title"), 4, back) {
 
     private val config
         get() = Main.instance.pluginConfig
@@ -73,7 +73,7 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
             config.tutorialJoinHint = !config.tutorialJoinHint
             apply()
         }
-        backButton(22)
+        backButton(31)
     }
 
     private fun apply() {

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Improvements
+
+#### Misc
+
++ Menus now leave an empty row between their buttons and the bottom row holding the back button.
+    + Lists show four rows of entries per page instead of five.
+
+### Fixes
+
+#### Misc
+
++ Fixed the back button covering the Outsiders: Switch button in the permissions menu.
+
 ## Version 0.1.1
 
 ### Technical Details

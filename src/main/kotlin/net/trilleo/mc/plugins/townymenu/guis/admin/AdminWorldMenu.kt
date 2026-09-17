@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
 
 /** One world's Towny settings (`/townyworld`): toggles, wilderness permissions and name, and resetting to defaults. */
 class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) :
-    Menu(player, player.tr("admin-world.title", "world" to TownyUtil.text(world.name)), 4, back) {
+    Menu(player, player.tr("admin-world.title", "world" to TownyUtil.text(world.name)), 5, back) {
 
     private val command = "towny:townyworld ${world.name}"
 
@@ -66,7 +66,7 @@ class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) 
             }
         }
 
-        backButton(31)
+        backButton(40)
     }
 
     private fun snapshot(): List<Any?> = toggleList().map { it.value() } + world.unclaimedZoneName

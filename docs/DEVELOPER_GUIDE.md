@@ -281,6 +281,9 @@ permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/
   can't intercept the command.
 - **Grey out what the player can't do.** Use `guarded(slot, PermissionNodes.X, item) { … }` (or `Layout.add(node, …)`)
   with the same node Towny's command checks.
+- **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom
+  row; leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such
+  as the chunk map and the 4×4 permission grid, skip it.
 - **Escape player-written text.** Pass names, boards, titles, and tags through `TownyUtil.name()` / `TownyUtil.text()`
   before embedding them in MiniMessage.
 - **Translate every string.** Icon names, lore, titles, and prompts come from `tr("key")`, never from Kotlin literals.
@@ -325,9 +328,9 @@ town, joining a town).
 
 ### PagedMenu and ListMenu
 
-`PagedMenu(player, title, back)` is a six-row menu. Override `entries()` to return `MenuEntry` objects; the top five
-rows show one page, slot 45/53 page back and forth, 49 is the back button, and `controls()` may place extra buttons in
-46–48 and 50–52. `MenuEntry` takes a **lambda** that builds the icon, so only entries on the visible page are built:
+`PagedMenu(player, title, back)` is a six-row menu. Override `entries()` to return `MenuEntry` objects; the top four
+rows show one page, the fifth row stays empty, slot 45/53 page back and forth, 49 is the back button, and `controls()`
+may place extra buttons in 46–48 and 50–52. `MenuEntry` takes a **lambda** that builds the icon, so only entries on the visible page are built:
 
 ```kotlin
 override fun entries(): List<MenuEntry> =

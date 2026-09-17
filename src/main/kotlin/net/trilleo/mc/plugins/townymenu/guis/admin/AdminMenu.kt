@@ -18,12 +18,12 @@ import org.bukkit.entity.Player
  * The server admin hub, opened by `/townymenu admin` or the main menu. Only players with
  * [PERMISSION] may use it; each action still checks the Towny node of the command it runs.
  */
-class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.title"), 4, back) {
+class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.title"), 5, back) {
 
     override fun build() {
         if (!player.hasPermission(PERMISSION)) {
             button(13, Icons.icon(Material.BARRIER, tr("menu.no-permission")))
-            return backButton(31)
+            return backButton(40)
         }
 
         button(10, Icons.icon(Material.COMPARATOR, tr("admin.config"), tr("admin.config-description"))) {
@@ -86,7 +86,7 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
             AdminResidentListMenu(player, this).open()
         }
 
-        backButton(31)
+        backButton(40)
     }
 
     private fun worlds(): Menu = ListMenu(player, tr("admin-world.list-title"), this) { list ->

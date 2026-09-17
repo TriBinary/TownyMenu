@@ -19,13 +19,13 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** The entry point opened by `/townymenu` or sneak + swap-hand. */
-class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
+class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
 
     override fun build() {
         val resident = resident
         if (resident == null) {
             button(22, Icons.icon(Material.BARRIER, tr("main.unregistered"), tr("main.unregistered-hint")))
-            return backButton(40)
+            return backButton(49)
         }
         val town = resident.townOrNull
         val nation = resident.nationOrNull
@@ -101,7 +101,7 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
         }
 
         if (player.hasPermission(AdminMenu.PERMISSION)) {
-            button(44, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) {
+            button(53, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) {
                 AdminMenu(
                     player,
                     this
@@ -109,6 +109,6 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
             }
         }
 
-        backButton(40)
+        backButton(49)
     }
 }

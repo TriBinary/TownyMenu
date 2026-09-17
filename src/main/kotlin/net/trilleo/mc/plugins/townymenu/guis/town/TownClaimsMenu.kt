@@ -13,13 +13,13 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Claiming, unclaiming, outposts, and bonus claim purchases for the viewer's town. */
-class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claims.title"), 5, back) {
+class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claims.title"), 6, back) {
 
     private val town: Town?
         get() = resident?.townOrNull
 
     override fun build() {
-        val town = town ?: return backButton(40)
+        val town = town ?: return backButton(49)
 
         button(4, Icons.icon(Material.GRASS_BLOCK, tr("claims.info"), null, *buildList {
             add(tr("claims.claimed", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))
@@ -126,8 +126,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             MapMenu(player, this).open()
         }
 
-        tutorialButton(44, Tutorial.CLAIMS)
-        backButton(40)
+        tutorialButton(53, Tutorial.CLAIMS)
+        backButton(49)
     }
 
     private companion object {

@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Plot group and district management for the plot the viewer is standing in. */
-class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-group.title"), 5, back) {
+class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-group.title"), 6, back) {
 
     private val plot: TownBlock?
         get() = TownyAPI.getInstance().getTownBlock(player)
@@ -21,7 +21,7 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
         val plot = plot
         if (plot == null) {
             button(22, Icons.icon(Material.BARRIER, tr("plot-group.not-in-town")))
-            return backButton(40)
+            return backButton(49)
         }
         val group = plot.plotObjectGroup
         val district = plot.district
@@ -34,7 +34,7 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
             tr("plot.group", "group" to (group?.let { TownyUtil.name(it.name) } ?: tr("common.none"))),
             tr("plot.district", "district" to (district?.let { TownyUtil.name(it.name) } ?: tr("common.none")))))
 
-        val groups = layout(10, 11, 12, 13, 14, 15, 16)
+        val groups = layout(19, 20, 21, 22, 23, 24, 25)
         groups.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_ADD,
             Icons.icon(Material.CHEST, tr("plot-group.add"), tr("plot-group.add-description"))
@@ -128,7 +128,7 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
             }
         }
 
-        tutorialButton(44, Tutorial.PLOTS)
-        backButton(40)
+        tutorialButton(53, Tutorial.PLOTS)
+        backButton(49)
     }
 }

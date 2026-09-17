@@ -15,7 +15,7 @@ class MenuEntry(icon: () -> ItemStack, val action: ((ClickType) -> Unit)? = null
 }
 
 /**
- * A six-row menu that pages through [entries]. The top five rows hold entries;
+ * A six-row menu that pages through [entries]. The top four rows hold entries and the fifth stays empty;
  * the bottom row holds previous/next arrows, the back button (slot 49), and
  * any extra buttons placed by [controls] in slots 46–48 and 50–52.
  */
@@ -78,7 +78,7 @@ abstract class PagedMenu(player: Player, title: String, back: Menu?) : Menu(play
     }
 
     companion object {
-        private const val PAGE_SIZE = 45
+        private const val PAGE_SIZE = 36
     }
 }
 

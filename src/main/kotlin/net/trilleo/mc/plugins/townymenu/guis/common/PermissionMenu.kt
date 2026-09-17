@@ -39,7 +39,7 @@ class PermissionMenu(
 
         ACTIONS.forEachIndexed { column, action ->
             val allOn = LEVELS.all { perms.getPerm(it, action) }
-            guarded(11 + column, node, itemStack(ACTION_ICONS.getValue(action)) {
+            guarded(2 + column, node, itemStack(ACTION_ICONS.getValue(action)) {
                 name("<gold>${actionName(action)}")
                 loreWrapped("<gray>${actionDescription(action)}")
                 lore("", tr(if (allOn) "perm.everyone-off" else "perm.everyone-on"))
@@ -48,7 +48,7 @@ class PermissionMenu(
 
         LEVELS.forEachIndexed { row, level ->
             val allOn = ACTIONS.all { perms.getPerm(level, it) }
-            guarded(19 + row * 9, node, itemStack(LEVEL_ICONS.getValue(level)) {
+            guarded(10 + row * 9, node, itemStack(LEVEL_ICONS.getValue(level)) {
                 name("<aqua>${levelName(level)}")
                 lore(tr(if (allOn) "perm.every-action-off" else "perm.every-action-on"))
             }) { run("$command ${level.arg} ${if (allOn) "off" else "on"}", ::snapshot) }
@@ -62,7 +62,7 @@ class PermissionMenu(
                         tr("icon.click-toggle")
                     )
                 }
-                guarded(20 + row * 9 + column, node, cell) {
+                guarded(11 + row * 9 + column, node, cell) {
                     run("$command ${level.arg} ${action.arg} ${if (allowed) "off" else "on"}", ::snapshot)
                 }
             }

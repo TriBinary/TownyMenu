@@ -10,7 +10,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** The tutorial hub: every chapter with the viewer's reading progress. */
-class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutorial.title"), 5, back) {
+class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutorial.title"), 6, back) {
 
     override fun build() {
         val chapters = Tutorial.visibleChapters
@@ -41,9 +41,9 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
                 TutorialChapterMenu(player, next, this).open()
             }
         }
-        backButton(40)
+        backButton(49)
         if (read > 0) {
-            button(42, Icons.icon(Material.WATER_BUCKET, tr("tutorial.reset"), tr("tutorial.reset-description"))) {
+            button(51, Icons.icon(Material.WATER_BUCKET, tr("tutorial.reset"), tr("tutorial.reset-description"))) {
                 DialogUtil.confirm(
                     player, MiniMessage.miniMessage().deserialize(tr("tutorial.reset-confirm")), null,
                     onYes = {

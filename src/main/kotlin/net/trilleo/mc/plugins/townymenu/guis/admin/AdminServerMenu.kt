@@ -11,7 +11,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Server-wide Towny actions (`/townyadmin`): new day, backups, reloads, and global toggles. */
-class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-server.title"), 5, back) {
+class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-server.title"), 6, back) {
 
     override fun build() {
         guarded(
@@ -138,7 +138,7 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOGGLE_REGENERATIONS
         )
 
-        backButton(40)
+        backButton(49)
     }
 
     private fun reload(slot: Int, material: Material, target: String, name: String, description: String) {
