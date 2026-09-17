@@ -2,6 +2,45 @@
 
 ## Unreleased
 
+### New Features
+
+#### Town Menu
+
++ Added a town jail menu: see prisoners and release them, jail online residents with a chosen sentence, bail, jail,
+  and cell, and list the town's jails.
++ Added Cede This Plot and Take Over Claim to the claims menu, for giving a chunk to another town and taking land from
+  an overclaimed town.
++ Added Merge into Your Town to other towns' pages, for mayors asking another town to merge into theirs.
++ Added Announce to Town to the residents menu.
++ Added a Nation Zone switch to town settings for towns that have a nation zone.
++ Residents of a ruined town can reclaim it from the town menu, and players without a town can reclaim ruins from Find
+  a Town when the server allows it.
+
+#### Nation Menu
+
++ Added sanctioned towns, under the nation's Towns menu: sanction towns outside the nation and lift sanctions.
++ Added Announce to Nation to the nation menu.
+
+#### Plot Menu
+
++ Added Join-Day Limits, setting the fewest and most days a buyer must have lived in the town.
++ Added Jail Cells to jail plots, for adding and removing cells where you stand.
++ Added Player Overrides to plot permissions: add or remove players with their own permissions on a plot, and open
+  Towny's editor to change them.
++ Right-clicking Evict Owner now evicts the owner and puts the plot back up for sale.
+
+#### Resident Menu
+
++ Added Display Modes to the profile, turning every mode off or restoring the server's defaults.
++ Added Chat Spy and Disable Admin Powers to personal settings for players allowed to use them.
+
+#### Tutorial
+
++ Added lessons on announcements, merging towns, ceding land, taking over claims, join-day limits, player overrides,
+  jailing players, and nation sanctions.
+    + The ruins, plot selling, plot groups, and display lessons now cover reclaiming, evicting for resale, group-wide
+      settings, and display modes.
+
 ### Improvements
 
 #### Misc
@@ -10,6 +49,11 @@
     + Lists show four rows of entries per page instead of five.
 
 ### Fixes
+
+#### Plot Menu
+
++ Fixed selling, plot type, settings, permissions, and trust failing on plots in a plot group; on grouped plots they
+  now change the whole group, and their buttons say so.
 
 #### Town Menu
 
@@ -30,6 +74,7 @@
 
 #### Misc
 
++ `PermissionMenu` takes an optional `overrides` menu, and a `Toggle` with a `null` node is shown unguarded.
 + `ToggleMenu` splits more than 21 toggles into pages instead of asking for an inventory taller than six rows.
 + `Layout.add` logs and skips buttons beyond its slots instead of throwing, so an overfull grid no longer breaks a menu.
 

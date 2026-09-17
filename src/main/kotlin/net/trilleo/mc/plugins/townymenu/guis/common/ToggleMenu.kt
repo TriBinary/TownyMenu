@@ -6,17 +6,19 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.ClickType
 
 /**
  * One on/off setting backed by a Towny toggle command. [name] and [description] are already translated.
  *
+ * @param node the permission the toggle needs, or `null` when Towny checks none
  * @param value reads the current state; `null` when the target no longer exists
  */
 class Toggle(
     val material: Material,
     val name: String,
     val description: String,
-    val node: PermissionNodes,
+    val node: PermissionNodes?,
     val command: String,
     val value: () -> Boolean?,
 )
@@ -36,13 +38,10 @@ class ToggleMenu(
         page = page.coerceIn(0, pages - 1)
         toggles.drop(page * PAGE_SIZE).take(PAGE_SIZE).forEachIndexed { index, toggle ->
             val slot = 10 + index / 7 * 9 + index % 7
-            guarded(
-                slot,
-                toggle.node,
-                Icons.toggle(player, toggle.material, toggle.name, toggle.value() ?: false, toggle.description)
-            ) {
-                run(toggle.command, toggle.value)
-            }
+            val icon = Icons.toggle(player, toggle.material, toggle.name, toggle.value() ?: false, toggle.description)
+            val action = { _: ClickType -> run(toggle.command, toggle.value) }
+            val node = toggle.node
+            if (node == null) button(slot, icon, action) else guarded(slot, node, icon, action)
         }
 
         val bottom = inventory.size - 9

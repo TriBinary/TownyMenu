@@ -17,6 +17,7 @@ import org.bukkit.entity.Player
  *
  * @param command   the Towny set-perm command, e.g. `towny:town set perm`
  * @param personal  label the levels Friends/Town (resident-owned land) instead of Residents/Nation
+ * @param overrides opens the per-player permission overrides of this land, when it has them
  * @param permissions reads the current permissions; `null` when the land no longer exists
  */
 class PermissionMenu(
@@ -26,6 +27,7 @@ class PermissionMenu(
     private val command: String,
     private val node: PermissionNodes,
     private val personal: Boolean,
+    private val overrides: ((Menu) -> Menu)? = null,
     private val permissions: () -> TownyPermission?,
 ) : Menu(player, title, 6, back) {
 
@@ -70,6 +72,11 @@ class PermissionMenu(
 
         guarded(25, node, Icons.icon(Material.WATER_BUCKET, tr("perm.reset"), tr("perm.reset-description"))) {
             run("$command reset", ::snapshot)
+        }
+        overrides?.let { open ->
+            button(34, Icons.icon(Material.PLAYER_HEAD, tr("perm.overrides"), tr("perm.overrides-description"))) {
+                open(this).open()
+            }
         }
         tutorialButton(53, Tutorial.PROTECTION)
         backButton(49)

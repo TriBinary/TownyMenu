@@ -215,6 +215,8 @@ perm:
   switch-description: "Use doors, buttons, levers, and containers."
   item-use: "Item Use"
   item-use-description: "Use items such as flint and steel or buckets."
+  overrides: "<gold>Player Overrides"
+  overrides-description: "Give single players their own build, break, and interact permissions on this land."
 
 picker:
   select: "<yellow>Click to select"
@@ -243,7 +245,7 @@ town:
   claims-description: "Claim and unclaim land, create outposts, and buy bonus claims."
   settings: "<yellow>Town Settings"
   settings-title: "Town Settings"
-  settings-description: "PvP, mobs, fire, explosions, open, public, and peaceful."
+  settings-description: "PvP, mobs, fire, explosions, open, public, peaceful, and nation zone."
   details: "<yellow>Town Details"
   details-description: "Name, board, tag, taxes, prices, spawn, and sale."
   permissions-title: "Town Permissions"
@@ -262,6 +264,12 @@ town:
   delete-description: "Disband your town permanently. You will be asked to confirm."
   leave: "<red>Leave Town"
   leave-description: "Leave your town. You will be asked to confirm."
+  jail: "<gray>Jail"
+  jail-description: "Jail residents, release prisoners, and see your jails."
+  jail-count: "<gray>Prisoners: <white>{count}"
+  reclaim: "<green>Reclaim Town"
+  reclaim-description: "Pay to restore your ruined town and become its mayor."
+  reclaim-wait: "<gray>Available after <white>{hours}</white> hours in ruins"
 
 no-town:
   title: "Find a Town"
@@ -272,6 +280,8 @@ no-town:
   browse: "<green>Browse Towns"
   browse-description: "Find an open town to join."
   invites-description: "Accept an invitation to a town."
+  reclaim: "<green>Reclaim a Ruined Town"
+  reclaim-description: "Stand in a ruined town and pay to become its mayor."
 
 outlaws:
   title: "Outlaws"
@@ -288,6 +298,43 @@ outposts:
   outpost: "<light_purple>Outpost #{number}"
   world: "<gray>World: <white>{world}"
   location: "<gray>Location: <white>{x}, {y}, {z}"
+
+town-jail:
+  title: "Town Jail"
+  hours-left: "<gray>Hours left: <white>{hours}"
+  bail: "<gray>Bail: <white>{bail}"
+  held-in: "<gray>Held in: <white>{jail}, cell {cell}"
+  click-unjail: "<green>Click to release"
+  jail-player: "<red>Jail a Player"
+  jail-player-title: "Jail Player"
+  jail-player-description: "Send an online resident to one of your jails."
+  no-jails: "<gray>No Jails"
+  no-jails-description: "Set a plot's type to Jail to build your town's first jail."
+  jails: "<gold>Jails"
+  jails-title: "Town Jails"
+  jails-description: "Every jail plot in your town."
+  jails-count: "<gray>Jails: <white>{count}"
+  primary: "<gold>Primary jail"
+  cells: "<gray>Cells: <white>{count}"
+  prisoners: "<gray>Prisoners: <white>{count}"
+  jail-number: "Jail #{number}"
+
+jail-sentence:
+  title: "Jail {player}"
+  hours: "<yellow>Sentence"
+  hours-description: "How many hours the player stays in jail."
+  hours-title: "Jail Sentence"
+  hours-label: "Hours"
+  max-hours: "<gray>Longest sentence: <white>{hours} hours"
+  bail: "<gold>Bail"
+  bail-description: "What the player can pay to leave early."
+  bail-title: "Bail"
+  max-bail: "<gray>Highest bail: <white>{bail}"
+  jail: "<gray>Jail"
+  cell: "<gray>Cell"
+  cell-number: "<white>Cell {number}"
+  confirm: "<green>Jail Player"
+  confirm-description: "Send the player to jail with this sentence."
 
 claims:
   title: "Town Claims"
@@ -323,6 +370,11 @@ claims:
   bonus-amount: "Number of claims"
   auto-claim: "<green>Auto Claim"
   auto-claim-description: "Claim every chunk you walk into."
+  cede: "<gold>Cede This Plot"
+  cede-title: "Cede Plot to Town"
+  cede-description: "Give the chunk you stand in to another town. Its mayor must be online to accept."
+  takeover: "<red>Take Over Claim"
+  takeover-description: "Take the chunk you stand in from an overclaimed town that borders yours."
 
 town-info:
   gone: "<red>This town no longer exists"
@@ -341,6 +393,8 @@ town-info:
   buy-description: "Become this town's mayor."
   invite: "<aqua>Invite to Nation"
   invite-description: "Invite this town to join {nation}."
+  merge: "<gold>Merge into Your Town"
+  merge-description: "Ask the mayor of {town} to merge their town into {own}. They must be online to accept."
 
 town-list:
   title: "Towns"
@@ -352,6 +406,9 @@ town-members:
   invite-name: "<green>Invite by Name"
   invite-name-description: "Invite any player Towny knows, even if they are offline."
   invite-title: "Invite to Town"
+  announce: "<gold>Announce to Town"
+  announce-title: "Town Announcement"
+  announce-description: "Send a message to every online resident."
 
 town-details:
   title: "Town Details"
@@ -427,6 +484,9 @@ nation:
   leave-description: "Take your town out of the nation. You will be asked to confirm."
   propose-alliance: "<green>Propose Alliance"
   declare-enemy: "<red>Declare Enemy"
+  announce: "<gold>Announce to Nation"
+  announce-title: "Nation Announcement"
+  announce-description: "Send a message to every online resident of the nation."
 
 no-nation:
   title: "Find a Nation"
@@ -473,6 +533,16 @@ nation-towns:
   invite: "<green>Invite a Town"
   invite-title: "Invite Town"
   invite-description: "Invite a town that isn't in a nation."
+  sanctions: "<red>Sanctioned Towns"
+  sanctions-description: "Towns kept away from your nation spawn."
+  sanctions-count: "<gray>Sanctioned: <white>{count}"
+
+nation-sanctions:
+  title: "Sanctions: {nation}"
+  right-lift: "<green>Right-click to lift the sanction"
+  add: "<red>Sanction a Town"
+  add-title: "Sanction Town"
+  add-description: "Keep a town outside your nation away from your nation spawn."
 
 nation-details:
   title: "Nation Details"
@@ -540,6 +610,20 @@ plot:
   clear: "<red>Clear Plot"
   clear-description: "Remove blocks placed on this plot that the server marks as clearable."
   town-description: "View the town that owns this land."
+  group-applies: "<gold>Applies to all {count} plots in {group}"
+  evict-resell: "<gray>Right-click to evict and put the plot back up for sale"
+  join-days: "<yellow>Join-Day Limits"
+  join-days-description: "Left-click to set the fewest days a buyer must have lived in town. Right-click to set the most days allowed."
+  join-days-none: "<gray>No limits"
+  join-days-hint: "<gray>Use 0 to remove the limit."
+  min-join-days: "<gray>Fewest days in town: <white>{days}"
+  max-join-days: "<gray>Most days in town: <white>{days}"
+  min-join-days-title: "Fewest Days in Town"
+  max-join-days-title: "Most Days in Town"
+  days: "Days"
+  jail-cells: "<gold>Jail Cells"
+  jail-cells-description: "Left-click to add a cell where you stand. Right-click to remove the cell where you stand."
+  jail-cells-count: "<gray>Cells: <white>{count}"
 
 # Towny's built-in plot types. Custom types from Towny's config show their own name unless added here.
 plot-type:
@@ -584,6 +668,19 @@ plot-trust:
   title: "Plot Trust"
   trust-title: "Trust on Plot"
   trust-online-description: "Let an online player build on this plot."
+  group: "<gold>Group: {group}"
+  group-description: "Trust on this plot applies to all {count} plots in its group."
+
+plot-overrides:
+  title: "Player Overrides"
+  changed-by: "<gray>Last changed by: <white>{player}"
+  click-remove: "<red>Click to remove override"
+  add-online: "<green>Add Online Player"
+  add-name: "<green>Add by Name"
+  add-description: "Give a player their own permissions here, then edit them in Towny's editor."
+  add-title: "Add Player Override"
+  edit: "<yellow>Edit Overrides"
+  edit-description: "Open Towny's editor to choose what each player may build, break, and use."
 
 profile:
   title: "Your Profile"
@@ -610,6 +707,9 @@ profile:
   spawn-description: "Teleport to your bed or your town spawn."
   bail: "<red>Pay Bail"
   bail-description: "Pay {cost} to leave jail."
+  modes: "<aqua>Display Modes"
+  modes-description: "Left-click to turn every mode off, such as auto map, borders, and auto claim. Right-click to restore the server's default modes."
+  modes-active: "<gray>Active: <white>{modes}"
 
 friends:
   title: "Friends"
@@ -707,6 +807,12 @@ toggle:
   plot-group-description: "Add each plot you walk into to your selected plot group."
   district: "<gold>District Mode"
   district-description: "Add each plot you walk into to your selected district."
+  nation-zone: "<aqua>Nation Zone"
+  nation-zone-description: "Protect the land around your town as part of your nation's zone."
+  spy: "<dark_gray>Chat Spy"
+  spy-description: "See messages from every town and nation chat channel."
+  admin-bypass: "<dark_red>Disable Admin Powers"
+  admin-bypass-description: "While on, Towny treats you like a regular player, so you can test protections."
 
 admin:
   title: "Server Admin"
@@ -1007,6 +1113,12 @@ tutorial:
     nation-upkeep: "<gray>Your nation's upkeep per day: <white>{cost}"
     bankruptcy: "<gray>Town bankruptcy: {value}"
     debt: "<red>Your town is bankrupt and owes {debt}."
+    merge-cost: "<gray>Base cost of merging towns: <white>{cost}"
+    merge-distance: "<gray>Furthest merge distance: <white>{distance} chunks"
+    reclaim-cost: "<gray>Reclaiming ruins costs: <white>{cost}"
+    reclaim-townless: "<gray>Players without a town can reclaim ruins: {value}"
+    bail: "<gray>Default bail: <white>{cost}"
+    max-bail: "<gray>Highest bail: <white>{cost}"
 
   start:
     title: "<aqua>Getting Started"
@@ -1040,7 +1152,7 @@ tutorial:
 
   town:
     title: "<gold>Running a Town"
-    description: "Ranks, recruiting, spawn, settings, details, selling, and ruins."
+    description: "Ranks, recruiting, spawn, settings, details, announcements, merging, selling, and ruins."
     ranks: "Mayor and Ranks"
     ranks-body: "The mayor can do everything. Ranks such as assistant, sheriff, or builder share part of that power, and the server decides exactly what each rank may do. Assign ranks from a resident's profile in the Residents menu."
     grow: "Growing Your Town"
@@ -1048,17 +1160,21 @@ tutorial:
     spawn: "Spawn and Home Block"
     spawn-body: "The home block is the heart of your town and holds the town spawn. Residents can teleport there from the town menu, and visitors can too while the town is Public. Mayors move the spawn and home block in Town Details."
     settings: "Town Settings"
-    settings-body: "PvP, hostile mobs, fire spread, and explosions are switched on or off for the whole town. Open lets anyone join without an invite, Public lets visitors use your spawn, and Peaceful keeps the town out of PvP and war."
+    settings-body: "PvP, hostile mobs, fire spread, and explosions are switched on or off for the whole town. Open lets anyone join without an invite, Public lets visitors use your spawn, and Peaceful keeps the town out of PvP and war. Towns in a nation can also switch off the nation zone that protects the land around them."
     details: "Name, Board, and Tag"
     details-body: "In Town Details, mayors rename the town, write the board message residents see when they log in, set a short chat tag, and choose the town's map colour."
     sell: "Selling a Town"
     sell-body: "A mayor can put the town up for sale in Town Details. Whoever buys it pays the price and becomes the new mayor. Towns for sale are marked in the town directory."
     ruins: "Ruins and Deleting"
-    ruins-body: "Deleting a town gives all its land back to the wilderness. When ruins are on, a deleted or bankrupt town first becomes ruins that open up to everyone over time and may be reclaimed before they disappear."
+    ruins-body: "Deleting a town gives all its land back to the wilderness. When ruins are on, a deleted or bankrupt town first becomes ruins that open up to everyone over time. Its residents can reclaim it from the town menu before it disappears, and on some servers players without a town can too, from Find a Town while standing in the ruins."
+    announce: "Announcements"
+    announce-body: "Send a message to every online resident with Announce to Town in the Residents menu. Nation leaders can do the same for the whole nation from the nation menu."
+    merge: "Merging Towns"
+    merge-body: "A mayor can ask another town to merge into their own from that town's page in the town directory. The other mayor must be online and accept, and then their residents, land, and bank join your town."
 
   claims:
     title: "<green>Claiming Land"
-    description: "Chunks and claim limits, claiming and unclaiming, outposts, and bonus claims."
+    description: "Chunks and claim limits, claiming and unclaiming, outposts, bonus claims, and ceding or taking over land."
     chunks: "Claims Are Chunks"
     chunks-body: "Towns claim land one chunk at a time, called a town block. Every claimed chunk is protected by your town's permissions. How many chunks you can claim depends on your residents and any bonus claims."
     claim: "Claiming Land"
@@ -1071,16 +1187,20 @@ tutorial:
     outposts-body: "An outpost is a claim away from your town, such as a distant mine or farm. Each outpost has a spawn that residents can teleport to, and more land can be claimed around it."
     bonus: "Bonus Claims"
     bonus-body: "Reached your claim limit? Buy bonus claims with money from the town bank. The price can rise with each one you buy."
+    cede: "Ceding Land"
+    cede-body: "Stand in one of your town's chunks and choose Cede This Plot to give it to another town, for example to settle a border. The other town's mayor must be online to accept. The home block can't be ceded."
+    takeover: "Taking Over Claims"
+    takeover-body: "A town with more land than its claim limit is overclaimed. Your town can take over chunks at the edge of an overclaimed town that touch your own land with Take Over Claim. Depending on the server, your nations may have to be enemies."
 
   plots:
     title: "<yellow>Plots"
-    description: "Owning, buying, and selling plots, plot types, settings, trust, and groups."
+    description: "Owning, buying, and selling plots, plot types, settings, trust, join-day limits, and groups."
     what: "What Is a Plot?"
     what-body: "Every chunk a town claims is a plot. The town owns it until a resident buys it, and then the owner decides who may build there. Open the Plot menu while standing in a plot to see who owns it."
     buy: "Buying a Plot"
     buy-body: "Plots for sale glow on the map. Walk into one, open the Plot menu, and choose Buy Plot to pay the price and become its owner."
     sell: "Selling and Giving Up"
-    sell-body: "Owners and mayors can put a plot up for sale; a price of 0 gives it away. Give Up returns your plot to the town, and mayors can evict an owner."
+    sell-body: "Owners and mayors can put a plot up for sale; a price of 0 gives it away. Give Up returns your plot to the town. Mayors can evict an owner, and right-clicking Evict Owner puts the plot straight back up for sale."
     types: "Plot Types"
     types-body: "Mayors choose each plot's type. Shops and embassies have their own prices and taxes, and embassies can be bought by players from other towns. Arenas always allow PvP, inns let anyone sleep, farms let residents farm, wilds let residents cut trees and mine, and jails hold prisoners."
     settings: "Plot Settings"
@@ -1088,11 +1208,13 @@ tutorial:
     trust: "Plot Trust"
     trust-body: "Trust a player on one plot to let them build there without changing the plot's permissions for everyone else."
     groups: "Groups and Districts"
-    groups-body: "A plot group bundles several plots so they are sold and managed together, like one big house. A district names a larger area of plots, such as a market quarter."
+    groups-body: "A plot group bundles several plots so they are sold and managed together, like one big house. While a plot is in a group, its sale, type, settings, permissions, trust, and join-day limits change the whole group. A district names a larger area of plots, such as a market quarter."
+    join-days: "Join-Day Limits"
+    join-days-body: "Mayors can keep a plot for newcomers or for long-time residents by setting the fewest days, the most days, or both, that a buyer must have lived in the town."
 
   protection:
     title: "<red>Permissions & Protection"
-    description: "Who may build where, friends and trust, PvP and other switches, outlaws, and jail."
+    description: "Who may build where, friends, trust, and player overrides, PvP and other switches, outlaws, and jail."
     actions: "Four Kinds of Actions"
     actions-body: "Towny protects four actions separately: Build (placing blocks), Destroy (breaking blocks), Switch (doors, buttons, levers, and containers), and Item Use (items such as flint and steel or buckets)."
     groups: "Who Gets Permission"
@@ -1111,10 +1233,14 @@ tutorial:
     outlaws-body: "Mayors and trusted ranks can declare troublemakers outlaws. Depending on the server, outlaws are warned or teleported away when they enter the town, and can be jailed."
     jail: "Jail"
     jail-body: "Towns can send players to a jail plot, for example outlaws or enemies killed in town. Jailed players wait out their sentence, or pay bail from their profile to leave early."
+    overrides: "Player Overrides"
+    overrides-body: "Plot owners can give single players their own build, break, switch, and item-use rights on a plot, whatever group they belong to. Add players under Player Overrides in the plot's permissions, then edit their rights in Towny's editor."
+    jailing: "Jailing Players"
+    jailing-body: "Mayors and sheriffs jail online residents from the town's Jail menu, choosing the sentence, bail, jail, and cell, and can release prisoners early. A jail is a plot with the Jail type; add cells to it from the Plot menu while standing inside."
 
   nations:
     title: "<aqua>Nations"
-    description: "What nations are, joining and founding one, member towns, diplomacy, settings, and spawn."
+    description: "What nations are, joining and founding one, member towns, diplomacy, sanctions, settings, and spawn."
     what: "What Is a Nation?"
     what-body: "A nation is a group of towns. The mayor of its capital town is the nation leader. Nations share a bank, a spawn, allies, and enemies, and member towns can receive extra claims."
     join: "Joining a Nation"
@@ -1129,6 +1255,8 @@ tutorial:
     settings-body: "Open lets any town join without an invite, Public lets outsiders use the nation spawn, and Peaceful keeps member towns out of PvP and war."
     spawn: "Nation Spawn"
     spawn-body: "Members can teleport to the nation spawn, and so can allies and visitors when the nation's settings allow it. The leader moves the spawn in Nation Details."
+    sanctions: "Sanctions"
+    sanctions-body: "A nation can sanction towns outside it, and residents of a sanctioned town can't teleport to the nation spawn. Manage sanctioned towns from the nation's Towns menu."
 
   economy:
     title: "<gold>Money & Taxes"
@@ -1156,6 +1284,6 @@ tutorial:
     others: "Other Players"
     others-body: "Click any resident in a town, nation, or friends list to view their profile. From there you can add them as a friend, and mayors can invite, trust, rank, or kick them."
     display: "Borders, Titles, and the Info Tool"
-    display-body: "Personal settings change what you see while exploring: a title when you cross into a town, particle borders around plots and towns, a chat map in every new chunk, and an info tool that shows who owns a block."
+    display-body: "Personal settings change what you see while exploring: a title when you cross into a town, particle borders around plots and towns, a chat map in every new chunk, and an info tool that shows who owns a block. Display Modes in your profile turns every mode off at once, or restores the server's defaults."
     spawn: "Spawning"
     spawn-body: "Go to Spawn teleports you to your town spawn, or to your bed while Bed Spawn is on. Spawning may cost money and have a cooldown, depending on the server."

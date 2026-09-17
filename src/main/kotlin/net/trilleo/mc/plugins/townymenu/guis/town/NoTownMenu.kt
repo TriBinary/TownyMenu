@@ -12,14 +12,17 @@ import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-/** Shown to players without a town: found one, browse towns to join, or answer invites. */
+/** Shown to players without a town: found one, browse towns to join, answer invites, or reclaim a ruined town. */
 class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.title"), 4, back) {
 
     override fun build() {
+        val reclaimable =
+            TownySettings.getTownRuinsReclaimEnabled() && TownySettings.canRuinsBeReclaimedByTownlessPlayers()
+        val row = if (reclaimable) layout(10, 12, 14, 16) else layout(11, 13, 15)
         val price =
             if (TownyUtil.economy) tr("common.cost", "cost" to TownyUtil.money(TownySettings.getNewTownPrice())) else null
-        guarded(
-            11, PermissionNodes.TOWNY_COMMAND_TOWN_NEW,
+        row.add(
+            PermissionNodes.TOWNY_COMMAND_TOWN_NEW,
             Icons.icon(Material.BELL, tr("no-town.found"), tr("no-town.found-description"), *listOfNotNull(price).toTypedArray())
         ) {
             prompt(tr("no-town.found-title"), tr("no-town.town-name")) { name ->
@@ -30,12 +33,11 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
                 )
             }
         }
-        button(13, Icons.icon(Material.OAK_DOOR, tr("no-town.browse"), tr("no-town.browse-description"))) {
+        row.add(Icons.icon(Material.OAK_DOOR, tr("no-town.browse"), tr("no-town.browse-description"))) {
             TownListMenu(player, this).open()
         }
         val invites = resident?.receivedInvites?.size ?: 0
-        button(
-            15,
+        row.add(
             Icons.icon(
                 Material.PAPER,
                 tr("main.invites"),
@@ -44,6 +46,20 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
             )
         ) {
             InvitesMenu(player, this).open()
+        }
+        if (reclaimable) {
+            val cost = if (TownyUtil.economy) {
+                tr("common.cost", "cost" to TownyUtil.money(TownySettings.getEcoPriceReclaimTown()))
+            } else null
+            row.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_RECLAIM,
+                Icons.icon(
+                    Material.MOSSY_STONE_BRICKS, tr("no-town.reclaim"), tr("no-town.reclaim-description"),
+                    *listOfNotNull(cost).toTypedArray()
+                )
+            ) {
+                run("towny:town reclaim", { resident?.hasTown() }, returnTo = back ?: MainMenu(player))
+            }
         }
         tutorialButton(35, Tutorial.FINDING_A_TOWN)
         backButton(31)

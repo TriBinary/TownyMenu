@@ -350,8 +350,8 @@ override fun entries(): List<MenuEntry> =
 
 | Class            | Purpose                                                                                       |
 |:-----------------|:----------------------------------------------------------------------------------------------|
-| `ToggleMenu`     | Pages of `Toggle`s, 21 per page (material, name, description, node, command, value reader).   |
-| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command.                            |
+| `ToggleMenu`     | Pages of `Toggle`s, 21 per page (material, name, description, node, command, value reader). A `null` node leaves the toggle unguarded, for modes Towny checks no node for. |
+| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command. Pass `overrides` to add a Player Overrides button (used for plots). |
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                     |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                |
 | `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                      |

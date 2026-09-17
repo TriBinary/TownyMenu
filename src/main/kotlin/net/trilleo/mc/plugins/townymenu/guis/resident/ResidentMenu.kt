@@ -82,6 +82,18 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         ) {
             runAndClose("towny:resident spawn")
         }
+        row.add(
+            PermissionNodes.TOWNY_COMMAND_RESIDENT_SET_MODE,
+            Icons.icon(
+                Material.MILK_BUCKET, tr("profile.modes"), tr("profile.modes-description"),
+                tr(
+                    "profile.modes-active",
+                    "modes" to resident.modes.ifEmpty { listOf(tr("common.none")) }.joinToString(", ")
+                )
+            )
+        ) { click ->
+            run("towny:resident set mode ${if (click.isRightClick) "reset" else "clear"}", { resident.modes.toSet() })
+        }
         if (resident.isJailed && TownyUtil.economy) {
             row.add(
                 Icons.icon(
@@ -109,15 +121,34 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             key: String,
             label: String,
             description: String,
-            node: PermissionNodes,
+            node: PermissionNodes?,
             read: (Resident) -> Boolean
         ) =
             Toggle(material, label, description, node, "towny:resident toggle $key") {
                 TownyAPI.getInstance().getResident(player)?.let(read)
             }
 
-        fun mode(material: Material, key: String, label: String, description: String, node: PermissionNodes) =
+        fun mode(material: Material, key: String, label: String, description: String, node: PermissionNodes?) =
             perm(material, key, label, description, node) { it.hasMode(key) }
+
+        val viewer = TownyAPI.getInstance().getResident(player)
+        val staff = listOfNotNull(
+            if (TownyUtil.can(player, PermissionNodes.TOWNY_CHAT_SPY)) mode(
+                Material.SPYGLASS,
+                "spy",
+                tr("toggle.spy"),
+                tr("toggle.spy-description"),
+                PermissionNodes.TOWNY_CHAT_SPY
+            ) else null,
+            // Admin bypass makes Towny deny the admin's own admin checks, so it can't be guarded by one.
+            if (player.isOp || player.hasPermission(PermissionNodes.TOWNY_ADMIN.node) || viewer?.hasMode("adminbypass") == true) mode(
+                Material.COMMAND_BLOCK,
+                "adminbypass",
+                tr("toggle.admin-bypass"),
+                tr("toggle.admin-bypass-description"),
+                null
+            ) else null,
+        )
 
         return ToggleMenu(
             player, tr("profile.settings-title"), this, listOf(
@@ -240,7 +271,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
                     tr("toggle.district-description"),
                     PermissionNodes.TOWNY_COMMAND_RESIDENT_TOGGLE_DISTRICT
                 ),
-            )
+            ) + staff
         )
     }
 }

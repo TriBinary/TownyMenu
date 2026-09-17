@@ -55,6 +55,14 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
                 run("towny:nation add ${picked.name}", sent)
             }.open()
         }
+        button(
+            48, Icons.icon(
+                Material.RED_BANNER, tr("nation-towns.sanctions"), tr("nation-towns.sanctions-description"),
+                tr("nation-towns.sanctions-count", "count" to nation.sanctionedTowns.size)
+            )
+        ) {
+            NationSanctionsMenu(player, nation, this).open()
+        }
         val pending = nation.sentInvites
         button(
             51, Icons.icon(

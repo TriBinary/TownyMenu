@@ -94,6 +94,22 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                 )
             ) { run("towny:town buytown ${town.name}", { town.mayor }, returnTo = MainMenu(player)) }
         }
+        val viewerTown = viewer?.townOrNull
+        if (viewerTown != null && viewerTown != town && viewer.isMayor) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_MERGE,
+                Icons.icon(
+                    Material.STRUCTURE_VOID, tr("town-info.merge"),
+                    tr(
+                        "town-info.merge-description",
+                        "town" to TownyUtil.name(town.name),
+                        "own" to TownyUtil.name(viewerTown.name)
+                    )
+                )
+            ) {
+                run("towny:town merge ${town.name}")
+            }
+        }
         val nation = viewer?.nationOrNull
         if (nation != null && !town.hasNation() && viewer.isKing) {
             grid.add(

@@ -215,6 +215,8 @@ perm:
   switch-description: "使用门、按钮、拉杆和容器。"
   item-use: "物品使用"
   item-use-description: "使用打火石、桶等物品。"
+  overrides: "<gold>玩家单独权限"
+  overrides-description: "为个别玩家单独设置在此土地上的建造、破坏和交互权限。"
 
 picker:
   select: "<yellow>点击选择"
@@ -243,7 +245,7 @@ town:
   claims-description: "占领和放弃土地、建立前哨以及购买额外领地。"
   settings: "<yellow>城镇设置"
   settings-title: "城镇设置"
-  settings-description: "PvP、怪物、火焰、爆炸、开放、公开与和平。"
+  settings-description: "PvP、怪物、火焰、爆炸、开放、公开、和平与国家区域。"
   details: "<yellow>城镇详情"
   details-description: "名称、公告、标签、税款、价格、出生点和出售。"
   permissions-title: "城镇权限"
@@ -262,6 +264,12 @@ town:
   delete-description: "永久解散你的城镇。执行前会要求确认。"
   leave: "<red>离开城镇"
   leave-description: "离开你的城镇。执行前会要求确认。"
+  jail: "<gray>监狱"
+  jail-description: "关押居民、释放囚犯并查看城镇监狱。"
+  jail-count: "<gray>囚犯：<white>{count}"
+  reclaim: "<green>收复城镇"
+  reclaim-description: "付费恢复已成为废墟的城镇，并成为其镇长。"
+  reclaim-wait: "<gray>成为废墟 <white>{hours}</white> 小时后可收复"
 
 no-town:
   title: "寻找城镇"
@@ -272,6 +280,8 @@ no-town:
   browse: "<green>浏览城镇"
   browse-description: "寻找一个可以加入的开放城镇。"
   invites-description: "接受加入城镇的邀请。"
+  reclaim: "<green>收复废墟城镇"
+  reclaim-description: "站在废墟城镇中，付费成为其镇长。"
 
 outlaws:
   title: "通缉犯"
@@ -288,6 +298,43 @@ outposts:
   outpost: "<light_purple>前哨 #{number}"
   world: "<gray>世界: <white>{world}"
   location: "<gray>坐标: <white>{x}, {y}, {z}"
+
+town-jail:
+  title: "城镇监狱"
+  hours-left: "<gray>剩余时间：<white>{hours} 小时"
+  bail: "<gray>保释金：<white>{bail}"
+  held-in: "<gray>关押于：<white>{jail}，{cell} 号牢房"
+  click-unjail: "<green>点击释放"
+  jail-player: "<red>关押玩家"
+  jail-player-title: "关押玩家"
+  jail-player-description: "把一名在线居民送进城镇监狱。"
+  no-jails: "<gray>没有监狱"
+  no-jails-description: "把一个地块的类型设为监狱，建立城镇的第一座监狱。"
+  jails: "<gold>监狱列表"
+  jails-title: "城镇监狱列表"
+  jails-description: "城镇中的所有监狱地块。"
+  jails-count: "<gray>监狱：<white>{count}"
+  primary: "<gold>主监狱"
+  cells: "<gray>牢房：<white>{count}"
+  prisoners: "<gray>囚犯：<white>{count}"
+  jail-number: "{number} 号监狱"
+
+jail-sentence:
+  title: "关押 {player}"
+  hours: "<yellow>刑期"
+  hours-description: "玩家在监狱中关押的小时数。"
+  hours-title: "刑期"
+  hours-label: "小时"
+  max-hours: "<gray>最长刑期：<white>{hours} 小时"
+  bail: "<gold>保释金"
+  bail-description: "玩家提前出狱需支付的金额。"
+  bail-title: "保释金"
+  max-bail: "<gray>最高保释金：<white>{bail}"
+  jail: "<gray>监狱"
+  cell: "<gray>牢房"
+  cell-number: "<white>{number} 号牢房"
+  confirm: "<green>确认关押"
+  confirm-description: "按此刑期将玩家送进监狱。"
 
 claims:
   title: "城镇领地"
@@ -323,6 +370,11 @@ claims:
   bonus-amount: "领地数量"
   auto-claim: "<green>自动占领"
   auto-claim-description: "自动占领你走进的每个区块。"
+  cede: "<gold>割让此地块"
+  cede-title: "将地块割让给城镇"
+  cede-description: "把你所站的区块交给另一个城镇。对方镇长必须在线并接受。"
+  takeover: "<red>夺取领地"
+  takeover-description: "从与你相邻、领地超额的城镇夺取你所站的区块。"
 
 town-info:
   gone: "<red>该城镇已不存在"
@@ -341,6 +393,8 @@ town-info:
   buy-description: "成为该城镇的镇长。"
   invite: "<aqua>邀请加入国家"
   invite-description: "邀请该城镇加入 {nation}。"
+  merge: "<gold>并入你的城镇"
+  merge-description: "请求 {town} 的镇长将其城镇并入 {own}。对方必须在线并接受。"
 
 town-list:
   title: "城镇列表"
@@ -352,6 +406,9 @@ town-members:
   invite-name: "<green>按名称邀请"
   invite-name-description: "邀请 Towny 记录中的任意玩家，即使对方不在线。"
   invite-title: "邀请加入城镇"
+  announce: "<gold>向城镇公告"
+  announce-title: "城镇公告"
+  announce-description: "向所有在线居民发送消息。"
 
 town-details:
   title: "城镇详情"
@@ -427,6 +484,9 @@ nation:
   leave-description: "让你的城镇退出国家。执行前会要求确认。"
   propose-alliance: "<green>提议结盟"
   declare-enemy: "<red>宣布为敌国"
+  announce: "<gold>向国家公告"
+  announce-title: "国家公告"
+  announce-description: "向国家所有在线居民发送消息。"
 
 no-nation:
   title: "寻找国家"
@@ -473,6 +533,16 @@ nation-towns:
   invite: "<green>邀请城镇"
   invite-title: "邀请城镇"
   invite-description: "邀请一个未加入国家的城镇。"
+  sanctions: "<red>受制裁城镇"
+  sanctions-description: "禁止使用你们国家传送点的城镇。"
+  sanctions-count: "<gray>受制裁：<white>{count}"
+
+nation-sanctions:
+  title: "制裁：{nation}"
+  right-lift: "<green>右键解除制裁"
+  add: "<red>制裁城镇"
+  add-title: "制裁城镇"
+  add-description: "禁止国家外的某个城镇使用你们的国家传送点。"
 
 nation-details:
   title: "国家详情"
@@ -540,6 +610,20 @@ plot:
   clear: "<red>清理地块"
   clear-description: "移除此地块上被服务器标记为可清理的方块。"
   town-description: "查看拥有这片土地的城镇。"
+  group-applies: "<gold>作用于 {group} 中的全部 {count} 个地块"
+  evict-resell: "<gray>右键驱逐并重新出售此地块"
+  join-days: "<yellow>入镇天数限制"
+  join-days-description: "左键设置购买者至少需在城镇居住的天数，右键设置最多允许的天数。"
+  join-days-none: "<gray>无限制"
+  join-days-hint: "<gray>输入 0 取消限制。"
+  min-join-days: "<gray>最少入镇天数：<white>{days}"
+  max-join-days: "<gray>最多入镇天数：<white>{days}"
+  min-join-days-title: "最少入镇天数"
+  max-join-days-title: "最多入镇天数"
+  days: "天数"
+  jail-cells: "<gold>牢房"
+  jail-cells-description: "左键在你所站位置添加牢房，右键移除你所站位置的牢房。"
+  jail-cells-count: "<gray>牢房：<white>{count}"
 
 # Towny 内置的地块类型。Towny 配置中的自定义类型会显示其原名，除非在此添加。
 plot-type:
@@ -584,6 +668,19 @@ plot-trust:
   title: "地块信任"
   trust-title: "信任玩家"
   trust-online-description: "允许一名在线玩家在此地块上建造。"
+  group: "<gold>地块组：{group}"
+  group-description: "此地块的信任作用于其所在组的全部 {count} 个地块。"
+
+plot-overrides:
+  title: "玩家单独权限"
+  changed-by: "<gray>最后修改者：<white>{player}"
+  click-remove: "<red>点击移除单独权限"
+  add-online: "<green>添加在线玩家"
+  add-name: "<green>按名称添加"
+  add-description: "为玩家单独设置此处的权限，然后在 Towny 的编辑器中修改。"
+  add-title: "添加玩家单独权限"
+  edit: "<yellow>编辑单独权限"
+  edit-description: "打开 Towny 的编辑器，选择每位玩家可以建造、破坏和使用的内容。"
 
 profile:
   title: "个人资料"
@@ -610,6 +707,9 @@ profile:
   spawn-description: "传送到你的床或城镇出生点。"
   bail: "<red>支付保释金"
   bail-description: "支付 {cost} 出狱。"
+  modes: "<aqua>显示模式"
+  modes-description: "左键关闭所有模式，例如自动地图、边界和自动圈地。右键恢复服务器默认模式。"
+  modes-active: "<gray>已开启：<white>{modes}"
 
 friends:
   title: "好友"
@@ -707,6 +807,12 @@ toggle:
   plot-group-description: "将你走进的每个地块加入所选的地块组。"
   district: "<gold>街区模式"
   district-description: "将你走进的每个地块加入所选的街区。"
+  nation-zone: "<aqua>国家区域"
+  nation-zone-description: "将城镇周围的土地作为国家区域加以保护。"
+  spy: "<dark_gray>聊天监听"
+  spy-description: "查看所有城镇和国家聊天频道的消息。"
+  admin-bypass: "<dark_red>停用管理员权限"
+  admin-bypass-description: "开启后，Towny 会把你当作普通玩家，便于测试保护设置。"
 
 admin:
   title: "服务器管理"
@@ -1007,6 +1113,12 @@ tutorial:
     nation-upkeep: "<gray>你国家的每日维护费: <white>{cost}"
     bankruptcy: "<gray>城镇破产: {value}"
     debt: "<red>你的城镇已破产，欠款 {debt}。"
+    merge-cost: "<gray>合并城镇的基础费用：<white>{cost}"
+    merge-distance: "<gray>合并的最远距离：<white>{distance} 个区块"
+    reclaim-cost: "<gray>收复废墟的费用：<white>{cost}"
+    reclaim-townless: "<gray>无城镇玩家可收复废墟：{value}"
+    bail: "<gray>默认保释金：<white>{cost}"
+    max-bail: "<gray>最高保释金：<white>{cost}"
 
   start:
     title: "<aqua>入门"
@@ -1040,7 +1152,7 @@ tutorial:
 
   town:
     title: "<gold>经营城镇"
-    description: "职位、招募、出生点、设置、详情、出售以及废墟。"
+    description: "职位、招募、出生点、设置、详情、公告、合并、出售以及废墟。"
     ranks: "镇长与职位"
     ranks-body: "镇长拥有全部权力。助理、警长、建筑师等职位分担其中一部分，每个职位的具体权限由服务器决定。在居民菜单中打开居民资料即可授予职位。"
     grow: "壮大城镇"
@@ -1048,17 +1160,21 @@ tutorial:
     spawn: "出生点与主区块"
     spawn-body: "主区块是城镇的核心，城镇出生点就在其中。居民可以从城镇菜单传送到出生点；城镇公开时访客也可以。镇长可以在城镇详情中移动出生点和主区块。"
     settings: "城镇设置"
-    settings-body: "PvP、敌对生物、火焰蔓延和爆炸对整个城镇统一开关。开放让任何人无需邀请即可加入，公开让访客可以使用你的出生点，和平则让城镇远离 PvP 与战争。"
+    settings-body: "PvP、敌对生物、火焰蔓延和爆炸对整个城镇统一开关。开放让任何人无需邀请即可加入，公开让访客可以使用你的出生点，和平则让城镇远离 PvP 与战争。国家中的城镇还可以关闭保护其周边土地的国家区域。"
     details: "名称、公告与标签"
     details-body: "在城镇详情中，镇长可以重命名城镇、编写居民登录时看到的公告、设置简短的聊天标签，并选择城镇的地图颜色。"
     sell: "出售城镇"
     sell-body: "镇长可以在城镇详情中出售城镇。购买者支付价格后成为新镇长。出售中的城镇会在城镇目录中标出。"
     ruins: "废墟与删除"
-    ruins-body: "删除城镇会把它的全部土地归还荒野。启用废墟时，被删除或破产的城镇会先变成废墟，随时间逐渐对所有人开放，并可能在消失前被收复。"
+    ruins-body: "删除城镇会把它的全部土地归还荒野。启用废墟时，被删除或破产的城镇会先变成废墟，随时间逐渐对所有人开放。在废墟消失前，其居民可以在城镇菜单中收复它；在部分服务器上，无城镇的玩家也可以站在废墟中，通过“寻找城镇”菜单收复。"
+    announce: "公告"
+    announce-body: "在居民菜单中使用“向城镇公告”，向所有在线居民发送消息。国家领袖也可以在国家菜单中向整个国家发布公告。"
+    merge: "合并城镇"
+    merge-body: "镇长可以在城镇目录中打开另一个城镇的页面，请求它并入自己的城镇。对方镇长必须在线并接受，之后对方的居民、土地和银行都会并入你的城镇。"
 
   claims:
     title: "<green>占领土地"
-    description: "区块与领地上限、占领与放弃、前哨以及额外领地。"
+    description: "区块与领地上限、占领与放弃、前哨、额外领地以及割让与夺取土地。"
     chunks: "领地以区块为单位"
     chunks-body: "城镇以区块为单位占领土地，每个区块称为一块领地。每块已占领的区块都受城镇权限保护。可占领的数量取决于居民人数和额外领地。"
     claim: "占领土地"
@@ -1071,16 +1187,20 @@ tutorial:
     outposts-body: "前哨是远离城镇的领地，例如远处的矿场或农场。每个前哨都有居民可以传送过去的出生点，还可以在其周围继续占领土地。"
     bonus: "额外领地"
     bonus-body: "领地达到上限了？用城镇银行的钱购买额外领地。每次购买后价格可能上涨。"
+    cede: "割让土地"
+    cede-body: "站在城镇的某个区块中，选择“割让此地块”即可把它交给另一个城镇，例如用于调整边界。对方镇长必须在线并接受。主区块无法割让。"
+    takeover: "夺取领地"
+    takeover-body: "领地超过上限的城镇处于超额状态。你的城镇可以用“夺取领地”占领超额城镇边缘、与你的领地相邻的区块。视服务器设置而定，双方国家可能需要互为敌对。"
 
   plots:
     title: "<yellow>地块"
-    description: "拥有、购买与出售地块，地块类型、设置、信任以及地块组。"
+    description: "拥有、购买与出售地块，地块类型、设置、信任、入镇天数限制以及地块组。"
     what: "什么是地块？"
     what-body: "城镇占领的每个区块都是一个地块。在居民购买之前，地块归城镇所有；购买后由地块主决定谁可以在上面建造。站在地块中打开地块菜单即可查看其主人。"
     buy: "购买地块"
     buy-body: "出售中的地块在地图上会发光。走进地块，打开地块菜单并选择购买地块，支付价格后即可成为地块主。"
     sell: "出售与放弃"
-    sell-body: "地块主和镇长可以出售地块，价格设为 0 即免费赠送。放弃地块会把它归还城镇，镇长也可以驱逐地块主。"
+    sell-body: "地块主和镇长可以出售地块，价格设为 0 即免费赠送。放弃地块会把它归还城镇。镇长可以驱逐地块主，右键“驱逐所有者”还会立即重新出售该地块。"
     types: "地块类型"
     types-body: "镇长可以设置每个地块的类型。商店和大使馆有各自的价格与税率，大使馆还能被其他城镇的玩家购买。竞技场始终允许 PvP，旅馆允许任何人睡觉，农场允许居民耕种，野外允许居民砍树和挖矿，监狱则用来关押犯人。"
     settings: "地块设置"
@@ -1088,11 +1208,13 @@ tutorial:
     trust: "地块信任"
     trust-body: "在单个地块上信任某位玩家，即可让其在此建造，而不必为所有人修改地块权限。"
     groups: "地块组与街区"
-    groups-body: "地块组把多个地块捆绑在一起，统一出售和管理，就像一座大房子。街区则为一片更大的地块区域命名，例如商业区。"
+    groups-body: "地块组把多个地块捆绑在一起，统一出售和管理，就像一座大房子。地块属于某个组时，它的出售、类型、设置、权限、信任和入镇天数限制都会作用于整个组。街区则为一片更大的地块区域命名，例如商业区。"
+    join-days: "入镇天数限制"
+    join-days-body: "镇长可以把地块留给新居民或老居民：设置购买者至少或最多需要在城镇居住的天数，也可以两者都设。"
 
   protection:
     title: "<red>权限与保护"
-    description: "谁能在哪里建造、好友与信任、PvP 等开关、通缉犯以及监狱。"
+    description: "谁能在哪里建造、好友、信任与玩家单独权限、PvP 等开关、通缉犯以及监狱。"
     actions: "四种操作"
     actions-body: "Towny 分别保护四种操作：建造（放置方块）、破坏（破坏方块）、开关（门、按钮、拉杆和容器）以及物品使用（打火石、桶等物品）。"
     groups: "谁能获得权限"
@@ -1111,10 +1233,14 @@ tutorial:
     outlaws-body: "镇长和受信任的职位可以将捣乱者宣布为通缉犯。视服务器设置而定，通缉犯进入城镇时会收到警告或被传送走，还可能被关进监狱。"
     jail: "监狱"
     jail-body: "城镇可以把玩家关进监狱地块，例如在城镇中被击杀的通缉犯或敌人。被关押的玩家需要服满刑期，或在个人资料中支付保释金提前出狱。"
+    overrides: "玩家单独权限"
+    overrides-body: "地块主可以为个别玩家单独设置在地块上的建造、破坏、开关和物品使用权限，不论其属于哪个群体。在地块权限的“玩家单独权限”中添加玩家，然后在 Towny 的编辑器中修改其权限。"
+    jailing: "关押玩家"
+    jailing-body: "镇长和治安官可以在城镇监狱菜单中关押在线居民，选择刑期、保释金、监狱和牢房，也可以提前释放囚犯。监狱是类型为“监狱”的地块，站在其中时可在地块菜单中添加牢房。"
 
   nations:
     title: "<aqua>国家"
-    description: "国家是什么、加入与建立国家、成员城镇、外交、设置以及出生点。"
+    description: "国家是什么、加入与建立国家、成员城镇、外交、制裁、设置以及出生点。"
     what: "什么是国家？"
     what-body: "国家由多个城镇组成，首都城镇的镇长就是国王。国家共享银行、出生点、盟友和敌人，成员城镇还可能获得额外领地。"
     join: "加入国家"
@@ -1129,6 +1255,8 @@ tutorial:
     settings-body: "开放让任何城镇无需邀请即可加入，公开让外人可以使用国家出生点，和平则让成员城镇远离 PvP 与战争。"
     spawn: "国家出生点"
     spawn-body: "成员可以传送到国家出生点，国家设置允许时盟友和访客也可以。国王可以在国家详情中移动出生点。"
+    sanctions: "制裁"
+    sanctions-body: "国家可以制裁国家外的城镇，受制裁城镇的居民无法传送到国家传送点。可在国家的城镇菜单中管理受制裁城镇。"
 
   economy:
     title: "<gold>金钱与税收"
@@ -1156,6 +1284,6 @@ tutorial:
     others: "其他玩家"
     others-body: "在城镇、国家或好友列表中点击任意居民即可查看其资料。你可以在那里添加好友，镇长还可以邀请、信任、授予职位或踢出对方。"
     display: "边界、标题与信息工具"
-    display-body: "个人设置会改变你探索时看到的内容：进入城镇时的标题、地块和城镇周围的粒子边界、进入新区块时的聊天地图，以及显示方块归属的信息工具。"
+    display-body: "个人设置会改变你探索时看到的内容：进入城镇时的标题、地块和城镇周围的粒子边界、进入新区块时的聊天地图，以及显示方块归属的信息工具。个人资料中的“显示模式”可以一次关闭所有模式，或恢复服务器默认设置。"
     spawn: "出生点"
     spawn-body: "前往出生点会把你传送到城镇出生点；开启床出生点时则传送到你的床。视服务器设置而定，传送可能需要费用并有冷却时间。"

@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.TownySettings
 import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.MapMenu
+import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
@@ -107,6 +108,22 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
                 ) { amount ->
                     run("towny:town buy bonus ${TownyUtil.argument(amount)}", { town.purchasedBlocks })
                 }
+            }
+        }
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_TOWN_CEDE_PLOT,
+            Icons.icon(Material.OAK_BOAT, tr("claims.cede"), tr("claims.cede-description"))
+        ) {
+            Pickers.town(this, tr("claims.cede-title"), { it != town }) { picked ->
+                run("towny:town cede plot ${picked.name}")
+            }.open()
+        }
+        if (TownySettings.isOverClaimingAllowingStolenLand()) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_TAKEOVERCLAIM,
+                Icons.icon(Material.IRON_SWORD, tr("claims.takeover"), tr("claims.takeover-description"))
+            ) {
+                run("towny:town takeoverclaim", claims, delayTicks = CLAIM_DELAY)
             }
         }
         val autoClaim = resident?.hasMode("townclaim") == true
