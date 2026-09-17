@@ -34,7 +34,7 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             if (TownyUtil.economy) add(tr("claims.price", "price" to TownyUtil.money(town.townBlockCost)))
         }.toTypedArray()))
 
-        val grid = layout(19, 20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33)
+        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
         val claims = { town.numTownBlocks }
 
         grid.add(

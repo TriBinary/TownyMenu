@@ -11,6 +11,10 @@
 
 ### Fixes
 
+#### Town Menu
+
++ Fixed the second row of the claims menu starting one slot too far right.
+
 #### Misc
 
 + Fixed the back button covering the Outsiders: Switch button in the permissions menu.
