@@ -5,9 +5,9 @@ This guide covers the utility helpers provided in `net.trilleo.mc.plugins.townym
 | Utility       | Description                                                                   |
 |:--------------|:------------------------------------------------------------------------------|
 | `itemStack`   | DSL builder for menu icons                                                    |
-| `Lang`        | Translations: per-player language files and the `tr()` helper                |
+| `Lang`        | Translations: per-player language files and the `tr()` helper                 |
 | `TownyUtil`   | Safe formatting of Towny data, money and dates, permission checks, input args |
-| `TownyConfig` | Towny's `config.yml` as a browsable, editable tree of sections and settings  |
+| `TownyConfig` | Towny's `config.yml` as a browsable, editable tree of sections and settings   |
 | `DialogUtil`  | Native text-input and confirmation dialogs (Paper Dialog API)                 |
 | `MessageUtil` | Prefix-decorated message sender for players                                   |
 | `LoreUtil`    | Word-aware text wrapping for item lore with style carry-over                  |
@@ -33,15 +33,15 @@ val icon = itemStack(Material.EMERALD) {
 
 ### Builder Methods
 
-| Method        | Signature                         | Description                                                 |
-|:--------------|:----------------------------------|:------------------------------------------------------------|
-| `name`        | `name(String)`                    | Set the display name (MiniMessage)                          |
-| `lore`        | `lore(vararg String)` / `lore(Iterable<String>)` | Append lore lines (each parsed with MiniMessage) |
-| `loreWrapped` | `loreWrapped(String, maxWidth = 40)` | Append text word-wrapped by `LoreUtil`                   |
-| `glow`        | `glow(Boolean)`                   | Force the enchantment glint on or off                       |
-| `hideTooltip` | `hideTooltip(Boolean)`            | Hide the whole tooltip (decorative filler)                  |
-| `head`        | `head(OfflinePlayer)`             | Show a player's skin on a `PLAYER_HEAD`                     |
-| `meta`        | `meta(ItemMeta.() -> Unit)`       | Escape hatch for direct `ItemMeta` manipulation, applied last |
+| Method        | Signature                                        | Description                                                   |
+|:--------------|:-------------------------------------------------|:--------------------------------------------------------------|
+| `name`        | `name(String)`                                   | Set the display name (MiniMessage)                            |
+| `lore`        | `lore(vararg String)` / `lore(Iterable<String>)` | Append lore lines (each parsed with MiniMessage)              |
+| `loreWrapped` | `loreWrapped(String, maxWidth = 40)`             | Append text word-wrapped by `LoreUtil`                        |
+| `glow`        | `glow(Boolean)`                                  | Force the enchantment glint on or off                         |
+| `hideTooltip` | `hideTooltip(Boolean)`                           | Hide the whole tooltip (decorative filler)                    |
+| `head`        | `head(OfflinePlayer)`                            | Show a player's skin on a `PLAYER_HEAD`                       |
+| `meta`        | `meta(ItemMeta.() -> Unit)`                      | Escape hatch for direct `ItemMeta` manipulation, applied last |
 
 ---
 
@@ -75,27 +75,27 @@ val line = player.tr("icon.town.claims", "claims" to town.numTownBlocks, "max" t
 Towny names, boards, titles, and tags are written by players. **Always** pass them through `name` or `text` before
 putting them into a MiniMessage string — otherwise a town named `<click:run_command:…>` could inject tags.
 
-| Method / Property      | Description                                                                 |
-|:-----------------------|:----------------------------------------------------------------------------|
-| `text(String)`         | Strips legacy `&`/`§` colour codes and escapes MiniMessage tags             |
-| `name(String)`         | Like `text`, and shows underscores in Towny names as spaces                 |
-| `money(Double)`        | Formats with the economy's currency, or `-` without an economy              |
-| `balance(Government)`  | A town's or nation's cached bank balance, formatted                         |
-| `date(Long)`           | Formats an epoch-millisecond timestamp as `yyyy-MM-dd`                      |
-| `onOff(Player, Boolean)` | A coloured On / Off label in the player's language                        |
-| `yesNo(Player, Boolean)` | A coloured Yes / No label in the player's language                        |
-| `plotType(Player, String)` | A plot type in the player's language (`plot-type.*`), or the raw name   |
-| `economy`              | `true` when Towny's economy is active                                       |
+| Method / Property          | Description                                                           |
+|:---------------------------|:----------------------------------------------------------------------|
+| `text(String)`             | Strips legacy `&`/`§` colour codes and escapes MiniMessage tags       |
+| `name(String)`             | Like `text`, and shows underscores in Towny names as spaces           |
+| `money(Double)`            | Formats with the economy's currency, or `-` without an economy        |
+| `balance(Government)`      | A town's or nation's cached bank balance, formatted                   |
+| `date(Long)`               | Formats an epoch-millisecond timestamp as `yyyy-MM-dd`                |
+| `onOff(Player, Boolean)`   | A coloured On / Off label in the player's language                    |
+| `yesNo(Player, Boolean)`   | A coloured Yes / No label in the player's language                    |
+| `plotType(Player, String)` | A plot type in the player's language (`plot-type.*`), or the raw name |
+| `economy`                  | `true` when Towny's economy is active                                 |
 
 ### Permissions and Input
 
-| Method                           | Description                                                                  |
-|:---------------------------------|:-----------------------------------------------------------------------------|
-| `can(Player, PermissionNodes)`   | Tests a node exactly like Towny's commands do (ranks, wildcards, admins)     |
-| `can(Player, String)`            | Same, for a raw node such as `towny.command.town.rank.assistant`             |
-| `otherOnlineResidents(Player)`   | Visible online players (except the viewer) that have a resident record      |
-| `argument(String)`               | The first word of dialog input, for single-value arguments like amounts      |
-| `nameArgument(String)`           | Dialog input as a Towny name, with whitespace turned into underscores        |
+| Method                         | Description                                                              |
+|:-------------------------------|:-------------------------------------------------------------------------|
+| `can(Player, PermissionNodes)` | Tests a node exactly like Towny's commands do (ranks, wildcards, admins) |
+| `can(Player, String)`          | Same, for a raw node such as `towny.command.town.rank.assistant`         |
+| `otherOnlineResidents(Player)` | Visible online players (except the viewer) that have a resident record   |
+| `argument(String)`             | The first word of dialog input, for single-value arguments like amounts  |
+| `nameArgument(String)`         | Dialog input as a Towny name, with whitespace turned into underscores    |
 
 ```kotlin
 prompt(tr("bank.deposit-title"), tr("common.amount")) { amount ->
@@ -110,10 +110,10 @@ prompt(tr("bank.deposit-title"), tr("common.amount")) { amount ->
 `DialogUtil` shows native Minecraft dialogs through Paper's Dialog API, so players never type into chat. Showing a
 dialog closes any open inventory. Callbacks always run on the main server thread.
 
-| Method                                                                           | Description                                                                                       |
-|:---------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------|
+| Method                                                                                  | Description                                                                                     |
+|:----------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------|
 | `input(player, title, label, onSubmit, onCancel, body?, initial, maxLength, multiline)` | Text field with Confirm/Cancel. Blank input counts as cancel. `onSubmit` receives trimmed text. |
-| `confirm(player, title: Component, body?, onYes, onNo)`                          | Confirm/Cancel dialog that cannot be closed with Escape, so exactly one callback runs.           |
+| `confirm(player, title: Component, body?, onYes, onNo)`                                 | Confirm/Cancel dialog that cannot be closed with Escape, so exactly one callback runs.          |
 
 Inside a menu, prefer `Menu.prompt(...)`, which reopens the menu on cancel.
 
@@ -269,10 +269,10 @@ val item = itemStack(Material.BELL) {
 
 ### Parameters
 
-| Parameter  | Type     | Default | Description                         |
-|:-----------|:---------|:--------|:------------------------------------|
-| `text`     | `String` | —       | MiniMessage-formatted input string  |
-| `maxWidth` | `Int`    | `40`    | Maximum columns per line            |
+| Parameter  | Type     | Default | Description                        |
+|:-----------|:---------|:--------|:-----------------------------------|
+| `text`     | `String` | —       | MiniMessage-formatted input string |
+| `maxWidth` | `Int`    | `40`    | Maximum columns per line           |
 
 ### Behavior Details
 

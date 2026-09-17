@@ -1,8 +1,8 @@
 # TownyMenu - Changelog & Releasing
 
 This guide covers how to maintain [CHANGELOG.md](../CHANGELOG.md) during development and how to publish a release on
-GitHub. The release itself is automated by [.github/workflows/release.yml](../.github/workflows/release.yml) — pushing
-a version tag builds the plugin, extracts the matching changelog section, and creates the GitHub Release with the jar
+GitHub. The release itself is automated by [.github/workflows/release.yml](../.github/workflows/release.yml) — pushing a
+version tag builds the plugin, extracts the matching changelog section, and creates the GitHub Release with the jar
 attached. Every push and pull request is also built by [.github/workflows/build.yml](../.github/workflows/build.yml).
 
 ## Changelog format
@@ -38,12 +38,12 @@ The changelog follows the [SkyHanni](https://github.com/hannibal002/SkyHanni) st
 
 Structure, top to bottom:
 
-| Level  | Heading                        | Purpose                                                                               |
-|--------|--------------------------------|---------------------------------------------------------------------------------------|
-| `##`   | `Unreleased` / `Version X.Y.Z` | One section per release; `Unreleased` collects entries during development             |
-| `###`  | Category                       | `New Features`, `Improvements`, `Fixes`, `Technical Details`, `Removed Features`      |
-| `####` | Feature area                   | `Town Menu`, `Nation Menu`, `Plot Menu`, `Misc`, … — free-form, `Misc` is the catch-all  |
-| `+`    | Entry                          | One change per bullet; indent `+` sub-bullets for details                             |
+| Level  | Heading                        | Purpose                                                                                 |
+|--------|--------------------------------|-----------------------------------------------------------------------------------------|
+| `##`   | `Unreleased` / `Version X.Y.Z` | One section per release; `Unreleased` collects entries during development               |
+| `###`  | Category                       | `New Features`, `Improvements`, `Fixes`, `Technical Details`, `Removed Features`        |
+| `####` | Feature area                   | `Town Menu`, `Nation Menu`, `Plot Menu`, `Misc`, … — free-form, `Misc` is the catch-all |
+| `+`    | Entry                          | One change per bullet; indent `+` sub-bullets for details                               |
 
 Rules of thumb:
 

@@ -5,9 +5,8 @@ automatically), **menus** (the inventory GUIs that front Towny), **translations*
 
 ## How Auto-Registration Works
 
-TownyMenu uses a `PackageScanner` to discover classes at startup. It scans specific packages for concrete
-(non-abstract) classes and registers them automatically. You never need to edit `plugin.yml` or manually wire anything
-up.
+TownyMenu uses a `PackageScanner` to discover classes at startup. It scans specific packages for concrete (non-abstract)
+classes and registers them automatically. You never need to edit `plugin.yml` or manually wire anything up.
 
 | System        | Base Class / Interface    | Package                                      |
 |:--------------|:--------------------------|:---------------------------------------------|
@@ -31,8 +30,8 @@ Every command and listener class must have one of the following constructors:
 | No-arg constructor                   | When you don't need a reference to the plugin |
 | Constructor accepting a `JavaPlugin` | When you need to access the plugin instance   |
 
-The plugin instance is injected automatically when a `JavaPlugin` constructor is available. Code that is not
-constructed by a registrar (menus, utilities) can use `Main.instance`.
+The plugin instance is injected automatically when a `JavaPlugin` constructor is available. Code that is not constructed
+by a registrar (menus, utilities) can use `Main.instance`.
 
 ---
 
@@ -40,9 +39,9 @@ constructed by a registrar (menus, utilities) can use `Main.instance`.
 
 To create a command, extend `PluginCommand` and place the class anywhere inside the `commands` package or a subpackage.
 
-By default every command is registered as a **sub-command** of `/townymenu` (alias `/tm`). For example, a command
-with `name = "reload"` becomes `/townymenu reload`. Set `isMainCommand = true` to register the command as a
-standalone top-level command instead.
+By default every command is registered as a **sub-command** of `/townymenu` (alias `/tm`). For example, a command with
+`name = "reload"` becomes `/townymenu reload`. Set `isMainCommand = true` to register the command as a standalone
+top-level command instead.
 
 When a player types `/townymenu` in-game, tab-completion automatically lists all available sub-commands.
 
@@ -63,16 +62,16 @@ The plugin ships with a built-in `/townymenu help` command. It lists every regis
 sorted alphabetically within each group, and formatted with colours for readability. Every command should provide a
 meaningful `description` so the help output is informative.
 
-The help list is translated: it shows `command.<name>.description` and `command.category.<category>` from the
-language files when they exist (plain text, no MiniMessage tags), and the English `description` or category name
-otherwise. Add both keys for every new command.
+The help list is translated: it shows `command.<name>.description` and `command.category.<category>` from the language
+files when they exist (plain text, no MiniMessage tags), and the English `description` or category name otherwise. Add
+both keys for every new command.
 
 ### PluginCommand Properties
 
 | Property        | Type           | Default        | Description                                                              |
 |:----------------|:---------------|:---------------|:-------------------------------------------------------------------------|
-| `name`          | `String`       | *(required)*   | The command name (e.g. `"reload"` for `/townymenu reload`)           |
-| `description`   | `String`       | `""`           | A brief description shown in `/townymenu help` — always provide one  |
+| `name`          | `String`       | *(required)*   | The command name (e.g. `"reload"` for `/townymenu reload`)               |
+| `description`   | `String`       | `""`           | A brief description shown in `/townymenu help` — always provide one      |
 | `usage`         | `String`       | `"/<command>"` | Usage hint shown when the command fails                                  |
 | `aliases`       | `List<String>` | `emptyList()`  | Alternative names for the command (applicable to main commands only)     |
 | `permission`    | `String?`      | `null`         | Permission node required to use the command (auto-registered at startup) |
@@ -269,14 +268,14 @@ class DeathListener(private val plugin: JavaPlugin) : Listener {
 
 ## Menus
 
-Every GUI lives in `net.trilleo.mc.plugins.townymenu.guis`. The framework is in `guis/framework`, shared menus
-(toggles, permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/town`, `guis/nation`,
+Every GUI lives in `net.trilleo.mc.plugins.townymenu.guis`. The framework is in `guis/framework`, shared menus (toggles,
+permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/town`, `guis/nation`,
 `guis/plot`, and `guis/resident`. `MainMenu` is the entry point opened by `/townymenu` and sneak + swap-hand.
 
 ### Design Rules
 
-- **Menus are views, not a source of truth.** `build()` runs on every render and reads fresh data from `TownyAPI`.
-  Never cache Towny objects' state in a menu field; hold the object (a `Town`, a `Resident`) and re-read it.
+- **Menus are views, not a source of truth.** `build()` runs on every render and reads fresh data from `TownyAPI`. Never
+  cache Towny objects' state in a menu field; hold the object (a `Town`, a `Resident`) and re-read it.
 - **Changes go through Towny commands.** Buttons call `run("towny:town toggle pvp", probe)` so Towny's permission
   checks, costs, confirmations, and messages all apply. Always use the `towny:` namespace so other plugins' aliases
   can't intercept the command.
@@ -290,24 +289,24 @@ Every GUI lives in `net.trilleo.mc.plugins.townymenu.guis`. The framework is in 
 ### Menu
 
 `Menu(player, title, rows, back)` is the base class. The title is already translated, so subclasses pass
-`player.tr("my-menu.title")`. The menu is its own `InventoryHolder`, so `MenuListener` routes
-clicks by checking the open inventory's holder — there is no registry and nothing to clean up when a menu closes.
+`player.tr("my-menu.title")`. The menu is its own `InventoryHolder`, so `MenuListener` routes clicks by checking the
+open inventory's holder — there is no registry and nothing to clean up when a menu closes.
 
-| Member                                  | Description                                                                     |
-|:----------------------------------------|:--------------------------------------------------------------------------------|
-| `build()`                               | Abstract. Place items and click actions. Called on every `render()`.            |
-| `open()`                                | Renders and opens the menu, or re-renders in place if it is already open.       |
-| `render()`                              | Clears the inventory (grey filler) and calls `build()`.                         |
-| `button(slot, item, action?)`           | Places an item; `action` receives the `ClickType`.                              |
-| `guarded(slot, node, item, action)`     | Like `button`, but shows a grey "no permission" icon without `node`.            |
-| `layout(vararg slots)`                  | Returns a `Layout` that fills the given slots in order, for optional buttons.   |
-| `backButton(slot)`                      | Back arrow to `back`, or a close button when `back` is `null`.                  |
-| `tutorialButton(slot, chapter)`         | Help button opening the tutorial `Chapter` that explains this menu.             |
-| `run(command, probe?, returnTo?, delay)`| Runs a Towny command as the player (see below).                                 |
-| `runAndClose(command)`                  | Closes the menu, then runs the command (teleports, books, chat output).         |
-| `prompt(title, label, …) { text -> }`   | Shows a text-input dialog; Cancel reopens the menu.                             |
-| `tr(key, "name" to value, …)`           | Translates `key` into the viewer's language (see [Translations](#translations)). |
-| `resident`                              | The viewer's Towny `Resident`, or `null`.                                       |
+| Member                                   | Description                                                                      |
+|:-----------------------------------------|:---------------------------------------------------------------------------------|
+| `build()`                                | Abstract. Place items and click actions. Called on every `render()`.             |
+| `open()`                                 | Renders and opens the menu, or re-renders in place if it is already open.        |
+| `render()`                               | Clears the inventory (grey filler) and calls `build()`.                          |
+| `button(slot, item, action?)`            | Places an item; `action` receives the `ClickType`.                               |
+| `guarded(slot, node, item, action)`      | Like `button`, but shows a grey "no permission" icon without `node`.             |
+| `layout(vararg slots)`                   | Returns a `Layout` that fills the given slots in order, for optional buttons.    |
+| `backButton(slot)`                       | Back arrow to `back`, or a close button when `back` is `null`.                   |
+| `tutorialButton(slot, chapter)`          | Help button opening the tutorial `Chapter` that explains this menu.              |
+| `run(command, probe?, returnTo?, delay)` | Runs a Towny command as the player (see below).                                  |
+| `runAndClose(command)`                   | Closes the menu, then runs the command (teleports, books, chat output).          |
+| `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel reopens the menu.                              |
+| `tr(key, "name" to value, …)`            | Translates `key` into the viewer's language (see [Translations](#translations)). |
+| `resident`                               | The viewer's Towny `Resident`, or `null`.                                        |
 
 ### Running Commands: `MenuActions`
 
@@ -318,11 +317,11 @@ lambda reading the state the command should change — and `MenuActions` compare
 - probe **changed** → `returnTo` (default: this menu) is re-opened, showing the new state;
 - probe **unchanged**, or no probe → the menu closes so the player can read Towny's chat reply (an error, a cost).
 
-If the command raises a Towny confirmation, `MenuActions` suppresses the chat prompt (`ConfirmationSendEvent`) and
-shows a native confirmation dialog instead; accepting runs Towny's confirm command and then settles the probe as usual.
+If the command raises a Towny confirmation, `MenuActions` suppresses the chat prompt (`ConfirmationSendEvent`) and shows
+a native confirmation dialog instead; accepting runs Towny's confirm command and then settles the probe as usual.
 
-Use `returnTo = MainMenu(player)` for actions after which the current menu no longer makes sense (leaving or deleting
-a town, joining a town).
+Use `returnTo = MainMenu(player)` for actions after which the current menu no longer makes sense (leaving or deleting a
+town, joining a town).
 
 ### PagedMenu and ListMenu
 
@@ -343,13 +342,13 @@ override fun entries(): List<MenuEntry> =
 
 ### Shared Menus (`guis/common`)
 
-| Class            | Purpose                                                                                     |
-|:-----------------|:--------------------------------------------------------------------------------------------|
+| Class            | Purpose                                                                                       |
+|:-----------------|:----------------------------------------------------------------------------------------------|
 | `ToggleMenu`     | A grid of `Toggle`s (material, translated name and description, node, command, value reader). |
-| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command.                          |
-| `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                   |
-| `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.              |
-| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                    |
+| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command.                            |
+| `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                     |
+| `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                |
+| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                      |
 
 ### Tutorial (`guis/tutorial`)
 
@@ -359,11 +358,11 @@ explains, with the chapter as its back button; right-clicking toggles whether it
 
 All content lives in the `Tutorial` object:
 
-| Type      | Purpose                                                                                                      |
-|:----------|:-------------------------------------------------------------------------------------------------------------|
-| `Chapter` | Icon, title and description keys, an optional `Link`, its lessons, and an optional visibility check.         |
-| `Lesson`  | A stable `id` (`chapter/topic`), icon, title and body keys, an optional `Link`, visibility, and `facts`.     |
-| `Link`    | A condition, the translation key shown when it fails (`tutorial.requires-town`, …), and a menu factory.      |
+| Type      | Purpose                                                                                                  |
+|:----------|:---------------------------------------------------------------------------------------------------------|
+| `Chapter` | Icon, title and description keys, an optional `Link`, its lessons, and an optional visibility check.     |
+| `Lesson`  | A stable `id` (`chapter/topic`), icon, title and body keys, an optional `Link`, visibility, and `facts`. |
+| `Link`    | A condition, the translation key shown when it fails (`tutorial.requires-town`, …), and a menu factory.  |
 
 - **`facts`** returns translated lines with this server's live values (`TownySettings` prices, limits, the viewer's
   town). Hide money lines when the economy is off; the private `money(amount, key)` helper does this.
@@ -385,8 +384,8 @@ When a change adds a Towny feature to a menu, add or update its lesson in `Tutor
 ### Admin Menus (`guis/admin`)
 
 `AdminMenu` is the server admin hub, opened by `/townymenu admin` or a main-menu button. Both entry points require
-`AdminMenu.PERMISSION` (`townymenu.admin`, OP by default), and every button inside is still `guarded` by the Towny
-node of the `/townyadmin` or `/townyworld` command it runs.
+`AdminMenu.PERMISSION` (`townymenu.admin`, OP by default), and every button inside is still `guarded` by the Towny node
+of the `/townyadmin` or `/townyworld` command it runs.
 
 | Class                   | Purpose                                                                                    |
 |:------------------------|:-------------------------------------------------------------------------------------------|
@@ -475,8 +474,8 @@ Every player-facing string lives in `src/main/resources/lang/<id>.yml`. TownyMen
 2. `language` in `config.yml` is `auto` or a language id. With `auto`, each player gets the file matching their client
    locale exactly (`zh_cn`), else one sharing its language prefix (`zh_tw` → `zh_CN`), else `en_US`. The console uses
    the configured language, or `en_US` under `auto`.
-3. `tr(key, "name" to value)` looks the key up and replaces each `{name}` with `value.toString()`. A key no file
-   defines is returned as-is, so a missing translation is visible in game.
+3. `tr(key, "name" to value)` looks the key up and replaces each `{name}` with `value.toString()`. A key no file defines
+   is returned as-is, so a missing translation is visible in game.
 
 ### Writing Keys
 
@@ -512,8 +511,8 @@ bank:
 - a key-shaped string literal in `src/main/kotlin` is not in `en_US.yml`;
 - a key in `en_US.yml` is not used by any code (outside the runtime-built prefixes).
 
-To bundle another language, add `lang/<id>.yml` to the resources and its id to `Lang.BUNDLED` and to the test's
-language list.
+To bundle another language, add `lang/<id>.yml` to the resources and its id to `Lang.BUNDLED` and to the test's language
+list.
 
 ---
 
@@ -1046,8 +1045,8 @@ The `utils` package (`net.trilleo.mc.plugins.townymenu.utils`) contains the `ite
 
 ## Configuration
 
-TownyMenu provides a typed configuration wrapper — `PluginConfig` — around the standard Bukkit `config.yml`. It
-lives in the `net.trilleo.mc.plugins.townymenu.config` package and is created automatically when the plugin starts.
+TownyMenu provides a typed configuration wrapper — `PluginConfig` — around the standard Bukkit `config.yml`. It lives in
+the `net.trilleo.mc.plugins.townymenu.config` package and is created automatically when the plugin starts.
 
 ### How It Works
 

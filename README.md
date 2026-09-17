@@ -11,16 +11,16 @@
 
 ## Features
 
-- **Towny, without the commands** — Players can do their everyday Towny tasks from clickable menus. Text input
-  (names, amounts, bios) uses native Minecraft dialogs, and Towny's confirmations appear as confirm/cancel dialogs.
+- **Towny, without the commands** — Players can do their everyday Towny tasks from clickable menus. Text input (names,
+  amounts, bios) uses native Minecraft dialogs, and Towny's confirmations appear as confirm/cancel dialogs.
 - **Open it anywhere** — `/townymenu` (or `/tm`), or press swap-hand (**F**) while sneaking.
-- **Tutorial** — Nine chapters teach every Towny feature worth knowing, with this server's real prices and limits.
-  Each lesson opens the menu it explains, every feature menu has a Tutorial button for its chapter, and reading
-  progress is saved. New players without a town are pointed to it when they join.
+- **Tutorial** — Nine chapters teach every Towny feature worth knowing, with this server's real prices and limits. Each
+  lesson opens the menu it explains, every feature menu has a Tutorial button for its chapter, and reading progress is
+  saved. New players without a town are pointed to it when they join.
 - **Town menu** — Residents and ranks, invites, the town bank, claims (single chunk, area, fill, outposts, unclaim,
   bonus claims, auto-claim), PvP/mobs/fire/explosions/open/public/peaceful settings, name, board, tag, taxes, plot
-  prices, spawn and home block, map colour, selling the town, build permissions, trusted residents and towns,
-  outlaws, spawn and outpost teleports, and leaving or deleting the town.
+  prices, spawn and home block, map colour, selling the town, build permissions, trusted residents and towns, outlaws,
+  spawn and outpost teleports, and leaving or deleting the town.
 - **Nation menu** — Member towns and invitations, residents and nation ranks, the nation bank, allies and enemies,
   peaceful/open/public settings, name, board, tag, taxes, capital, leader, spawn, map colour, and leaving or deleting
   the nation.
@@ -79,12 +79,12 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 
 ## Configuration
 
-| Key                        | Default | Description                                                                     |
-|:---------------------------|:--------|:--------------------------------------------------------------------------------|
-| `message-prefix`           | —       | MiniMessage prefix shown before plugin messages                                 |
-| `language`                 | `auto`  | `auto` follows each player's client language; `en_US` or `zh_CN` forces one    |
-| `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking                     |
-| `tutorial-join-hint`       | `true`  | Suggest the tutorial to players without a town when they join                   |
+| Key                        | Default | Description                                                                 |
+|:---------------------------|:--------|:----------------------------------------------------------------------------|
+| `message-prefix`           | —       | MiniMessage prefix shown before plugin messages                             |
+| `language`                 | `auto`  | `auto` follows each player's client language; `en_US` or `zh_CN` forces one |
+| `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking                 |
+| `tutorial-join-hint`       | `true`  | Suggest the tutorial to players without a town when they join               |
 
 ## Translations
 
@@ -97,8 +97,7 @@ missing from a file fall back to the bundled copy, then to English.
 
 Full development guides are in the `docs/` directory:
 
-- [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) — How to add commands, listeners, and menus, and use the
-  configuration.
+- [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) — How to add commands, listeners, and menus, and use the configuration.
 - [UTILITY_GUIDE.md](docs/UTILITY_GUIDE.md) — Reference for the utility helpers (`itemStack` DSL, `TownyUtil`,
   `DialogUtil`, `MessageUtil`, `LoreUtil`).
 - [COMMIT_STRUCTURE.md](docs/COMMIT_STRUCTURE.md) — Commit message conventions.

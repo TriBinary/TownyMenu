@@ -109,25 +109,26 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
 - **Collect text with `prompt(...)`** (Paper dialogs), never chat input.
 - **Escape player-written text** (names, boards, titles, tags) with `TownyUtil.name()` / `TownyUtil.text()` before
   embedding it in MiniMessage.
-- **Translate everything with `tr("key", "placeholder" to value)`** — `Menu.tr` uses the viewer's language; outside
-  a menu use `sender.tr(...)`. Menu titles are translated in the constructor call: `Menu(player, player.tr("x.title"), …)`.
-- **Keep the tutorial in sync** — a new or changed Towny feature updates its lesson in `guis/tutorial/Tutorial.kt`,
-  and a new feature menu gets a `tutorialButton` for its chapter.
+- **Translate everything with `tr("key", "placeholder" to value)`** — `Menu.tr` uses the viewer's language; outside a
+  menu use `sender.tr(...)`. Menu titles are translated in the constructor call:
+  `Menu(player, player.tr("x.title"), …)`.
+- **Keep the tutorial in sync** — a new or changed Towny feature updates its lesson in `guis/tutorial/Tutorial.kt`, and
+  a new feature menu gets a `tutorialButton` for its chapter.
 - **Keep `PagedMenu` entries lazy** — pass the icon as a lambda to `MenuEntry` so off-page icons are never built.
 
 ## Translations
 
 - `Lang` loads `plugins/TownyMenu/lang/<id>.yml` (copied from `src/main/resources/lang/` on first start). With
-  `language: auto` in `config.yml` each player gets the file matching their client locale (`zh_tw` → `zh_CN` by
-  prefix), falling back to `en_US`.
-- Values are MiniMessage with `{placeholder}` arguments. Arguments are inserted verbatim, so escape player-written
-  text with `TownyUtil.name()` / `TownyUtil.text()` first. Colours belong in the translation, not in Kotlin.
+  `language: auto` in `config.yml` each player gets the file matching their client locale (`zh_tw` → `zh_CN` by prefix),
+  falling back to `en_US`.
+- Values are MiniMessage with `{placeholder}` arguments. Arguments are inserted verbatim, so escape player-written text
+  with `TownyUtil.name()` / `TownyUtil.text()` first. Colours belong in the translation, not in Kotlin.
 - Keys are grouped by menu (`town.*`, `plot-group.*`); reuse `common.*`, `toggle.*`, and `icon.*` for shared text.
 - Key names must appear as whole string literals (`tr(if (on) "a.on" else "a.off")`, not `"a.$state"`) so
   `LangFilesTest` can see them. The only runtime-built keys are `plot-type.*` and `command.*`.
 - Quote YAML keys that YAML 1.1 reads as booleans (`"on"`, `"off"`, `"yes"`, `"no"`).
-- Chinese terms follow Towny's own zh_CN wording: 城镇 (town), 国家 (nation), 镇长 (mayor), 国王 (nation leader),
-  居民 (resident), 地块 (plot), 领地 (claims), 前哨 (outpost).
+- Chinese terms follow Towny's own zh_CN wording: 城镇 (town), 国家 (nation), 镇长 (mayor), 国王 (nation leader), 居民
+  (resident), 地块 (plot), 领地 (claims), 前哨 (outpost).
 
 ## Working with Towny
 
@@ -136,10 +137,10 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
 - **Read data through `TownyAPI`** — `TownyAPI.getInstance()` gives residents (`getResident(player)`), towns, nations,
   and `TownBlock`s. Handle `null` results: a player may have no resident record, town, or nation.
 - **Prefer Towny's own actions over reimplementing them** — for anything that changes Towny state (joining, claiming,
-  deposits, ranks, toggles), run the equivalent Towny command as the player — from a menu, `run("towny:town ...")` —
-  so Towny's permission checks, costs, confirmations, and messages still apply. Always use the `towny:` namespace.
-  Only call Towny's mutating API directly when no command covers the action, and then enforce the same permission
-  nodes Towny would.
+  deposits, ranks, toggles), run the equivalent Towny command as the player — from a menu, `run("towny:town ...")` — so
+  Towny's permission checks, costs, confirmations, and messages still apply. Always use the `towny:` namespace. Only
+  call Towny's mutating API directly when no command covers the action, and then enforce the same permission nodes Towny
+  would.
 - **Towny's config is the one exception** — no command edits it, so the admin config editor writes through
   `TownyConfig` and then runs `/townyadmin reload config` as the player. Every other admin action runs a
   `/townyadmin` or `/townyworld` command.
@@ -159,8 +160,8 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
 - [.github/workflows/build.yml](.github/workflows/build.yml) builds every push and pull request.
 - Releases are made by tagging `vX.Y.Z`: [.github/workflows/release.yml](.github/workflows/release.yml) builds the jar,
   uses the matching `## Version X.Y.Z` section of `CHANGELOG.md` as the release notes, and attaches the jar. See
-  [docs/RELEASING.md](docs/RELEASING.md). **Never tag or push tags unless explicitly asked** — pushing a tag publishes
-  a release.
+  [docs/RELEASING.md](docs/RELEASING.md). **Never tag or push tags unless explicitly asked** — pushing a tag publishes a
+  release.
 
 ## Commit Convention
 

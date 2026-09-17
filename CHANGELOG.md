@@ -18,10 +18,10 @@
     + Open it with `/tm tutorial`, the Tutorial button in the main menu, or the Tutorial button in each feature menu,
       which jumps straight to the chapter explaining that menu.
     + Left-click a lesson to open the menu it explains; lessons say what you need first, such as joining a town.
-    + Lessons show this server's live values, such as the cost of founding a town, claim prices, upkeep, and the time
-      of the new day. Money topics are hidden when the server has no economy.
-    + Your progress is saved: read lessons are ticked, chapters show how many you have read, and Continue Reading
-      opens the next unread chapter.
+    + Lessons show this server's live values, such as the cost of founding a town, claim prices, upkeep, and the time of
+      the new day. Money topics are hidden when the server has no economy.
+    + Your progress is saved: read lessons are ticked, chapters show how many you have read, and Continue Reading opens
+      the next unread chapter.
 + Players without a town are pointed to the tutorial when they join, until they have read every lesson. Turn this off
   with `tutorial-join-hint` in `config.yml` or in the admin TownyMenu settings.
 
@@ -32,8 +32,8 @@
 + Added claim management: claim a chunk, an area, or enclosed gaps, claim outposts, unclaim, buy bonus claims, and
   toggle auto-claim.
 + Added town settings (PvP, mobs, fire, explosions, open, public, peaceful, percentage taxes).
-+ Added town details: name, board, tag, taxes, plot prices, spawn cost, spawn, home block, outpost spawn, primary
-  jail, map colour, and selling the town.
++ Added town details: name, board, tag, taxes, plot prices, spawn cost, spawn, home block, outpost spawn, primary jail,
+  map colour, and selling the town.
 + Added town build permissions, trusted residents and towns, outlaws, spawn and outpost teleports, and leaving or
   deleting a town.
 + Added a town directory that ranks towns by residents, claims, balance, online players, or openness.
@@ -70,11 +70,11 @@
       applied immediately.
 + Added per-world settings: PvP, explosions, fire, mobs, war, jailing, land repair, claiming, wilderness permissions,
   the wilderness name, and resetting a world to defaults.
-+ Added server actions: new day, new hour, backup, database save, outpost check, Towny reloads, bank withdrawal,
-  debug, and developer mode toggles, and wilderness use and land repair for every world at once.
-+ Added town administration for any town: teleport, rename, set mayor, add and kick residents, bonus and bought
-  claims, bank deposits and withdrawals, leaving its nation, restoring a ruined town, deleting, and admin-only settings
-  (forced PvP and mobs, unlimited claims, upkeep, war, top lists).
++ Added server actions: new day, new hour, backup, database save, outpost check, Towny reloads, bank withdrawal, debug,
+  and developer mode toggles, and wilderness use and land repair for every world at once.
++ Added town administration for any town: teleport, rename, set mayor, add and kick residents, bonus and bought claims,
+  bank deposits and withdrawals, leaving its nation, restoring a ruined town, deleting, and admin-only settings (forced
+  PvP and mobs, unlimited claims, upkeep, war, top lists).
 + Added nation administration: rename, leader, capital, adding and kicking towns, bank, settings, and deleting.
 + Added resident administration with a searchable list: town membership, rename, title, surname, NPC flag, releasing
   from jail, and deleting.
