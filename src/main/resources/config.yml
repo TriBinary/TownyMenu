@@ -3,6 +3,11 @@
 # A friendly prefix shown before plugin messages
 message-prefix: "<click:run_command:/townymenu><gradient:yellow:gold>[TownyMenu]"
 
+# Menu language. "auto" shows each player their Minecraft client language when TownyMenu has it
+# (clients in an unsupported language see en_US). Set a language id such as "en_US" or "zh_CN" to use it for everyone.
+# Translations live in plugins/TownyMenu/lang/ and can be edited or extended with new <id>.yml files.
+language: auto
+
 # Open the main menu when a player presses the swap-hand key (F by default) while sneaking.
 # Set to false if this conflicts with another plugin's controls.
 sneak-swap-hand-shortcut: true

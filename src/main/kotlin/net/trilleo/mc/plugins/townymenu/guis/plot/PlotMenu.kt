@@ -14,6 +14,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -21,7 +22,7 @@ import org.bukkit.entity.Player
  * The plot the viewer is standing in. Every render re-reads the player's
  * location, so walking to another chunk and refreshing shows that chunk.
  */
-class PlotMenu(player: Player, back: Menu?) : Menu(player, "Plot", 6, back) {
+class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title"), 6, back) {
 
     private val plot: TownBlock?
         get() = TownyAPI.getInstance().getTownBlock(player)
@@ -29,49 +30,50 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, "Plot", 6, back) {
     override fun build() {
         val plot = plot
         if (plot == null) wilderness() else claimed(plot)
-        button(50, Icons.icon(Material.CLOCK, "<yellow>Refresh", "Update this menu after moving to another chunk.")) { render() }
+        button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"))) { render() }
         backButton(49)
     }
 
     private fun wilderness() {
         val coord = WorldCoord.parseWorldCoord(player)
-        button(4, Icons.icon(Material.OAK_SAPLING, "<green>Wilderness", "Nobody has claimed this land.",
-            "<gray>Chunk: <white>${coord.x}, ${coord.z}"))
+        button(4, Icons.icon(Material.OAK_SAPLING, "<green>${tr("main.wilderness")}", tr("plot.wilderness-description"),
+            tr("map.chunk", "x" to coord.x, "z" to coord.z)))
         val town = resident?.townOrNull
         val grid = layout(20, 21, 22, 23, 24)
         if (town != null) {
             grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
-                Icons.icon(Material.GRASS_BLOCK, "<green>Claim for ${TownyUtil.name(town.name)}", "Claim this chunk for your town.")) {
+                Icons.icon(Material.GRASS_BLOCK, tr("plot.claim", "town" to TownyUtil.name(town.name)), tr("plot.claim-description"))) {
                 run("towny:town claim", { town.numTownBlocks }, delayTicks = 20)
             }
             grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_OUTPOST,
-                Icons.icon(Material.COMPASS, "<light_purple>Claim as Outpost", "Claim this chunk as an outpost.")) {
+                Icons.icon(Material.COMPASS, tr("plot.claim-outpost"), tr("plot.claim-outpost-description"))) {
                 run("towny:town claim outpost", { town.numTownBlocks }, delayTicks = 20)
             }
         }
-        grid.add(Icons.icon(Material.FILLED_MAP, "<aqua>Map", "See the land around you.")) { MapMenu(player, this).open() }
+        grid.add(Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) { MapMenu(player, this).open() }
     }
 
     private fun claimed(plot: TownBlock) {
         val town = plot.townOrNull
         val owner = plot.residentOrNull
         val viewer = resident
-        button(4, Icons.icon(Material.GRASS_BLOCK, "<gold>${if (plot.name.isNullOrBlank()) "Plot" else TownyUtil.text(plot.name)}", null, *buildList {
-            add("<gray>Town: <white>${town?.let { TownyUtil.name(it.name) } ?: "-"}")
-            add("<gray>Owner: <white>${owner?.let { TownyUtil.name(it.name) } ?: "The town"}")
-            add("<gray>Type: <white>${TownyUtil.name(plot.type.name)}")
-            add("<gray>Chunk: <white>${plot.x}, ${plot.z}")
-            if (plot.isHomeBlock) add("<gold>Home block")
-            if (plot.isOutpost) add("<light_purple>Outpost")
-            if (plot.hasPlotObjectGroup()) add("<gray>Group: <white>${TownyUtil.name(plot.plotObjectGroup.name)}")
-            if (plot.hasDistrict()) add("<gray>District: <white>${TownyUtil.name(plot.district.name)}")
+        button(4, Icons.icon(Material.GRASS_BLOCK, "<gold>${if (plot.name.isNullOrBlank()) tr("plot.unnamed") else TownyUtil.text(plot.name)}", null, *buildList {
+            add(tr("icon.resident.town", "town" to (town?.let { TownyUtil.name(it.name) } ?: "-")))
+            add(tr("map.owner", "owner" to (owner?.let { TownyUtil.name(it.name) } ?: tr("map.owner-town"))))
+            add(tr("map.type", "type" to TownyUtil.plotType(player, plot.type.name)))
+            add(tr("map.chunk", "x" to plot.x, "z" to plot.z))
+            if (plot.isHomeBlock) add(tr("map.home-block"))
+            if (plot.isOutpost) add(tr("map.outpost"))
+            if (plot.hasPlotObjectGroup()) add(tr("plot.group", "group" to TownyUtil.name(plot.plotObjectGroup.name)))
+            if (plot.hasDistrict()) add(tr("plot.district", "district" to TownyUtil.name(plot.district.name)))
             if (TownyUtil.economy) {
-                if (plot.isForSale) add("<green>For sale: <white>${TownyUtil.money(plot.plotPrice)}")
-                if (plot.isTaxed) add("<gray>Daily tax: <white>${TownyUtil.money(plot.plotTax)}")
+                if (plot.isForSale) add(tr("map.for-sale", "price" to TownyUtil.money(plot.plotPrice)))
+                if (plot.isTaxed) add(tr("bank.daily-tax", "tax" to TownyUtil.money(plot.plotTax)))
             }
-            add("<gray>PvP: ${TownyUtil.onOff(plot.permissions.pvp)}  <gray>Mobs: ${TownyUtil.onOff(plot.permissions.mobs)}")
-            add("<gray>Fire: ${TownyUtil.onOff(plot.permissions.fire)}  <gray>Explosions: ${TownyUtil.onOff(plot.permissions.explosion)}")
-            add("<gray>Claimed: <white>${TownyUtil.date(plot.claimedAt)}")
+            add(tr("town.pvp-mobs", "pvp" to TownyUtil.onOff(player, plot.permissions.pvp), "mobs" to TownyUtil.onOff(player, plot.permissions.mobs)))
+            add(tr("town.fire-explosions", "fire" to TownyUtil.onOff(player, plot.permissions.fire),
+                "explosions" to TownyUtil.onOff(player, plot.permissions.explosion)))
+            add(tr("plot.claimed", "date" to TownyUtil.date(plot.claimedAt)))
         }.toTypedArray()))
 
         val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43)
@@ -80,86 +82,86 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, "Plot", 6, back) {
 
         if (plot.isForSale && owner != viewer) {
             grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_CLAIM, Icons.icon(
-                Material.EMERALD, "<green>Buy Plot", "Become the owner of this plot.",
-                "<gray>Price: <white>${TownyUtil.money(plot.plotPrice)}",
+                Material.EMERALD, tr("plot.buy"), tr("plot.buy-description"),
+                tr("common.price", "price" to TownyUtil.money(plot.plotPrice)),
             )) { run("towny:plot claim", ownerProbe) }
         }
         if (owner != null && owner == viewer) {
             grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_UNCLAIM,
-                Icons.icon(Material.COARSE_DIRT, "<red>Give Up Plot", "Return this plot to the town.")) {
+                Icons.icon(Material.COARSE_DIRT, tr("plot.give-up"), tr("plot.give-up-description"))) {
                 run("towny:plot unclaim", ownerProbe)
             }
         }
         if (plot.isForSale) {
             grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_NOTFORSALE,
-                Icons.icon(Material.RED_BANNER, "<red>Take off Sale", "Stop selling this plot.")) {
+                Icons.icon(Material.RED_BANNER, tr("plot.not-for-sale"), tr("plot.not-for-sale-description"))) {
                 run("towny:plot notforsale", saleProbe)
             }
         } else {
             grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_FORSALE,
-                Icons.icon(Material.GREEN_BANNER, "<gold>Put up for Sale", "Let a resident buy this plot.")) {
-                prompt("Sell Plot", "Price", "<gray>Use 0 to give it away for free.", initial = "0") { price ->
+                Icons.icon(Material.GREEN_BANNER, tr("plot.for-sale"), tr("plot.for-sale-description"))) {
+                prompt(tr("plot.for-sale-title"), tr("common.price-label"), tr("plot.for-sale-hint"), initial = "0") { price ->
                     run("towny:plot forsale ${TownyUtil.argument(price)}", saleProbe)
                 }
             }
         }
         if (owner != null) {
             grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_EVICT,
-                Icons.icon(Material.IRON_BOOTS, "<red>Evict Owner", "Remove ${TownyUtil.name(owner.name)} as this plot's owner.")) {
+                Icons.icon(Material.IRON_BOOTS, tr("plot.evict"), tr("plot.evict-description", "owner" to TownyUtil.name(owner.name)))) {
                 run("towny:plot evict", ownerProbe)
             }
         }
-        grid.add(Icons.icon(Material.OAK_SIGN, "<yellow>Plot Type", "Shops, embassies, arenas, farms, jails, and more.",
-            "<gray>Current: <white>${TownyUtil.name(plot.type.name)}")) {
-            val types = listOf("reset" to "<white>Default") +
-                TownBlockTypeHandler.getTypeNames().filter { it != "default" }.sorted().map { it to "<white>${TownyUtil.name(it)}" }
-            Pickers.option(this, "Plot Type", types, plot.type.name.takeIf { it != "default" } ?: "reset", Material.OAK_SIGN) { type ->
+        grid.add(Icons.icon(Material.OAK_SIGN, tr("plot.type"), tr("plot.type-description"),
+            tr("common.current", "value" to TownyUtil.plotType(player, plot.type.name)))) {
+            val types = listOf("reset" to "<white>${TownyUtil.plotType(player, "default")}") +
+                TownBlockTypeHandler.getTypeNames().filter { it != "default" }.sorted().map { it to "<white>${TownyUtil.plotType(player, it)}" }
+            Pickers.option(this, tr("plot.type-title"), types, plot.type.name.takeIf { it != "default" } ?: "reset", Material.OAK_SIGN) { type ->
                 run("towny:plot set $type", { plot.type.name }, returnTo = this)
             }.open()
         }
         grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_SET_NAME,
-            Icons.icon(Material.NAME_TAG, "<yellow>Rename Plot", "Shown to players as they walk in.")) {
-            prompt("Rename Plot", "Plot name", initial = plot.name.orEmpty()) { name ->
+            Icons.icon(Material.NAME_TAG, tr("plot.rename"), tr("plot.rename-description"))) {
+            prompt(tr("plot.rename-title"), tr("plot.plot-name"), initial = plot.name.orEmpty()) { name ->
                 run("towny:plot set name ${TownyUtil.nameArgument(name)}", { plot.name })
             }
         }
-        grid.add(Icons.icon(Material.LEVER, "<yellow>Plot Settings", "PvP, fire, explosions, mobs, and taxes on this plot.")) {
+        grid.add(Icons.icon(Material.LEVER, tr("plot.settings"), tr("plot.settings-description"))) {
             toggles(plot).open()
         }
         grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_SET_PERM,
-            Icons.icon(Material.IRON_DOOR, "<aqua>Permissions", "Who can build, break, and interact on this plot.")) {
-            PermissionMenu(player, "Plot Permissions", this, "towny:plot set perm",
+            Icons.icon(Material.IRON_DOOR, tr("common.permissions"), tr("plot.permissions-description"))) {
+            PermissionMenu(player, tr("plot.permissions-title"), this, "towny:plot set perm",
                 PermissionNodes.TOWNY_COMMAND_PLOT_SET_PERM, owner != null) { plot.takeIf { it.exists() }?.permissions }.open()
         }
         grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_TRUST, Icons.icon(
-            Material.TRIPWIRE_HOOK, "<green>Trusted Players", "Trusted players may build on this plot.",
-            "<gray>Trusted: <white>${plot.trustedResidents.size}",
+            Material.TRIPWIRE_HOOK, tr("plot.trusted"), tr("plot.trusted-description"),
+            tr("plot.trusted-count", "count" to plot.trustedResidents.size),
         )) { PlotTrustMenu(player, plot, this).open() }
-        grid.add(Icons.icon(Material.CHEST, "<gold>Groups & Districts", "Bundle plots into groups sold together, or into districts.")) {
+        grid.add(Icons.icon(Material.CHEST, tr("plot.groups"), tr("plot.groups-description"))) {
             PlotGroupMenu(player, this).open()
         }
         grid.add(PermissionNodes.TOWNY_COMMAND_PLOT_CLEAR,
-            Icons.icon(Material.BRUSH, "<red>Clear Plot", "Remove blocks placed on this plot that the server marks as clearable.")) {
+            Icons.icon(Material.BRUSH, tr("plot.clear"), tr("plot.clear-description"))) {
             runAndClose("towny:plot clear")
         }
         if (town != null) {
-            grid.add(Icons.icon(Material.BELL, "<gold>${TownyUtil.name(town.name)}", "View the town that owns this land.")) {
+            grid.add(Icons.icon(Material.BELL, "<gold>${TownyUtil.name(town.name)}", tr("plot.town-description"))) {
                 TownInfoMenu(player, town, this).open()
             }
         }
-        grid.add(Icons.icon(Material.FILLED_MAP, "<aqua>Map", "See the land around you.")) { MapMenu(player, this).open() }
+        grid.add(Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) { MapMenu(player, this).open() }
     }
 
     private fun toggles(plot: TownBlock): Menu {
         fun toggle(material: Material, key: String, label: String, description: String, node: PermissionNodes, read: (TownBlock) -> Boolean) =
             Toggle(material, label, description, node, "towny:plot toggle $key") { plot.takeIf { it.exists() }?.let(read) }
 
-        return ToggleMenu(player, "Plot Settings", this, listOf(
-            toggle(Material.IRON_SWORD, "pvp", "<red>PvP", "Allow players to fight on this plot.", PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_PVP) { it.permissions.pvp },
-            toggle(Material.FLINT_AND_STEEL, "fire", "<gold>Fire Spread", "Allow fire to spread on this plot.", PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_FIRE) { it.permissions.fire },
-            toggle(Material.TNT, "explosion", "<dark_red>Explosions", "Allow explosions on this plot.", PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_EXPLOSION) { it.permissions.explosion },
-            toggle(Material.ZOMBIE_HEAD, "mobs", "<dark_green>Hostile Mobs", "Allow hostile mobs to spawn on this plot.", PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_MOBS) { it.permissions.mobs },
-            toggle(Material.GOLD_NUGGET, "taxed", "<gold>Taxed", "Charge the plot owner the town's daily plot tax.", PermissionNodes.TOWNY_COMMAND_PLOT_ASMAYOR) { it.isTaxed },
+        return ToggleMenu(player, tr("plot.settings-title"), this, listOf(
+            toggle(Material.IRON_SWORD, "pvp", tr("toggle.pvp"), tr("toggle.plot-pvp-description"), PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_PVP) { it.permissions.pvp },
+            toggle(Material.FLINT_AND_STEEL, "fire", tr("toggle.fire"), tr("toggle.plot-fire-description"), PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_FIRE) { it.permissions.fire },
+            toggle(Material.TNT, "explosion", tr("toggle.explosions"), tr("toggle.plot-explosions-description"), PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_EXPLOSION) { it.permissions.explosion },
+            toggle(Material.ZOMBIE_HEAD, "mobs", tr("toggle.mobs"), tr("toggle.plot-mobs-description"), PermissionNodes.TOWNY_COMMAND_PLOT_TOGGLE_MOBS) { it.permissions.mobs },
+            toggle(Material.GOLD_NUGGET, "taxed", tr("toggle.taxed"), tr("toggle.taxed-description"), PermissionNodes.TOWNY_COMMAND_PLOT_ASMAYOR) { it.isTaxed },
         ))
     }
 }

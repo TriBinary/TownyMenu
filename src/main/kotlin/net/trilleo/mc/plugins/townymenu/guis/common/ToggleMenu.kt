@@ -7,7 +7,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /**
- * One on/off setting backed by a Towny toggle command.
+ * One on/off setting backed by a Towny toggle command. [name] and [description] are already translated.
  *
  * @param value reads the current state; `null` when the target no longer exists
  */
@@ -31,7 +31,7 @@ class ToggleMenu(
     override fun build() {
         toggles.forEachIndexed { index, toggle ->
             val slot = 10 + index / 7 * 9 + index % 7
-            guarded(slot, toggle.node, Icons.toggle(toggle.material, toggle.name, toggle.value() ?: false, toggle.description)) {
+            guarded(slot, toggle.node, Icons.toggle(player, toggle.material, toggle.name, toggle.value() ?: false, toggle.description)) {
                 run(toggle.command, toggle.value)
             }
         }

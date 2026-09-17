@@ -1,6 +1,8 @@
 package net.trilleo.mc.plugins.townymenu.commands.info
 
 import net.trilleo.mc.plugins.townymenu.registration.CommandRegistrar
+import net.trilleo.mc.plugins.townymenu.utils.Lang
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -12,7 +14,6 @@ class HelpCommand : PluginCommand(
     description = "Show all available commands"
 ) {
     companion object {
-        // Matches the total width of the header: "========= TownyMenu Commands ========="
         private const val HEADER_WIDTH = 42
     }
 
@@ -23,7 +24,7 @@ class HelpCommand : PluginCommand(
         sender.sendMessage(
             Component.text("=========", NamedTextColor.GOLD)
                 .append(
-                    Component.text(" TownyMenu Commands ", NamedTextColor.GOLD)
+                    Component.text(" ${sender.tr("command.help.header")} ", NamedTextColor.GOLD)
                         .decorate(TextDecoration.BOLD)
                 )
                 .append(Component.text("=========", NamedTextColor.GOLD))
@@ -34,7 +35,7 @@ class HelpCommand : PluginCommand(
             sender.sendMessage(
                 Component.text("» ", NamedTextColor.GOLD)
                     .append(
-                        Component.text(category, NamedTextColor.YELLOW)
+                        Component.text(Lang.find(sender, "command.category.${category.lowercase()}") ?: category, NamedTextColor.YELLOW)
                             .decorate(TextDecoration.BOLD)
                     )
             )
@@ -49,7 +50,7 @@ class HelpCommand : PluginCommand(
                 sender.sendMessage(
                     Component.text("  $commandText", NamedTextColor.GREEN)
                         .append(Component.text(" - ", NamedTextColor.DARK_GRAY))
-                        .append(Component.text(info.command.description, NamedTextColor.GRAY))
+                        .append(Component.text(Lang.find(sender, "command.${info.command.name}.description") ?: info.command.description, NamedTextColor.GRAY))
                 )
             }
         }

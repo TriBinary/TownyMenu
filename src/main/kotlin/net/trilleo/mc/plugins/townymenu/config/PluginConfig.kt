@@ -28,6 +28,10 @@ class PluginConfig(private val plugin: JavaPlugin) {
     val messagePrefix: String
         get() = plugin.config.getString("message-prefix") ?: "[TownyMenu]"
 
+    /** `auto` to follow each player's client language, or a language id such as `zh_CN` (`language`). */
+    val language: String
+        get() = plugin.config.getString("language") ?: "auto"
+
     /** Whether pressing swap-hand (F) while sneaking opens the main menu (`sneak-swap-hand-shortcut`). */
     val sneakSwapHandShortcut: Boolean
         get() = plugin.config.getBoolean("sneak-swap-hand-shortcut", true)

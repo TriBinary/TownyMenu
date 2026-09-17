@@ -23,6 +23,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage
  * val narrow = LoreUtil.wrapLore("<red>Warning: dangerous item!", maxWidth = 30)
  * ```
  *
+ * Width is measured in columns: Chinese, Japanese, and Korean characters count
+ * as two, and lines may break between them.
+ *
  * Explicit newlines (`\n` or `<newline>`) force a line break:
  * ```kotlin
  * val lines = LoreUtil.wrapLore("<gray>Line one\nLine two")
@@ -36,7 +39,7 @@ object LoreUtil {
      * Wraps a MiniMessage-formatted string into multiple lore-ready [Component] lines.
      *
      * @param text the MiniMessage-formatted input string
-     * @param maxWidth maximum number of visible characters per line (default 40)
+     * @param maxWidth maximum number of columns per line (default 40); wide CJK characters take two
      * @return a list of [Component] lines suitable for use as item lore
      */
     fun wrapLore(text: String, maxWidth: Int = 40): List<Component> {
@@ -109,15 +112,18 @@ object LoreUtil {
 
     /**
      * Splits a flat list of styled characters into word-aware wrapped lines,
-     * each not exceeding [maxWidth] visible characters.
+     * each not exceeding [maxWidth] columns.
+     *
+     * Chinese, Japanese, and Korean characters count as two columns and may be
+     * broken between any two characters, since those scripts don't separate
+     * words with spaces. Closing punctuation stays on the line of the character
+     * before it.
      */
     private fun wrapStyledChars(chars: List<StyledChar>, maxWidth: Int): List<List<StyledChar>> {
         if (chars.isEmpty()) return listOf(emptyList())
 
-        // First, split into words (separated by spaces)
         val words = mutableListOf<List<StyledChar>>()
         var currentWord = mutableListOf<StyledChar>()
-
         for (sc in chars) {
             if (sc.char == ' ') {
                 words.add(currentWord)
@@ -128,48 +134,39 @@ object LoreUtil {
         }
         words.add(currentWord)
 
-        // Now build lines word by word
         val lines = mutableListOf<List<StyledChar>>()
         var currentLine = mutableListOf<StyledChar>()
 
+        fun place(segment: List<StyledChar>, glued: Boolean) {
+            val separator = if (currentLine.isEmpty() || glued) 0 else 1
+            when {
+                width(segment) > maxWidth -> {
+                    if (currentLine.isNotEmpty()) lines.add(currentLine)
+                    val broken = forceBreakWord(segment, maxWidth)
+                    lines.addAll(broken.dropLast(1))
+                    currentLine = broken.last().toMutableList()
+                }
+                currentLine.isEmpty() -> currentLine.addAll(segment)
+                width(currentLine) + separator + width(segment) <= maxWidth -> {
+                    if (separator == 1) currentLine.add(StyledChar(' ', segment.first().style))
+                    currentLine.addAll(segment)
+                }
+                else -> {
+                    lines.add(currentLine)
+                    currentLine = segment.toMutableList()
+                }
+            }
+        }
+
         for (word in words) {
             if (word.isEmpty()) {
-                // Empty word from consecutive spaces — treat as a space
-                if (currentLine.size < maxWidth) {
-                    // Just add a space if there's room
-                    if (currentLine.isNotEmpty()) {
-                        currentLine.add(
-                            StyledChar(
-                                ' ',
-                                if (currentLine.isNotEmpty()) currentLine.last().style else Style.empty()
-                            )
-                        )
-                    }
+                // Consecutive spaces: keep the extra space when it fits
+                if (currentLine.isNotEmpty() && width(currentLine) < maxWidth) {
+                    currentLine.add(StyledChar(' ', currentLine.last().style))
                 }
                 continue
             }
-
-            if (word.size > maxWidth) {
-                // Force-break a long word
-                if (currentLine.isNotEmpty()) {
-                    lines.add(currentLine)
-                    currentLine = mutableListOf()
-                }
-                val broken = forceBreakWord(word, maxWidth)
-                lines.addAll(broken.dropLast(1))
-                currentLine = broken.last().toMutableList()
-            } else if (currentLine.isEmpty()) {
-                // First word on the line
-                currentLine.addAll(word)
-            } else if (currentLine.size + 1 + word.size <= maxWidth) {
-                // Word fits with a space
-                currentLine.add(StyledChar(' ', word.first().style))
-                currentLine.addAll(word)
-            } else {
-                // Word doesn't fit — start a new line
-                lines.add(currentLine)
-                currentLine = word.toMutableList()
-            }
+            segments(word).forEachIndexed { index, segment -> place(segment, glued = index > 0) }
         }
 
         if (currentLine.isNotEmpty() || lines.isEmpty()) {
@@ -179,20 +176,56 @@ object LoreUtil {
         return lines
     }
 
+    /** Splits a space-free word at every point a line may break: around each wide character. */
+    private fun segments(word: List<StyledChar>): List<List<StyledChar>> {
+        val result = mutableListOf<MutableList<StyledChar>>()
+        var previousWide = false
+        for (sc in word) {
+            val wide = isWide(sc.char)
+            val startNew = result.isEmpty() || ((wide || previousWide) && sc.char !in CLOSING_PUNCTUATION)
+            if (startNew) result.add(mutableListOf(sc)) else result.last().add(sc)
+            previousWide = wide
+        }
+        return result
+    }
+
     /**
-     * Force-breaks a word that exceeds [maxWidth] into multiple chunks.
+     * Force-breaks a word that exceeds [maxWidth] columns into multiple chunks.
      */
     private fun forceBreakWord(word: List<StyledChar>, maxWidth: Int): List<List<StyledChar>> {
         val result = mutableListOf<List<StyledChar>>()
-        var i = 0
-        while (i < word.size) {
-            val end = minOf(i + maxWidth, word.size)
-            result.add(word.subList(i, end))
-            i = end
+        var chunk = mutableListOf<StyledChar>()
+        var chunkWidth = 0
+        for (sc in word) {
+            val charWidth = width(sc.char)
+            if (chunk.isNotEmpty() && chunkWidth + charWidth > maxWidth) {
+                result.add(chunk)
+                chunk = mutableListOf()
+                chunkWidth = 0
+            }
+            chunk.add(sc)
+            chunkWidth += charWidth
         }
-        if (result.isEmpty()) result.add(emptyList())
+        result.add(chunk)
         return result
     }
+
+    private fun width(chars: List<StyledChar>): Int = chars.sumOf { width(it.char) }
+
+    private fun width(char: Char): Int = if (isWide(char)) 2 else 1
+
+    private fun isWide(char: Char): Boolean =
+        char in '\u3000'..'\u303F' || char in '\uFF00'..'\uFFEF' ||
+            Character.UnicodeScript.of(char.code) in WIDE_SCRIPTS
+
+    private val WIDE_SCRIPTS = setOf(
+        Character.UnicodeScript.HAN,
+        Character.UnicodeScript.HIRAGANA,
+        Character.UnicodeScript.KATAKANA,
+        Character.UnicodeScript.HANGUL,
+    )
+
+    private const val CLOSING_PUNCTUATION = "，。、；：？！）」』》〉】,.;:?!)"
 
     /**
      * Builds a single lore line [Component] from styled characters,

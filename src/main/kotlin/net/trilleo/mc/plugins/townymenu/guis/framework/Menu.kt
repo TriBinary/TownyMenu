@@ -9,6 +9,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import net.trilleo.mc.plugins.townymenu.utils.DialogUtil
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -26,7 +27,8 @@ import org.bukkit.inventory.ItemStack
  * routes clicks without any global registry.
  *
  * [build] is called on every [render] and must read fresh data from Towny —
- * menus never cache Towny state.
+ * menus never cache Towny state. Every text is translated for [player] with [tr],
+ * including the [title] the subclass passes in.
  *
  * @param back the menu the back button returns to; `null` shows a close button
  */
@@ -45,6 +47,9 @@ abstract class Menu(
         get() = TownyAPI.getInstance().getResident(player)
 
     override fun getInventory(): Inventory = inventory
+
+    /** Translates [key] into the viewer's language. See [net.trilleo.mc.plugins.townymenu.utils.Lang]. */
+    fun tr(key: String, vararg args: Pair<String, Any?>): String = player.tr(key, *args)
 
     /** Places this menu's items and click actions. Called on every [render]. */
     protected abstract fun build()
@@ -101,9 +106,9 @@ abstract class Menu(
     protected fun backButton(slot: Int) {
         val target = back
         if (target == null) {
-            button(slot, itemStack(Material.BARRIER) { name("<red>Close") }) { player.closeInventory() }
+            button(slot, itemStack(Material.BARRIER) { name(tr("menu.close")) }) { player.closeInventory() }
         } else {
-            button(slot, itemStack(Material.ARROW) { name("<yellow>Back") }) { target.open() }
+            button(slot, itemStack(Material.ARROW) { name(tr("menu.back")) }) { target.open() }
         }
     }
 
@@ -147,11 +152,10 @@ abstract class Menu(
 
         private val FILLER = itemStack(Material.GRAY_STAINED_GLASS_PANE) { hideTooltip(true) }
 
-        private fun locked(item: ItemStack): ItemStack = itemStack(Material.GRAY_DYE) {
-            meta {
-                displayName(item.itemMeta?.displayName())
-                lore(listOf(MiniMessage.miniMessage().deserialize("<!i><red>You don't have permission for this.")))
-            }
-        }
+    }
+
+    private fun locked(item: ItemStack): ItemStack = itemStack(Material.GRAY_DYE) {
+        lore(tr("menu.no-permission"))
+        meta { displayName(item.itemMeta?.displayName()) }
     }
 }

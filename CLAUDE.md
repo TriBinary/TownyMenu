@@ -39,7 +39,12 @@ Before finishing any task that changes the plugin, do all of the following:
    task. A change to a documented workflow (e.g. the release process in [docs/RELEASING.md](docs/RELEASING.md)) updates
    that doc too. Keep this file accurate as well.
 
-3. **Check the README** — if the change affects anything [README.md](README.md) mentions (features, commands,
+3. **Translate every new string** — player-facing text never lives in Kotlin. Add each key to **both**
+   [en_US.yml](src/main/resources/lang/en_US.yml) and [zh_CN.yml](src/main/resources/lang/zh_CN.yml) in the same task,
+   with a real Simplified Chinese translation, and remove keys the change no longer uses. `LangFilesTest` fails the
+   build when the files disagree or a key is missing or unused. See the Translations section below.
+
+4. **Check the README** — if the change affects anything [README.md](README.md) mentions (features, commands,
    requirements, build instructions), update it.
 
 ## Build & Run
@@ -68,7 +73,10 @@ src/main/kotlin/net/trilleo/mc/plugins/townymenu/
 │   └── MainMenu.kt, MapMenu.kt, InvitesMenu.kt
 ├── listeners/               # Event listeners (auto-registered)
 ├── registration/            # Auto-registration engine (do not modify lightly)
-└── utils/                   # itemStack DSL, TownyUtil, DialogUtil, MessageUtil, LoreUtil
+└── utils/                   # itemStack DSL, Lang, TownyUtil, DialogUtil, MessageUtil, LoreUtil
+src/main/resources/
+├── config.yml  plugin.yml
+└── lang/                    # en_US.yml, zh_CN.yml — every player-facing string
 ```
 
 ## Auto-Registration System
@@ -97,7 +105,23 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
 - **Collect text with `prompt(...)`** (Paper dialogs), never chat input.
 - **Escape player-written text** (names, boards, titles, tags) with `TownyUtil.name()` / `TownyUtil.text()` before
   embedding it in MiniMessage.
+- **Translate everything with `tr("key", "placeholder" to value)`** — `Menu.tr` uses the viewer's language; outside
+  a menu use `sender.tr(...)`. Menu titles are translated in the constructor call: `Menu(player, player.tr("x.title"), …)`.
 - **Keep `PagedMenu` entries lazy** — pass the icon as a lambda to `MenuEntry` so off-page icons are never built.
+
+## Translations
+
+- `Lang` loads `plugins/TownyMenu/lang/<id>.yml` (copied from `src/main/resources/lang/` on first start). With
+  `language: auto` in `config.yml` each player gets the file matching their client locale (`zh_tw` → `zh_CN` by
+  prefix), falling back to `en_US`.
+- Values are MiniMessage with `{placeholder}` arguments. Arguments are inserted verbatim, so escape player-written
+  text with `TownyUtil.name()` / `TownyUtil.text()` first. Colours belong in the translation, not in Kotlin.
+- Keys are grouped by menu (`town.*`, `plot-group.*`); reuse `common.*`, `toggle.*`, and `icon.*` for shared text.
+- Key names must appear as whole string literals (`tr(if (on) "a.on" else "a.off")`, not `"a.$state"`) so
+  `LangFilesTest` can see them. The only runtime-built keys are `plot-type.*` and `command.*`.
+- Quote YAML keys that YAML 1.1 reads as booleans (`"on"`, `"off"`, `"yes"`, `"no"`).
+- Chinese terms follow Towny's own zh_CN wording: 城镇 (town), 国家 (nation), 镇长 (mayor), 国王 (nation leader),
+  居民 (resident), 地块 (plot), 领地 (claims), 前哨 (outpost).
 
 ## Working with Towny
 
@@ -154,6 +178,7 @@ or `Fix` commit carries its own changelog entry. See [docs/COMMIT_STRUCTURE.md](
 - **No comments by default** — only add one when the WHY is non-obvious (hidden constraint, workaround, subtle
   invariant). Never describe WHAT the code does.
 - **No unused code** — delete dead code entirely rather than commenting it out or renaming with `_`.
+- **No hard-coded player-facing text** — every string goes through `tr()` and the language files.
 - **MiniMessage everywhere** — all player-facing text uses Kyori Adventure MiniMessage tags (`<red>`, `<bold>`,
   `<gradient:…>`). Never use `ChatColor`.
 - **Build menu icons with the DSL** — use `itemStack { }` for GUI items and `LoreUtil` for wrapped lore.

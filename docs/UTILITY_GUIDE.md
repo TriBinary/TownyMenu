@@ -5,6 +5,7 @@ This guide covers the utility helpers provided in `net.trilleo.mc.plugins.townym
 | Utility       | Description                                                                   |
 |:--------------|:------------------------------------------------------------------------------|
 | `itemStack`   | DSL builder for menu icons                                                    |
+| `Lang`        | Translations: per-player language files and the `tr()` helper                |
 | `TownyUtil`   | Safe formatting of Towny data, money and dates, permission checks, input args |
 | `DialogUtil`  | Native text-input and confirmation dialogs (Paper Dialog API)                 |
 | `MessageUtil` | Prefix-decorated message sender for players                                   |
@@ -43,6 +44,26 @@ val icon = itemStack(Material.EMERALD) {
 
 ---
 
+## Lang
+
+`Lang` holds the translations for every player-facing string. See
+[Translations in the Developer Guide](DEVELOPER_GUIDE.md#translations) for the file layout and rules.
+
+| Method / Extension                   | Description                                                                                          |
+|:-------------------------------------|:-----------------------------------------------------------------------------------------------------|
+| `Lang.load(plugin, language)`        | Copies the bundled files to `plugins/TownyMenu/lang/` if missing and loads every language file.      |
+| `Lang.tr(sender, key, vararg args)`  | The translation of `key` for `sender`, with `{name}` placeholders filled; the key itself if missing. |
+| `Lang.find(sender, key)`             | The raw translation, or `null` when no language defines `key` (for runtime-built keys).              |
+| `CommandSender.tr(key, vararg args)` | Extension shorthand for `Lang.tr(this, key, *args)`.                                                 |
+| `Menu.tr(key, vararg args)`          | The same, for the menu's viewer.                                                                     |
+
+```kotlin
+player.sendPrefixed(player.tr("command.reload.done"))
+val line = player.tr("icon.town.claims", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString)
+```
+
+---
+
 ## TownyUtil
 
 `TownyUtil` holds the helpers every Towny menu needs.
@@ -59,7 +80,9 @@ putting them into a MiniMessage string — otherwise a town named `<click:run_co
 | `money(Double)`        | Formats with the economy's currency, or `-` without an economy              |
 | `balance(Government)`  | A town's or nation's cached bank balance, formatted                         |
 | `date(Long)`           | Formats an epoch-millisecond timestamp as `yyyy-MM-dd`                      |
-| `onOff(Boolean)`       | A coloured `On` / `Off` label                                               |
+| `onOff(Player, Boolean)` | A coloured On / Off label in the player's language                        |
+| `yesNo(Player, Boolean)` | A coloured Yes / No label in the player's language                        |
+| `plotType(Player, String)` | A plot type in the player's language (`plot-type.*`), or the raw name   |
 | `economy`              | `true` when Towny's economy is active                                       |
 
 ### Permissions and Input
@@ -73,7 +96,7 @@ putting them into a MiniMessage string — otherwise a town named `<click:run_co
 | `nameArgument(String)`           | Dialog input as a Towny name, with whitespace turned into underscores        |
 
 ```kotlin
-prompt("Deposit", "Amount") { amount ->
+prompt(tr("bank.deposit-title"), tr("common.amount")) { amount ->
     run("towny:town deposit ${TownyUtil.argument(amount)}", { town.account.holdingBalance })
 }
 ```
@@ -217,13 +240,16 @@ val item = itemStack(Material.BELL) {
 | Parameter  | Type     | Default | Description                         |
 |:-----------|:---------|:--------|:------------------------------------|
 | `text`     | `String` | —       | MiniMessage-formatted input string  |
-| `maxWidth` | `Int`    | `40`    | Maximum visible characters per line |
+| `maxWidth` | `Int`    | `40`    | Maximum columns per line            |
 
 ### Behavior Details
 
 - **Word-aware**: Lines break at word boundaries (spaces). A word that exceeds `maxWidth` alone is force-broken
   mid-word.
 - **Visible text only**: MiniMessage tags (`<red>`, `<bold>`, etc.) do not count toward the width.
+- **CJK-aware**: Chinese, Japanese, and Korean characters count as two columns (they render about twice as wide), and
+  lines may break between any two of them, since those scripts don't use spaces. Closing punctuation such as `，` or
+  `。` stays on the line of the character before it.
 - **Style inheritance**: The style active at the end of one line is inherited by the next.
 - **Italic reset**: Every output line has `italic=false` set on its root style to override Minecraft's default lore
   rendering.

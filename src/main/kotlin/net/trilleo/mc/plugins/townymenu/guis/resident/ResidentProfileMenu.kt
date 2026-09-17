@@ -19,10 +19,10 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
     Menu(player, TownyUtil.name(target.name), 5, back) {
 
     override fun build() {
-        button(4, Icons.resident(target, *buildList {
-            add("<gray>Registered: <white>${TownyUtil.date(target.registered)}")
-            target.nationOrNull?.let { add("<gray>Nation: <white>${TownyUtil.name(it.name)}") }
-            if (target.about.isNotBlank()) add("<gray>About: <white><i>${TownyUtil.text(target.about)}")
+        button(4, Icons.resident(player, target, *buildList {
+            add(tr("profile.registered", "date" to TownyUtil.date(target.registered)))
+            target.nationOrNull?.let { add(tr("icon.town.nation", "nation" to TownyUtil.name(it.name))) }
+            if (target.about.isNotBlank()) add(tr("profile.about-line", "about" to TownyUtil.text(target.about)))
         }.toTypedArray()))
 
         val viewer = resident ?: return backButton(40)
@@ -37,31 +37,31 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
             val friend = viewer.hasFriend(target)
             actions.add(PermissionNodes.TOWNY_COMMAND_RESIDENT_FRIEND, Icons.icon(
                 if (friend) Material.WITHER_ROSE else Material.POPPY,
-                if (friend) "<red>Remove Friend" else "<light_purple>Add Friend",
-                "Friends count as residents in your personal plot permissions.",
+                tr(if (friend) "resident-profile.remove-friend" else "resident-profile.add-friend"),
+                tr("profile.friends-description"),
             )) { run("towny:resident friend ${if (friend) "remove" else "add"} ${target.name}", { viewer.hasFriend(target) }) }
         }
 
         if (sameTown) {
             actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_RANK,
-                Icons.icon(Material.NAME_TAG, "<gold>Town Ranks", "Assign ranks such as assistant or sheriff.")) {
+                Icons.icon(Material.NAME_TAG, tr("resident-profile.town-ranks"), tr("resident-profile.town-ranks-description"))) {
                 RankMenu.create(player, target, false, this).open()
             }
             actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_TITLE,
-                Icons.icon(Material.OAK_HANGING_SIGN, "<yellow>Set Title", "Left-click to set the title shown before their name. Right-click to clear it.")) { click ->
-                editTitle("title", click.isRightClick) { target.title }
+                Icons.icon(Material.OAK_HANGING_SIGN, tr("resident-profile.title"), tr("resident-profile.title-description"))) { click ->
+                editTitle("title", click.isRightClick, tr("resident-profile.title-prompt"), tr("resident-profile.title-label")) { target.title }
             }
             actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_SURNAME,
-                Icons.icon(Material.OAK_SIGN, "<yellow>Set Surname", "Left-click to set the surname shown after their name. Right-click to clear it.")) { click ->
-                editTitle("surname", click.isRightClick) { target.surname }
+                Icons.icon(Material.OAK_SIGN, tr("resident-profile.surname"), tr("resident-profile.surname-description"))) { click ->
+                editTitle("surname", click.isRightClick, tr("resident-profile.surname-prompt"), tr("resident-profile.surname-label")) { target.surname }
             }
             if (!self && !target.isMayor) {
                 actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_MAYOR,
-                    Icons.icon(Material.GOLDEN_HELMET, "<gold>Make Mayor", "Hand over leadership of your town.")) {
+                    Icons.icon(Material.GOLDEN_HELMET, tr("resident-profile.make-mayor"), tr("resident-profile.make-mayor-description"))) {
                     run("towny:town set mayor ${target.name}", { town.mayor })
                 }
                 actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_KICK,
-                    Icons.icon(Material.IRON_BOOTS, "<red>Kick from Town", "Remove this resident from your town.")) {
+                    Icons.icon(Material.IRON_BOOTS, tr("resident-profile.kick"), tr("resident-profile.kick-description"))) {
                     run("towny:town kick ${target.name}", { town.hasResident(target) }, returnTo = back ?: MainMenu(player))
                 }
             }
@@ -71,8 +71,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
             val trusted = town.hasTrustedResident(target)
             actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_TRUST, Icons.icon(
                 Material.TRIPWIRE_HOOK,
-                if (trusted) "<red>Untrust" else "<green>Trust in Town",
-                "Trusted residents may build everywhere in your town.",
+                tr(if (trusted) "resident-profile.untrust" else "resident-profile.trust"),
+                tr("resident-profile.trust-description"),
             )) { run("towny:town trust ${if (trusted) "remove" else "add"} ${target.name}", { town.hasTrustedResident(target) }) }
         }
 
@@ -80,13 +80,13 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
             val outlaw = town.hasOutlaw(target)
             actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_OUTLAW, Icons.icon(
                 Material.IRON_BARS,
-                if (outlaw) "<green>Pardon Outlaw" else "<red>Declare Outlaw",
-                "Outlaws can be kept out of or teleported away from your town.",
+                tr(if (outlaw) "resident-profile.pardon" else "resident-profile.outlaw"),
+                tr("resident-profile.outlaw-description"),
             )) { run("towny:town outlaw ${if (outlaw) "remove" else "add"} ${target.name}", { town.hasOutlaw(target) }) }
 
             if (!target.hasTown()) {
                 actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
-                    Icons.icon(Material.PAPER, "<green>Invite to Town", "Send an invitation to join your town.")) {
+                    Icons.icon(Material.PAPER, tr("resident-profile.invite"), tr("resident-profile.invite-description"))) {
                     run("towny:town add ${target.name}", { town.sentInvites.size })
                 }
             }
@@ -94,12 +94,12 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
 
         if (sameNation) {
             actions.add(PermissionNodes.TOWNY_COMMAND_NATION_RANK,
-                Icons.icon(Material.NAME_TAG, "<aqua>Nation Ranks", "Assign nation ranks such as assistant.")) {
+                Icons.icon(Material.NAME_TAG, tr("resident-profile.nation-ranks"), tr("resident-profile.nation-ranks-description"))) {
                 RankMenu.create(player, target, true, this).open()
             }
             if (!self && !target.isKing && target.townOrNull == nation.capital) {
                 actions.add(PermissionNodes.TOWNY_COMMAND_NATION_SET_KING,
-                    Icons.icon(Material.GOLDEN_HELMET, "<aqua>Make Nation Leader", "Hand over leadership of your nation.")) {
+                    Icons.icon(Material.GOLDEN_HELMET, tr("resident-profile.make-leader"), tr("resident-profile.make-leader-description"))) {
                     run("towny:nation set king ${target.name}", { nation.king })
                 }
             }
@@ -108,11 +108,11 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
         backButton(40)
     }
 
-    private fun editTitle(field: String, clear: Boolean, current: () -> String) {
+    private fun editTitle(field: String, clear: Boolean, title: String, label: String, current: () -> String) {
         if (clear) {
             run("towny:town set $field ${target.name}", current)
         } else {
-            prompt("Set ${field.replaceFirstChar { it.uppercase() }}", field.replaceFirstChar { it.uppercase() }, initial = current()) { text ->
+            prompt(title, label, initial = current()) { text ->
                 run("towny:town set $field ${target.name} $text", current)
             }
         }

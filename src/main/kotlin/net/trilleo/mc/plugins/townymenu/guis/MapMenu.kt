@@ -10,6 +10,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -18,7 +19,7 @@ import org.bukkit.inventory.ItemStack
  * A 9×5 chunk map centred on the viewer (north is up). Clicking claimed land
  * opens that town; the bottom row claims or unclaims the viewer's own chunk.
  */
-class MapMenu(player: Player, back: Menu?) : Menu(player, "Map", 6, back) {
+class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title"), 6, back) {
 
     override fun build() {
         val center = WorldCoord.parseWorldCoord(player)
@@ -37,25 +38,25 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, "Map", 6, back) {
             }
         }
 
-        button(45, Icons.icon(Material.PAPER, "<yellow>Legend", null,
-            "<white>■ <gray>Wilderness", "<green>■ <gray>Your town", "<yellow>■ <gray>Your plot",
-            "<aqua>■ <gray>Your nation", "<blue>■ <gray>Allied nation", "<red>■ <gray>Enemy nation",
-            "<gold>■ <gray>Other town", "<gray>Glowing tiles are for sale.", "<gray>North is up."))
+        button(45, Icons.icon(Material.PAPER, tr("map.legend"), null,
+            tr("map.legend-wilderness"), tr("map.legend-town"), tr("map.legend-plot"),
+            tr("map.legend-nation"), tr("map.legend-ally"), tr("map.legend-enemy"),
+            tr("map.legend-other"), tr("map.legend-for-sale"), tr("map.legend-north")))
 
         val town = viewer?.townOrNull
         if (town != null) {
             val claims = { town.numTownBlocks }
             guarded(47, PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
-                Icons.icon(Material.GRASS_BLOCK, "<green>Claim Your Chunk", "Claim the chunk you are standing in.")) {
+                Icons.icon(Material.GRASS_BLOCK, tr("map.claim"), tr("map.claim-description"))) {
                 run("towny:town claim", claims, delayTicks = 20)
             }
             guarded(48, PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
-                Icons.icon(Material.COARSE_DIRT, "<red>Unclaim Your Chunk", "Unclaim the chunk you are standing in.")) {
+                Icons.icon(Material.COARSE_DIRT, tr("map.unclaim"), tr("map.unclaim-description"))) {
                 run("towny:town unclaim", claims, delayTicks = 20)
             }
         }
         backButton(49)
-        button(50, Icons.icon(Material.CLOCK, "<yellow>Refresh", "Redraw the map around your current position.")) { render() }
+        button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("map.refresh-description"))) { render() }
     }
 
     private fun cell(coord: WorldCoord, plot: TownBlock?, viewer: Resident?, here: Boolean): ItemStack {
@@ -73,19 +74,19 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, "Map", 6, back) {
         }
         return itemStack(if (here) Material.PLAYER_HEAD else material) {
             if (here) head(player)
-            name(if (town == null) "${color}Wilderness" else "$color${TownyUtil.name(town.name)}")
+            name(color + if (town == null) tr("main.wilderness") else TownyUtil.name(town.name))
             lore(buildList {
-                if (here) add("<yellow>You are here")
-                add("<gray>Chunk: <white>${coord.x}, ${coord.z}")
+                if (here) add(tr("map.you-are-here"))
+                add(tr("map.chunk", "x" to coord.x, "z" to coord.z))
                 if (plot != null) {
-                    nation?.let { add("<gray>Nation: <white>${TownyUtil.name(it.name)}") }
-                    add("<gray>Owner: <white>${plot.residentOrNull?.let { TownyUtil.name(it.name) } ?: "The town"}")
-                    add("<gray>Type: <white>${TownyUtil.name(plot.type.name)}")
-                    if (plot.isHomeBlock) add("<gold>Home block")
-                    if (plot.isOutpost) add("<light_purple>Outpost")
-                    if (plot.isForSale) add("<green>For sale: <white>${TownyUtil.money(plot.plotPrice)}")
+                    nation?.let { add(tr("icon.town.nation", "nation" to TownyUtil.name(it.name))) }
+                    add(tr("map.owner", "owner" to (plot.residentOrNull?.let { TownyUtil.name(it.name) } ?: tr("map.owner-town"))))
+                    add(tr("map.type", "type" to TownyUtil.plotType(player, plot.type.name)))
+                    if (plot.isHomeBlock) add(tr("map.home-block"))
+                    if (plot.isOutpost) add(tr("map.outpost"))
+                    if (plot.isForSale) add(tr("map.for-sale", "price" to TownyUtil.money(plot.plotPrice)))
                     add("")
-                    add("<yellow>Click to view town")
+                    add(tr("map.click-town"))
                 }
             })
             glow(plot?.isForSale == true)

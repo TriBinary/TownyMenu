@@ -1,7 +1,7 @@
 # TownyMenu - Developer Guide
 
 This guide explains how TownyMenu is put together and how to extend it: **commands** and **listeners** (discovered
-automatically), **menus** (the inventory GUIs that front Towny), and the **configuration** system.
+automatically), **menus** (the inventory GUIs that front Towny), **translations**, and the **configuration** system.
 
 ## How Auto-Registration Works
 
@@ -62,6 +62,10 @@ category is used by the built-in `/townymenu help` command to group commands for
 The plugin ships with a built-in `/townymenu help` command. It lists every registered command grouped by category,
 sorted alphabetically within each group, and formatted with colours for readability. Every command should provide a
 meaningful `description` so the help output is informative.
+
+The help list is translated: it shows `command.<name>.description` and `command.category.<category>` from the
+language files when they exist (plain text, no MiniMessage tags), and the English `description` or category name
+otherwise. Add both keys for every new command.
 
 ### PluginCommand Properties
 
@@ -280,10 +284,13 @@ Every GUI lives in `net.trilleo.mc.plugins.townymenu.guis`. The framework is in 
   with the same node Towny's command checks.
 - **Escape player-written text.** Pass names, boards, titles, and tags through `TownyUtil.name()` / `TownyUtil.text()`
   before embedding them in MiniMessage.
+- **Translate every string.** Icon names, lore, titles, and prompts come from `tr("key")`, never from Kotlin literals.
+  See [Translations](#translations).
 
 ### Menu
 
-`Menu(player, title, rows, back)` is the base class. The menu is its own `InventoryHolder`, so `MenuListener` routes
+`Menu(player, title, rows, back)` is the base class. The title is already translated, so subclasses pass
+`player.tr("my-menu.title")`. The menu is its own `InventoryHolder`, so `MenuListener` routes
 clicks by checking the open inventory's holder — there is no registry and nothing to clean up when a menu closes.
 
 | Member                                  | Description                                                                     |
@@ -298,6 +305,7 @@ clicks by checking the open inventory's holder — there is no registry and noth
 | `run(command, probe?, returnTo?, delay)`| Runs a Towny command as the player (see below).                                 |
 | `runAndClose(command)`                  | Closes the menu, then runs the command (teleports, books, chat output).         |
 | `prompt(title, label, …) { text -> }`   | Shows a text-input dialog; Cancel reopens the menu.                             |
+| `tr(key, "name" to value, …)`           | Translates `key` into the viewer's language (see [Translations](#translations)). |
 | `resident`                              | The viewer's Towny `Resident`, or `null`.                                       |
 
 ### Running Commands: `MenuActions`
@@ -324,7 +332,7 @@ rows show one page, slot 45/53 page back and forth, 49 is the back button, and `
 ```kotlin
 override fun entries(): List<MenuEntry> =
     town.residents.map { member ->
-        MenuEntry({ Icons.resident(member, "", "<yellow>Click to view") }) {
+        MenuEntry({ Icons.resident(player, member, "", tr("common.click-view")) }) {
             ResidentProfileMenu(player, member, this).open()
         }
     }
@@ -336,7 +344,7 @@ override fun entries(): List<MenuEntry> =
 
 | Class            | Purpose                                                                                     |
 |:-----------------|:--------------------------------------------------------------------------------------------|
-| `ToggleMenu`     | A grid of `Toggle`s (material, name, description, permission node, command, value reader). |
+| `ToggleMenu`     | A grid of `Toggle`s (material, translated name and description, node, command, value reader). |
 | `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command.                          |
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                   |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.              |
@@ -344,8 +352,9 @@ override fun entries(): List<MenuEntry> =
 
 ### Icons
 
-`Icons` builds the standard icons: `icon(material, name, description, extraLines…)`, `toggle(…)`, and summary icons
-`resident(…)`, `town(…)`, `nation(…)` that accept extra lore lines.
+`Icons` builds the standard icons: `icon(material, name, description, extraLines…)` from already-translated text, and
+`toggle(player, …)` plus the summary icons `resident(player, …)`, `town(player, …)`, `nation(player, …)`, which add
+their own labels in `player`'s language and accept extra lore lines.
 
 ### Example: A New Menu
 
@@ -355,20 +364,33 @@ package net.trilleo.mc.plugins.townymenu.guis.town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class TownPvpMenu(player: Player, back: Menu) : Menu(player, "Town PvP", 3, back) {
+class TownPvpMenu(player: Player, back: Menu) : Menu(player, player.tr("town-pvp.title"), 3, back) {
 
     override fun build() {
         val town = resident?.townOrNull ?: return backButton(22)
         guarded(13, PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP,
-            Icons.toggle(Material.IRON_SWORD, "<red>PvP", town.isPVP, "Allow fighting in town.")) {
+            Icons.toggle(player, Material.IRON_SWORD, tr("toggle.pvp"), town.isPVP, tr("toggle.town-pvp-description"))) {
             run("towny:town toggle pvp", { town.isPVP })
         }
         backButton(22)
     }
 }
+```
+
+with the new title in both language files:
+
+```yaml
+# src/main/resources/lang/en_US.yml
+town-pvp:
+  title: "Town PvP"
+
+# src/main/resources/lang/zh_CN.yml
+town-pvp:
+  title: "城镇 PvP"
 ```
 
 Open it from another menu's button with `TownPvpMenu(player, this).open()`.
@@ -383,6 +405,61 @@ Open it from another menu's button with `TownPvpMenu(player, this).open()`.
 `MenuListener` opens `MainMenu` when a player presses swap-hand (F) while sneaking, unless
 `sneak-swap-hand-shortcut` is `false` in `config.yml`. It also cancels every click and drag while a menu is on top, and
 closes all menus when the plugin disables.
+
+---
+
+## Translations
+
+Every player-facing string lives in `src/main/resources/lang/<id>.yml`. TownyMenu bundles `en_US` and `zh_CN`, and
+**every change that adds or removes text updates both files**.
+
+### How It Works
+
+1. On startup (and `/townymenu reload`), `Lang.load` copies any missing bundled file into `plugins/TownyMenu/lang/`
+   and loads every `.yml` there. Keys missing from a file fall back to the bundled copy of that language, then to
+   English, so plugin updates never break edited files.
+2. `language` in `config.yml` is `auto` or a language id. With `auto`, each player gets the file matching their client
+   locale exactly (`zh_cn`), else one sharing its language prefix (`zh_tw` → `zh_CN`), else `en_US`. The console uses
+   the configured language, or `en_US` under `auto`.
+3. `tr(key, "name" to value)` looks the key up and replaces each `{name}` with `value.toString()`. A key no file
+   defines is returned as-is, so a missing translation is visible in game.
+
+### Writing Keys
+
+```kotlin
+// In a menu (Menu.tr uses the viewer's language)
+button(11, Icons.icon(Material.EMERALD, tr("bank.deposit"), tr("bank.deposit-description")))
+lore(tr("icon.town.residents", "count" to town.numResidents))
+
+// Anywhere else
+sender.sendPrefixed(sender.tr("command.reload.done"))
+```
+
+```yaml
+bank:
+  deposit: "<green>Deposit"
+  deposit-description: "Move money from your balance into the bank."
+```
+
+- **Colours go in the translation**, so translators see the whole line.
+- **Placeholders are inserted verbatim.** Escape player-written text with `TownyUtil.name()` / `TownyUtil.text()`.
+- **Group keys by menu** (`town-details.*`) and reuse `common.*`, `icon.*`, and `toggle.*` for shared text.
+- **Write keys as whole string literals.** `tr(if (held) "rank.assigned" else "rank.not-assigned")` is fine;
+  `tr("rank.$state")` is not, because the test below cannot see it. `plot-type.*` and `command.*` are the only
+  runtime-built keys (read with `Lang.find`, which returns `null` instead of the key).
+- **Quote YAML keys that YAML 1.1 reads as booleans**: `"on"`, `"off"`, `"yes"`, `"no"`.
+
+### LangFilesTest
+
+`./gradlew build` runs `LangFilesTest`, which fails when:
+
+- a bundled language is missing a key English has, or has one English lacks;
+- a translation's `{placeholders}` differ from English;
+- a key-shaped string literal in `src/main/kotlin` is not in `en_US.yml`;
+- a key in `en_US.yml` is not used by any code (outside the runtime-built prefixes).
+
+To bundle another language, add `lang/<id>.yml` to the resources and its id to `Lang.BUNDLED` and to the test's
+language list.
 
 ---
 
@@ -935,6 +1012,9 @@ lives in the `net.trilleo.mc.plugins.townymenu.config` package and is created au
 # A friendly prefix shown before plugin messages
 message-prefix: "<click:run_command:/townymenu><gradient:yellow:gold>[TownyMenu]"
 
+# Menu language: "auto" follows each player's client, or a language id such as "zh_CN" for everyone.
+language: auto
+
 # Open the main menu when a player presses the swap-hand key (F by default) while sneaking.
 sneak-swap-hand-shortcut: true
 ```
@@ -944,6 +1024,7 @@ sneak-swap-hand-shortcut: true
 | Property                | Key                        | Description                                    |
 |:------------------------|:---------------------------|:-----------------------------------------------|
 | `messagePrefix`         | `message-prefix`           | MiniMessage prefix used by `MessageUtil`       |
+| `language`              | `language`                 | `auto` or the language id given to `Lang.load` |
 | `sneakSwapHandShortcut` | `sneak-swap-hand-shortcut` | Whether sneak + swap-hand opens the main menu  |
 
 To add a setting, add the key to `config.yml` and a matching property to `PluginConfig`:
@@ -962,4 +1043,4 @@ into the file and saves it:
 Main.instance.pluginConfig.reload()
 ```
 
-The built-in `/townymenu reload` command already calls this method.
+The built-in `/townymenu reload` command already calls this method, then reloads `MessageUtil` and `Lang`.

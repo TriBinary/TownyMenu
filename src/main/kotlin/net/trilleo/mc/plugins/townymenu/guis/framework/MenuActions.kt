@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.confirmations.Confirmation
 import com.palmergames.bukkit.towny.confirmations.event.ConfirmationSendEvent
 import net.trilleo.mc.plugins.townymenu.Main
 import net.trilleo.mc.plugins.townymenu.utils.DialogUtil
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.UUID
@@ -62,7 +63,7 @@ object MenuActions {
     private fun showConfirmation(player: Player, action: Pending, confirmation: Confirmation) {
         if (!player.isOnline || pending[player.uniqueId] !== action) return
         val title = confirmation.title.locale(player).component()
-        val body = if (confirmation.isSerious) "<red>This cannot be undone." else null
+        val body = if (confirmation.isSerious) player.tr("dialog.cannot-undo") else null
         val prefix = confirmation.pluginPrefix
         DialogUtil.confirm(
             player, title, body,

@@ -5,6 +5,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.registration.CommandRegistrar
 import net.trilleo.mc.plugins.townymenu.registration.ListenerRegistrar
 import net.trilleo.mc.plugins.townymenu.registration.PermissionRegistrar
+import net.trilleo.mc.plugins.townymenu.utils.Lang
 import net.trilleo.mc.plugins.townymenu.utils.MessageUtil
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -17,6 +18,7 @@ class Main : JavaPlugin() {
         instance = this
         pluginConfig = PluginConfig(this)
         MessageUtil.init(pluginConfig.messagePrefix)
+        Lang.load(this, pluginConfig.language)
 
         CommandRegistrar.registerAll(this)
         PermissionRegistrar.registerAll(this)

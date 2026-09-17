@@ -10,12 +10,13 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** A nation's member towns. Members with permission can invite and remove towns. */
 class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
-    PagedMenu(player, "Towns: ${TownyUtil.name(nation.name)}", back) {
+    PagedMenu(player, player.tr("nation-towns.title", "nation" to TownyUtil.name(nation.name)), back) {
 
     private val isMember: Boolean
         get() = resident?.nationOrNull == nation
@@ -27,11 +28,11 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
             .map { town ->
                 val lines = buildList {
                     add("")
-                    if (nation.isCapital(town)) add("<gold>Capital")
-                    add("<yellow>Left-click for details")
-                    if (canKick && !nation.isCapital(town)) add("<red>Right-click to remove from nation")
+                    if (nation.isCapital(town)) add(tr("nation-towns.capital"))
+                    add(tr("common.left-details"))
+                    if (canKick && !nation.isCapital(town)) add(tr("nation-towns.right-remove"))
                 }
-                MenuEntry({ Icons.town(town, *lines.toTypedArray()) }) { click ->
+                MenuEntry({ Icons.town(player, town, *lines.toTypedArray()) }) { click ->
                     if (click.isRightClick && canKick && !nation.isCapital(town)) {
                         run("towny:nation kick ${town.name}", { nation.numTowns })
                     } else {
@@ -45,16 +46,16 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
         if (!isMember) return
         val sent = { nation.sentInvites.size }
         guarded(47, PermissionNodes.TOWNY_COMMAND_NATION_INVITE_ADD,
-            Icons.icon(Material.BELL, "<green>Invite a Town", "Invite a town that isn't in a nation.")) {
-            Pickers.town(this, "Invite Town", { !it.hasNation() }) { picked ->
+            Icons.icon(Material.BELL, tr("nation-towns.invite"), tr("nation-towns.invite-description"))) {
+            Pickers.town(this, tr("nation-towns.invite-title"), { !it.hasNation() }) { picked ->
                 run("towny:nation add ${picked.name}", sent)
             }.open()
         }
         val pending = nation.sentInvites
         button(51, Icons.icon(
-            Material.PAPER, "<yellow>Sent Invites", null,
+            Material.PAPER, tr("common.sent-invites"), null,
             *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
-            "<gray>Pending: <white>${pending.size}",
+            tr("common.pending", "count" to pending.size),
         ))
     }
 }

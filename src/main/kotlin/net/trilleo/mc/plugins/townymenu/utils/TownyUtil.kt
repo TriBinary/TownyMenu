@@ -30,6 +30,9 @@ object TownyUtil {
     /** A Towny object name (underscores shown as spaces), safe for MiniMessage. */
     fun name(name: String): String = text(name.replace('_', ' '))
 
+    /** A plot type name in [player]'s language (`plot-type.<type>`), or the raw name for custom types. */
+    fun plotType(player: Player, type: String): String = Lang.find(player, "plot-type.${type.lowercase()}") ?: name(type)
+
     /** Formats [amount] with the server economy's currency, or `-` when no economy is active. */
     fun money(amount: Double): String =
         if (TownyEconomyHandler.isActive()) text(TownyEconomyHandler.getFormattedBalance(amount)) else "-"
@@ -41,8 +44,11 @@ object TownyUtil {
     fun date(epochMillis: Long): String =
         if (epochMillis <= 0) "-" else dateFormat.format(Instant.ofEpochMilli(epochMillis))
 
-    /** A coloured On/Off label. */
-    fun onOff(value: Boolean): String = if (value) "<green>On" else "<red>Off"
+    /** A coloured On/Off label in [player]'s language. */
+    fun onOff(player: Player, value: Boolean): String = player.tr(if (value) "common.on" else "common.off")
+
+    /** A coloured Yes/No label in [player]'s language. */
+    fun yesNo(player: Player, value: Boolean): String = player.tr(if (value) "common.yes" else "common.no")
 
     /** `true` when the economy is enabled, so bank and price options make sense. */
     val economy: Boolean

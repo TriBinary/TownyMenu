@@ -66,11 +66,11 @@ object DialogUtil {
                 .body(listOfNotNull(body?.let { DialogBody.plainMessage(miniMessage.deserialize(it)) }))
                 .inputs(listOf(field))
                 .build(),
-            button("<green>Confirm") { view ->
+            button(player.tr("dialog.confirm")) { view ->
                 val value = view.getText(INPUT_KEY)?.trim().orEmpty()
                 if (value.isEmpty()) onCancel() else onSubmit(value)
             },
-            button("<gray>Cancel") { onCancel() },
+            button(player.tr("dialog.cancel")) { onCancel() },
         )
     }
 
@@ -86,8 +86,8 @@ object DialogUtil {
                 .afterAction(DialogBase.DialogAfterAction.CLOSE)
                 .body(listOfNotNull(body?.let { DialogBody.plainMessage(miniMessage.deserialize(it)) }))
                 .build(),
-            button("<green>Confirm") { onYes() },
-            button("<red>Cancel") { onNo() },
+            button(player.tr("dialog.confirm")) { onYes() },
+            button(player.tr("dialog.cancel-red")) { onNo() },
         )
     }
 

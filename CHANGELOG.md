@@ -52,6 +52,17 @@
 + Added an invites menu for town invites, nation invites, and alliance requests.
 + Buttons for actions you lack Towny permission for are shown greyed out.
 + Clicking the chat message prefix now opens the main menu.
++ Added translations: every menu, dialog, and command message is available in English and Simplified Chinese.
+    + Each player sees their Minecraft client language. Set `language` in `config.yml` to use one language for everyone.
+    + Language files are saved to `plugins/TownyMenu/lang/`, where server owners can edit them or add new languages.
+      `/tm reload` reloads them.
+    + Chinese descriptions wrap cleanly in item tooltips.
+
+### Fixes
+
+#### Misc
+
++ Fixed players seeing the "Unknown sub-command" message twice.
 
 ### Technical Details
 
@@ -66,3 +77,9 @@
 + Removed unused template systems: custom items, recipes, scheduled tasks, player and server data storage,
   `CountdownUtil`, `TeamUtil`, `TagUtil`, `PDCUtil`, `GameRuleUtil`, and the unused enums.
 + Added `TownyUtil` and `DialogUtil`, and trimmed the `itemStack` DSL and `PluginConfig` to what the plugin uses.
++ Added the `Lang` translation system (`tr()` on menus and command senders) and moved every player-facing string into
+  `src/main/resources/lang/<id>.yml`.
+    + `Icons.toggle`, `Icons.resident`, `Icons.town`, `Icons.nation`, and `TownyUtil.onOff` now take the viewing player.
+    + Added `LangFilesTest`, which checks that every bundled language has the same keys and placeholders as English and
+      that every key the code uses exists and is used.
++ `LoreUtil` now measures width in columns, counting CJK characters as two and breaking lines between them.

@@ -14,11 +14,12 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NationMenu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NoNationMenu
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Management hub for the viewer's own town. */
-class TownMenu(player: Player, back: Menu?) : Menu(player, "Your Town", 6, back) {
+class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title"), 6, back) {
 
     private val town: Town?
         get() = resident?.townOrNull
@@ -26,76 +27,78 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, "Your Town", 6, back)
     override fun build() {
         val town = town
         if (town == null) {
-            button(22, Icons.icon(Material.BARRIER, "<red>You are not in a town"))
+            button(22, Icons.icon(Material.BARRIER, tr("town.not-in-town")))
             return backButton(49)
         }
         val viewer = resident ?: return backButton(49)
 
-        button(4, Icons.town(town, *buildList {
-            add("<gray>Founded: <white>${TownyUtil.date(town.registered)}")
+        button(4, Icons.town(player, town, *buildList {
+            add(tr("common.founded", "date" to TownyUtil.date(town.registered)))
             if (TownyUtil.economy) {
-                add("<gray>Daily tax: <white>${if (town.isTaxPercentage) "${town.taxes}%" else TownyUtil.money(town.taxes)}")
-                add("<gray>Plot tax: <white>${TownyUtil.money(town.plotTax)}")
+                add(tr("bank.daily-tax", "tax" to if (town.isTaxPercentage) "${town.taxes}%" else TownyUtil.money(town.taxes)))
+                add(tr("town.plot-tax", "tax" to TownyUtil.money(town.plotTax)))
             }
-            add("<gray>Outposts: <white>${town.maxOutpostSpawn}")
-            add("<gray>PvP: ${TownyUtil.onOff(town.isPVP)}  <gray>Mobs: ${TownyUtil.onOff(town.hasMobs())}")
-            add("<gray>Fire: ${TownyUtil.onOff(town.isFire)}  <gray>Explosions: ${TownyUtil.onOff(town.isExplosion)}")
+            add(tr("town.outposts", "count" to town.maxOutpostSpawn))
+            add(tr("town.pvp-mobs", "pvp" to TownyUtil.onOff(player, town.isPVP), "mobs" to TownyUtil.onOff(player, town.hasMobs())))
+            add(tr("town.fire-explosions", "fire" to TownyUtil.onOff(player, town.isFire), "explosions" to TownyUtil.onOff(player, town.isExplosion)))
         }.toTypedArray()))
 
         val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43)
 
-        grid.add(Icons.icon(Material.PLAYER_HEAD, "<green>Residents", "View residents, manage ranks, and invite players.", "<gray>Residents: <white>${town.numResidents}")) {
+        grid.add(Icons.icon(Material.PLAYER_HEAD, tr("town.residents"), tr("town.residents-description"), tr("icon.town.residents", "count" to town.numResidents))) {
             TownMembersMenu(player, town, this).open()
         }
         if (TownyUtil.economy) {
-            grid.add(Icons.icon(Material.GOLD_INGOT, "<gold>Town Bank", "Deposit, withdraw, and view bank history.", "<gray>Balance: <white>${TownyUtil.balance(town)}")) {
+            grid.add(Icons.icon(Material.GOLD_INGOT, tr("town.bank"), tr("town.bank-description"), tr("bank.balance", "balance" to TownyUtil.balance(town)))) {
                 BankMenu(player, town, this).open()
             }
         }
-        grid.add(Icons.icon(Material.GRASS_BLOCK, "<green>Claims", "Claim and unclaim land, create outposts, and buy bonus claims.", "<gray>Claims: <white>${town.numTownBlocks}/${town.maxTownBlocksAsAString}")) {
+        grid.add(Icons.icon(Material.GRASS_BLOCK, tr("claims.info"), tr("town.claims-description"),
+            tr("icon.town.claims", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))) {
             TownClaimsMenu(player, this).open()
         }
-        grid.add(Icons.icon(Material.FILLED_MAP, "<aqua>Map", "See the land around you.")) {
+        grid.add(Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) {
             MapMenu(player, this).open()
         }
-        grid.add(Icons.icon(Material.LEVER, "<yellow>Town Settings", "PvP, mobs, fire, explosions, open, public, and peaceful.")) {
+        grid.add(Icons.icon(Material.LEVER, tr("town.settings"), tr("town.settings-description"))) {
             toggles().open()
         }
-        grid.add(Icons.icon(Material.WRITABLE_BOOK, "<yellow>Town Details", "Name, board, tag, taxes, prices, spawn, and sale.")) {
+        grid.add(Icons.icon(Material.WRITABLE_BOOK, tr("town.details"), tr("town.details-description"))) {
             TownSettingsMenu(player, this).open()
         }
         grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_PERM,
-            Icons.icon(Material.IRON_DOOR, "<aqua>Permissions", "Who can build, break, and interact on town-owned land.")) {
-            PermissionMenu(player, "Town Permissions", this, "towny:town set perm",
+            Icons.icon(Material.IRON_DOOR, tr("common.permissions"), tr("town.permissions-description"))) {
+            PermissionMenu(player, tr("town.permissions-title"), this, "towny:town set perm",
                 PermissionNodes.TOWNY_COMMAND_TOWN_SET_PERM, false) { TownyAPI.getInstance().getResident(player)?.townOrNull?.permissions }.open()
         }
-        grid.add(Icons.icon(Material.TRIPWIRE_HOOK, "<green>Trusted", "Residents and towns trusted to build anywhere in town.")) {
+        grid.add(Icons.icon(Material.TRIPWIRE_HOOK, tr("common.trusted"), tr("town.trusted-description"))) {
             TownTrustMenu(player, town, this).open()
         }
-        grid.add(Icons.icon(Material.IRON_BARS, "<red>Outlaws", "Players declared outlaws of your town.", "<gray>Outlaws: <white>${town.outlaws.size}")) {
+        grid.add(Icons.icon(Material.IRON_BARS, tr("town.outlaws"), tr("town.outlaws-description"), tr("town.outlaws-count", "count" to town.outlaws.size))) {
             OutlawsMenu(player, town, this).open()
         }
-        grid.add(Icons.icon(Material.ENDER_PEARL, "<light_purple>Town Spawn", "Teleport to your town spawn.")) {
+        grid.add(Icons.icon(Material.ENDER_PEARL, tr("town.spawn"), tr("town.spawn-description"))) {
             runAndClose("towny:town spawn")
         }
         if (town.hasOutpostSpawn()) {
-            grid.add(Icons.icon(Material.COMPASS, "<light_purple>Outposts", "Teleport to one of your town's outposts.")) {
+            grid.add(Icons.icon(Material.COMPASS, tr("town.outpost-teleport"), tr("town.outpost-teleport-description"))) {
                 OutpostsMenu(player, town, this).open()
             }
         }
         val nation = town.nationOrNull
-        grid.add(Icons.icon(Material.BEACON, "<aqua>Nation", if (nation != null) "Open ${TownyUtil.name(nation.name)}." else "Found or join a nation.")) {
+        grid.add(Icons.icon(Material.BEACON, tr("main.nation"),
+            if (nation != null) tr("town.nation-open", "nation" to TownyUtil.name(nation.name)) else tr("town.nation-none"))) {
             if (town.hasNation()) NationMenu(player, this).open() else NoNationMenu(player, this).open()
         }
 
         if (viewer.isMayor) {
             grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_DELETE,
-                Icons.icon(Material.TNT, "<dark_red>Delete Town", "Disband your town permanently. You will be asked to confirm.")) {
+                Icons.icon(Material.TNT, tr("town.delete"), tr("town.delete-description"))) {
                 run("towny:town delete", { viewer.hasTown() }, returnTo = MainMenu(player))
             }
         } else {
             grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_LEAVE,
-                Icons.icon(Material.OAK_DOOR, "<red>Leave Town", "Leave your town. You will be asked to confirm.")) {
+                Icons.icon(Material.OAK_DOOR, tr("town.leave"), tr("town.leave-description"))) {
                 run("towny:town leave", { viewer.hasTown() }, returnTo = MainMenu(player))
             }
         }
@@ -107,15 +110,15 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, "Your Town", 6, back)
         fun toggle(material: Material, key: String, label: String, description: String, node: PermissionNodes, read: (Town) -> Boolean) =
             Toggle(material, label, description, node, "towny:town toggle $key") { town?.let(read) }
 
-        return ToggleMenu(player, "Town Settings", this, listOf(
-            toggle(Material.IRON_SWORD, "pvp", "<red>PvP", "Allow players to fight inside the town.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP) { it.isPVP },
-            toggle(Material.ZOMBIE_HEAD, "mobs", "<dark_green>Hostile Mobs", "Allow hostile mobs to spawn in town.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_MOBS) { it.hasMobs() },
-            toggle(Material.FLINT_AND_STEEL, "fire", "<gold>Fire Spread", "Allow fire to spread in town.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_FIRE) { it.isFire },
-            toggle(Material.TNT, "explosion", "<dark_red>Explosions", "Allow explosions to damage the town.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_EXPLOSION) { it.isExplosion },
-            toggle(Material.OAK_DOOR, "open", "<green>Open", "Let anyone join without an invite.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_OPEN) { it.isOpen },
-            toggle(Material.ENDER_EYE, "public", "<aqua>Public", "Let outsiders teleport to your spawn and see your home block.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PUBLIC) { it.isPublic },
-            toggle(Material.WHITE_BANNER, "neutral", "<white>Peaceful", "Stay out of wars and PvP.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_NEUTRAL) { it.isNeutral },
-            toggle(Material.GOLD_NUGGET, "taxpercent", "<gold>Percentage Taxes", "Charge taxes as a percentage of balance instead of a flat amount.", PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_TAXPERCENT) { it.isTaxPercentage },
+        return ToggleMenu(player, tr("town.settings-title"), this, listOf(
+            toggle(Material.IRON_SWORD, "pvp", tr("toggle.pvp"), tr("toggle.town-pvp-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP) { it.isPVP },
+            toggle(Material.ZOMBIE_HEAD, "mobs", tr("toggle.mobs"), tr("toggle.town-mobs-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_MOBS) { it.hasMobs() },
+            toggle(Material.FLINT_AND_STEEL, "fire", tr("toggle.fire"), tr("toggle.town-fire-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_FIRE) { it.isFire },
+            toggle(Material.TNT, "explosion", tr("toggle.explosions"), tr("toggle.town-explosions-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_EXPLOSION) { it.isExplosion },
+            toggle(Material.OAK_DOOR, "open", tr("toggle.open"), tr("toggle.town-open-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_OPEN) { it.isOpen },
+            toggle(Material.ENDER_EYE, "public", tr("toggle.public"), tr("toggle.town-public-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PUBLIC) { it.isPublic },
+            toggle(Material.WHITE_BANNER, "neutral", tr("toggle.peaceful"), tr("toggle.town-peaceful-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_NEUTRAL) { it.isNeutral },
+            toggle(Material.GOLD_NUGGET, "taxpercent", tr("toggle.tax-percent"), tr("toggle.tax-percent-description"), PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_TAXPERCENT) { it.isTaxPercentage },
         ))
     }
 }

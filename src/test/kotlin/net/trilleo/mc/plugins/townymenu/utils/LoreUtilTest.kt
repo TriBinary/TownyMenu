@@ -125,6 +125,31 @@ class LoreUtilTest {
         assertEquals(1, result.size)
     }
 
+    @Test
+    fun `chinese text wraps between characters counting two columns each`() {
+        val input = "在你的个人地块权限中，好友视为居民。"
+        val result = LoreUtil.wrapLore(input, maxWidth = 20)
+        assertTrue(result.size > 1)
+        for (line in result) {
+            assertTrue(plainText(line).length <= 10, "Line exceeds 20 columns: '${plainText(line)}'")
+        }
+        assertEquals(input, result.joinToString("") { plainText(it) })
+    }
+
+    @Test
+    fun `closing punctuation stays with the preceding character`() {
+        val result = LoreUtil.wrapLore("一二三四五，六七", maxWidth = 12)
+        assertEquals("一二三四五，", plainText(result[0]))
+        assertEquals("六七", plainText(result[1]))
+    }
+
+    @Test
+    fun `mixed chinese and latin text keeps its spaces`() {
+        val result = LoreUtil.wrapLore("输入 Towny 记录中任意玩家的名称。")
+        assertEquals(1, result.size)
+        assertEquals("输入 Towny 记录中任意玩家的名称。", plainText(result[0]))
+    }
+
     /**
      * Finds the first TextComponent with non-empty content in a component tree.
      */

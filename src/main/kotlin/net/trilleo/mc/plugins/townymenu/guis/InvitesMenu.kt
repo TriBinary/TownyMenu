@@ -12,6 +12,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -20,9 +21,9 @@ import org.bukkit.inventory.ItemStack
  * Every invitation waiting on the viewer: town invites to them, nation invites
  * to their town, and alliance requests to their nation.
  */
-class InvitesMenu(player: Player, back: Menu?) : PagedMenu(player, "Invites", back) {
+class InvitesMenu(player: Player, back: Menu?) : PagedMenu(player, player.tr("invites.title"), back) {
 
-    override val emptyItem = itemStack(Material.PAPER) { name("<gray>No pending invites") }
+    override val emptyItem = itemStack(Material.PAPER) { name(tr("invites.none")) }
 
     override fun entries(): List<MenuEntry> {
         val viewer = resident ?: return emptyList()
@@ -33,13 +34,13 @@ class InvitesMenu(player: Player, back: Menu?) : PagedMenu(player, "Invites", ba
 
         val personal = viewer.receivedInvites.mapNotNull { invite ->
             val from = invite.sender as? Town ?: return@mapNotNull null
-            entry(invite, "Invitation to join ${TownyUtil.name(from.name)}", { Icons.town(from, *it) },
+            entry(invite, tr("invites.town", "town" to TownyUtil.name(from.name)), { Icons.town(player, from, *it) },
                 "towny:invite $accept ${from.name}", "towny:invite $deny ${from.name}") { snapshot(viewer) }
         }
         val forTown = if (town != null && TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ACCEPT)) {
             town.receivedInvites.mapNotNull { invite ->
                 val from = invite.sender as? Nation ?: return@mapNotNull null
-                entry(invite, "Invitation for your town to join ${TownyUtil.name(from.name)}", { Icons.nation(from, *it) },
+                entry(invite, tr("invites.nation", "nation" to TownyUtil.name(from.name)), { Icons.nation(player, from, *it) },
                     "towny:town invite accept ${from.name}", "towny:town invite deny ${from.name}") { snapshot(viewer) }
             }
         } else {
@@ -48,7 +49,7 @@ class InvitesMenu(player: Player, back: Menu?) : PagedMenu(player, "Invites", ba
         val forNation = if (nation != null && TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_NATION_ALLY_ACCEPT)) {
             nation.receivedInvites.mapNotNull { invite ->
                 val from = invite.sender as? Nation ?: return@mapNotNull null
-                entry(invite, "Alliance request from ${TownyUtil.name(from.name)}", { Icons.nation(from, *it) },
+                entry(invite, tr("invites.alliance", "nation" to TownyUtil.name(from.name)), { Icons.nation(player, from, *it) },
                     "towny:nation ally accept ${from.name}", "towny:nation ally deny ${from.name}") { snapshot(viewer) }
             }
         } else {
@@ -65,8 +66,8 @@ class InvitesMenu(player: Player, back: Menu?) : PagedMenu(player, "Invites", ba
         denyCommand: String,
         probe: () -> Any?,
     ): MenuEntry {
-        val lines = arrayOf("", "<yellow>$title", "<gray>Sent by: <white>${TownyUtil.name(invite.senderName)}",
-            "<green>Left-click to accept", "<red>Right-click to decline")
+        val lines = arrayOf("", "<yellow>$title", tr("invites.sender", "sender" to TownyUtil.name(invite.senderName)),
+            tr("invites.left-accept"), tr("invites.right-decline"))
         return MenuEntry({ icon(lines) }) { click ->
             run(if (click.isRightClick) denyCommand else acceptCommand, probe)
         }

@@ -24,7 +24,7 @@ object Pickers {
         ListMenu(back.player, title, back) {
             TownyUtil.otherOnlineResidents(back.player)
                 .filter(filter)
-                .map { resident -> MenuEntry({ Icons.resident(resident, "", "<yellow>Click to select") }) { onPick(resident) } }
+                .map { resident -> MenuEntry({ Icons.resident(back.player, resident, "", back.tr("picker.select")) }) { onPick(resident) } }
         }
 
     /** Picks a town matching [filter]. */
@@ -33,7 +33,7 @@ object Pickers {
             TownyAPI.getInstance().towns
                 .filter(filter)
                 .sortedBy { it.name.lowercase() }
-                .map { town -> MenuEntry({ Icons.town(town, "", "<yellow>Click to select") }) { onPick(town) } }
+                .map { town -> MenuEntry({ Icons.town(back.player, town, "", back.tr("picker.select")) }) { onPick(town) } }
         }
 
     /** Picks a nation matching [filter]. */
@@ -42,7 +42,7 @@ object Pickers {
             TownyAPI.getInstance().nations
                 .filter(filter)
                 .sortedBy { it.name.lowercase() }
-                .map { nation -> MenuEntry({ Icons.nation(nation, "", "<yellow>Click to select") }) { onPick(nation) } }
+                .map { nation -> MenuEntry({ Icons.nation(back.player, nation, "", back.tr("picker.select")) }) { onPick(nation) } }
         }
 
     /** Picks one of [options] (id to MiniMessage label), marking [current] as selected. */
@@ -53,7 +53,7 @@ object Pickers {
                 val icon = {
                     itemStack(material) {
                         name(label)
-                        lore(if (selected) "<green>Current" else "<yellow>Click to select")
+                        lore(back.tr(if (selected) "picker.current" else "picker.select"))
                         glow(selected)
                     }
                 }

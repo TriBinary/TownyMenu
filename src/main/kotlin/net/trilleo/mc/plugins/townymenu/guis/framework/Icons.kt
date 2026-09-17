@@ -5,11 +5,13 @@ import com.palmergames.bukkit.towny.`object`.Resident
 import com.palmergames.bukkit.towny.`object`.Town
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-/** Icon builders shared by the Towny menus. */
+/** Icon builders shared by the Towny menus. Icons with built-in text take the [Player] whose language they use. */
 object Icons {
 
     /** A simple icon with a name and wrapped description. */
@@ -21,16 +23,16 @@ object Icons {
         }
 
     /** A toggle switch showing its current [value]; clicking should flip it. */
-    fun toggle(material: Material, name: String, value: Boolean, description: String): ItemStack =
+    fun toggle(player: Player, material: Material, name: String, value: Boolean, description: String): ItemStack =
         itemStack(material) {
             name(name)
             loreWrapped("<gray>$description")
-            lore("", "<gray>Currently: ${TownyUtil.onOff(value)}", "<yellow>Click to toggle")
+            lore("", player.tr("icon.currently", "value" to TownyUtil.onOff(player, value)), player.tr("icon.click-toggle"))
             glow(value)
         }
 
     /** A player head for [resident], with extra lore [lines]. */
-    fun resident(resident: Resident, vararg lines: String): ItemStack =
+    fun resident(player: Player, resident: Resident, vararg lines: String): ItemStack =
         itemStack(Material.PLAYER_HEAD) {
             resident.uuid?.let { head(Bukkit.getOfflinePlayer(it)) }
             name((if (resident.isOnline) "<green>" else "<gray>") + TownyUtil.name(resident.name))
@@ -39,54 +41,56 @@ object Icons {
                 if (resident.hasTitle() || resident.hasSurname()) {
                     add("<gray>${TownyUtil.text(resident.title)} ${TownyUtil.name(resident.name)} ${TownyUtil.text(resident.surname)}".trim())
                 }
-                add("<gray>Town: <white>${town?.let { TownyUtil.name(it.name) } ?: "None"}")
+                add(player.tr("icon.resident.town", "town" to (town?.let { TownyUtil.name(it.name) } ?: player.tr("common.none"))))
                 if (town != null) {
                     val ranks = buildList {
-                        if (resident.isMayor) add("Mayor")
-                        addAll(resident.townRanks)
-                        addAll(resident.nationRanks)
+                        if (resident.isMayor) add(player.tr("icon.resident.mayor"))
+                        addAll(resident.townRanks.map(TownyUtil::name))
+                        addAll(resident.nationRanks.map(TownyUtil::name))
                     }
-                    if (ranks.isNotEmpty()) add("<gray>Ranks: <white>${TownyUtil.name(ranks.joinToString(", "))}")
+                    if (ranks.isNotEmpty()) add(player.tr("icon.resident.ranks", "ranks" to ranks.joinToString(", ")))
                 }
-                add(if (resident.isOnline) "<green>Online" else "<gray>Last online: <white>${TownyUtil.date(resident.lastOnline)}")
+                add(
+                    if (resident.isOnline) player.tr("icon.resident.online")
+                    else player.tr("icon.resident.last-online", "date" to TownyUtil.date(resident.lastOnline))
+                )
                 addAll(lines)
             })
         }
 
     /** A summary icon for [town], with extra lore [lines]. */
-    fun town(town: Town, vararg lines: String): ItemStack =
+    fun town(player: Player, town: Town, vararg lines: String): ItemStack =
         itemStack(if (town.isCapital) Material.GOLDEN_HELMET else Material.BELL) {
             name("<gold>${TownyUtil.name(town.name)}")
             lore(buildList {
                 town.board.takeIf { it.isNotBlank() }?.let { add("<gray><i>${TownyUtil.text(it).take(60)}") }
-                add("<gray>Mayor: <white>${town.mayor?.let { TownyUtil.name(it.name) } ?: "-"}")
-                add("<gray>Residents: <white>${town.numResidents}")
-                add("<gray>Claims: <white>${town.numTownBlocks}/${town.maxTownBlocksAsAString}")
-                add("<gray>Nation: <white>${town.nationOrNull?.let { TownyUtil.name(it.name) } ?: "None"}")
-                if (TownyUtil.economy) add("<gray>Bank: <white>${TownyUtil.balance(town)}")
-                add("<gray>Open: ${yesNo(town.isOpen)}  <gray>Public: ${yesNo(town.isPublic)}")
-                if (town.isForSale) add("<gold>For sale: ${TownyUtil.money(town.forSalePrice)}")
-                if (town.isRuined) add("<red>Ruined")
+                add(player.tr("icon.town.mayor", "mayor" to (town.mayor?.let { TownyUtil.name(it.name) } ?: "-")))
+                add(player.tr("icon.town.residents", "count" to town.numResidents))
+                add(player.tr("icon.town.claims", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))
+                add(player.tr("icon.town.nation", "nation" to (town.nationOrNull?.let { TownyUtil.name(it.name) } ?: player.tr("common.none"))))
+                if (TownyUtil.economy) add(player.tr("icon.bank", "balance" to TownyUtil.balance(town)))
+                add(player.tr("icon.open-public", "open" to TownyUtil.yesNo(player, town.isOpen), "public" to TownyUtil.yesNo(player, town.isPublic)))
+                if (town.isForSale) add(player.tr("icon.town.for-sale", "price" to TownyUtil.money(town.forSalePrice)))
+                if (town.isRuined) add(player.tr("icon.town.ruined"))
                 addAll(lines)
             })
             glow(town.isOpen)
         }
 
     /** A summary icon for [nation], with extra lore [lines]. */
-    fun nation(nation: Nation, vararg lines: String): ItemStack =
+    fun nation(player: Player, nation: Nation, vararg lines: String): ItemStack =
         itemStack(Material.BEACON) {
             name("<aqua>${TownyUtil.name(nation.name)}")
             lore(buildList {
                 nation.board.takeIf { it.isNotBlank() }?.let { add("<gray><i>${TownyUtil.text(it).take(60)}") }
-                add("<gray>Leader: <white>${nation.king?.let { TownyUtil.name(it.name) } ?: "-"}")
-                add("<gray>Capital: <white>${nation.capital?.let { TownyUtil.name(it.name) } ?: "-"}")
-                add("<gray>Towns: <white>${nation.numTowns}  <gray>Residents: <white>${nation.numResidents}")
-                if (TownyUtil.economy) add("<gray>Bank: <white>${TownyUtil.balance(nation)}")
-                add("<gray>Allies: <white>${nation.allies.size}  <gray>Enemies: <white>${nation.enemies.size}")
-                add("<gray>Open: ${yesNo(nation.isOpen)}  <gray>Public: ${yesNo(nation.isPublic)}  <gray>Peaceful: ${yesNo(nation.isNeutral)}")
+                add(player.tr("icon.nation.leader", "leader" to (nation.king?.let { TownyUtil.name(it.name) } ?: "-")))
+                add(player.tr("icon.nation.capital", "capital" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")))
+                add(player.tr("icon.nation.size", "towns" to nation.numTowns, "residents" to nation.numResidents))
+                if (TownyUtil.economy) add(player.tr("icon.bank", "balance" to TownyUtil.balance(nation)))
+                add(player.tr("icon.nation.relations", "allies" to nation.allies.size, "enemies" to nation.enemies.size))
+                add(player.tr("icon.nation.flags", "open" to TownyUtil.yesNo(player, nation.isOpen),
+                    "public" to TownyUtil.yesNo(player, nation.isPublic), "peaceful" to TownyUtil.yesNo(player, nation.isNeutral)))
                 addAll(lines)
             })
         }
-
-    private fun yesNo(value: Boolean) = if (value) "<green>Yes" else "<red>No"
 }

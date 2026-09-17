@@ -31,7 +31,7 @@ class PermissionMenu(
     override fun build() {
         val perms = permissions()
         if (perms == null) {
-            button(22, Icons.icon(Material.BARRIER, "<red>This land no longer exists"))
+            button(22, Icons.icon(Material.BARRIER, tr("perm.gone")))
             backButton(49)
             return
         }
@@ -39,9 +39,9 @@ class PermissionMenu(
         ACTIONS.forEachIndexed { column, action ->
             val allOn = LEVELS.all { perms.getPerm(it, action) }
             guarded(11 + column, node, itemStack(ACTION_ICONS.getValue(action)) {
-                name("<gold>${ACTION_NAMES.getValue(action)}")
-                loreWrapped("<gray>${ACTION_DESCRIPTIONS.getValue(action)}")
-                lore("", "<yellow>Click to turn ${if (allOn) "<red>off" else "<green>on"} <yellow>for everyone")
+                name("<gold>${actionName(action)}")
+                loreWrapped("<gray>${actionDescription(action)}")
+                lore("", tr(if (allOn) "perm.everyone-off" else "perm.everyone-on"))
             }) { run("$command ${action.arg} ${if (allOn) "off" else "on"}", ::snapshot) }
         }
 
@@ -49,14 +49,14 @@ class PermissionMenu(
             val allOn = ACTIONS.all { perms.getPerm(level, it) }
             guarded(19 + row * 9, node, itemStack(LEVEL_ICONS.getValue(level)) {
                 name("<aqua>${levelName(level)}")
-                lore("<yellow>Click to turn ${if (allOn) "<red>off" else "<green>on"} <yellow>every action")
+                lore(tr(if (allOn) "perm.every-action-off" else "perm.every-action-on"))
             }) { run("$command ${level.arg} ${if (allOn) "off" else "on"}", ::snapshot) }
 
             ACTIONS.forEachIndexed { column, action ->
                 val allowed = perms.getPerm(level, action)
                 val cell = itemStack(if (allowed) Material.LIME_CONCRETE else Material.RED_CONCRETE) {
-                    name("${if (allowed) "<green>" else "<red>"}${levelName(level)}: ${ACTION_NAMES.getValue(action)}")
-                    lore("<gray>Currently: ${if (allowed) "<green>Allowed" else "<red>Denied"}", "<yellow>Click to toggle")
+                    name("${if (allowed) "<green>" else "<red>"}${levelName(level)}: ${actionName(action)}")
+                    lore(tr("icon.currently", "value" to tr(if (allowed) "perm.allowed" else "perm.denied")), tr("icon.click-toggle"))
                 }
                 guarded(20 + row * 9 + column, node, cell) {
                     run("$command ${level.arg} ${action.arg} ${if (allowed) "off" else "on"}", ::snapshot)
@@ -64,7 +64,7 @@ class PermissionMenu(
             }
         }
 
-        guarded(25, node, Icons.icon(Material.WATER_BUCKET, "<yellow>Reset", "Restore the server's default permissions.")) {
+        guarded(25, node, Icons.icon(Material.WATER_BUCKET, tr("perm.reset"), tr("perm.reset-description"))) {
             run("$command reset", ::snapshot)
         }
         backButton(49)
@@ -73,10 +73,24 @@ class PermissionMenu(
     private fun snapshot(): String? = permissions()?.toString()
 
     private fun levelName(level: PermLevel): String = when (level) {
-        PermLevel.RESIDENT -> if (personal) "Friends" else "Residents"
-        PermLevel.NATION -> if (personal) "Town" else "Nation"
-        PermLevel.ALLY -> "Allies"
-        PermLevel.OUTSIDER -> "Outsiders"
+        PermLevel.RESIDENT -> tr(if (personal) "perm.friends" else "perm.residents")
+        PermLevel.NATION -> tr(if (personal) "perm.town" else "perm.nation")
+        PermLevel.ALLY -> tr("perm.allies")
+        PermLevel.OUTSIDER -> tr("perm.outsiders")
+    }
+
+    private fun actionName(action: ActionType): String = when (action) {
+        ActionType.BUILD -> tr("perm.build")
+        ActionType.DESTROY -> tr("perm.destroy")
+        ActionType.SWITCH -> tr("perm.switch")
+        ActionType.ITEM_USE -> tr("perm.item-use")
+    }
+
+    private fun actionDescription(action: ActionType): String = when (action) {
+        ActionType.BUILD -> tr("perm.build-description")
+        ActionType.DESTROY -> tr("perm.destroy-description")
+        ActionType.SWITCH -> tr("perm.switch-description")
+        ActionType.ITEM_USE -> tr("perm.item-use-description")
     }
 
     private companion object {
@@ -86,16 +100,6 @@ class PermissionMenu(
         val PermLevel.arg get() = name.lowercase()
         val ActionType.arg get() = if (this == ActionType.ITEM_USE) "itemuse" else name.lowercase()
 
-        val ACTION_NAMES = mapOf(
-            ActionType.BUILD to "Build", ActionType.DESTROY to "Destroy",
-            ActionType.SWITCH to "Switch", ActionType.ITEM_USE to "Item Use",
-        )
-        val ACTION_DESCRIPTIONS = mapOf(
-            ActionType.BUILD to "Place blocks.",
-            ActionType.DESTROY to "Break blocks.",
-            ActionType.SWITCH to "Use doors, buttons, levers, and containers.",
-            ActionType.ITEM_USE to "Use items such as flint and steel or buckets.",
-        )
         val ACTION_ICONS = mapOf(
             ActionType.BUILD to Material.BRICKS, ActionType.DESTROY to Material.IRON_PICKAXE,
             ActionType.SWITCH to Material.LEVER, ActionType.ITEM_USE to Material.FLINT_AND_STEEL,

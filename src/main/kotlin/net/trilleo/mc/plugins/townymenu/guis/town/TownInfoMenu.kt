@@ -16,55 +16,55 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
 
     override fun build() {
         if (!town.exists()) {
-            button(13, Icons.icon(Material.BARRIER, "<red>This town no longer exists"))
+            button(13, Icons.icon(Material.BARRIER, tr("town-info.gone")))
             return backButton(31)
         }
-        button(4, Icons.town(town, "<gray>Founded: <white>${TownyUtil.date(town.registered)}"))
+        button(4, Icons.town(player, town, tr("common.founded", "date" to TownyUtil.date(town.registered))))
 
         val viewer = resident
         val grid = layout(19, 20, 21, 22, 23, 24, 25)
 
         if (viewer?.townOrNull == town) {
-            grid.add(Icons.icon(Material.WRITABLE_BOOK, "<gold>Manage Your Town", "Open your town's management menu.")) {
+            grid.add(Icons.icon(Material.WRITABLE_BOOK, tr("town-info.manage"), tr("town-info.manage-description"))) {
                 TownMenu(player, this).open()
             }
         }
-        grid.add(Icons.icon(Material.ENDER_PEARL, "<light_purple>Visit", "Teleport to this town's spawn.",
-            if (TownyUtil.economy && town.spawnCost > 0) "<gray>Cost: <white>${TownyUtil.money(town.spawnCost)}" else "")) {
+        grid.add(Icons.icon(Material.ENDER_PEARL, tr("town-info.visit"), tr("town-info.visit-description"),
+            if (TownyUtil.economy && town.spawnCost > 0) tr("common.cost", "cost" to TownyUtil.money(town.spawnCost)) else "")) {
             runAndClose("towny:town spawn ${town.name}")
         }
-        grid.add(Icons.icon(Material.PLAYER_HEAD, "<green>Residents", null, "<gray>Residents: <white>${town.numResidents}")) {
+        grid.add(Icons.icon(Material.PLAYER_HEAD, tr("town.residents"), null, tr("icon.town.residents", "count" to town.numResidents))) {
             TownMembersMenu(player, town, this).open()
         }
         town.nationOrNull?.let { nation ->
-            grid.add(Icons.icon(Material.BEACON, "<aqua>Nation: ${TownyUtil.name(nation.name)}", "View this town's nation.")) {
+            grid.add(Icons.icon(Material.BEACON, tr("town-info.nation", "nation" to TownyUtil.name(nation.name)), tr("town-info.nation-description"))) {
                 NationInfoMenu(player, nation, this).open()
             }
         }
         if (viewer != null && !viewer.hasTown() && town.isOpen) {
             grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_JOIN,
-                Icons.icon(Material.OAK_DOOR, "<green>Join Town", "This town is open to everyone.")) {
+                Icons.icon(Material.OAK_DOOR, tr("town-info.join"), tr("town-info.join-description"))) {
                 run("towny:town join ${town.name}", { viewer.hasTown() }, returnTo = MainMenu(player))
             }
         }
         if (TownyUtil.economy && viewer?.townOrNull != town) {
             grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_DEPOSIT_OTHERTOWN,
-                Icons.icon(Material.EMERALD, "<green>Donate", "Deposit money into this town's bank.")) {
-                prompt("Donate to ${TownyUtil.name(town.name)}", "Amount") { amount ->
+                Icons.icon(Material.EMERALD, tr("town-info.donate"), tr("town-info.donate-description"))) {
+                prompt(tr("town-info.donate-title", "town" to TownyUtil.name(town.name)), tr("common.amount")) { amount ->
                     run("towny:town deposit ${TownyUtil.argument(amount)} ${town.name}", { town.account.holdingBalance })
                 }
             }
         }
         if (TownyUtil.economy && town.isForSale && viewer?.townOrNull != town) {
             grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_BUYTOWN, Icons.icon(
-                Material.GOLD_BLOCK, "<gold>Buy Town", "Become this town's mayor.",
-                "<gray>Price: <white>${TownyUtil.money(town.forSalePrice)}",
+                Material.GOLD_BLOCK, tr("town-info.buy"), tr("town-info.buy-description"),
+                tr("common.price", "price" to TownyUtil.money(town.forSalePrice)),
             )) { run("towny:town buytown ${town.name}", { town.mayor }, returnTo = MainMenu(player)) }
         }
         val nation = viewer?.nationOrNull
         if (nation != null && !town.hasNation() && viewer.isKing) {
             grid.add(PermissionNodes.TOWNY_COMMAND_NATION_INVITE_ADD,
-                Icons.icon(Material.PAPER, "<aqua>Invite to Nation", "Invite this town to join ${TownyUtil.name(nation.name)}.")) {
+                Icons.icon(Material.PAPER, tr("town-info.invite"), tr("town-info.invite-description", "nation" to TownyUtil.name(nation.name)))) {
                 run("towny:nation add ${town.name}", { nation.sentInvites.size })
             }
         }

@@ -30,7 +30,7 @@ abstract class PagedMenu(player: Player, title: String, back: Menu?) : Menu(play
     protected open fun controls() {}
 
     /** Item shown in the middle of an empty page. */
-    protected open val emptyItem: ItemStack = itemStack(Material.STRUCTURE_VOID) { name("<gray>Nothing here yet") }
+    protected open val emptyItem: ItemStack = itemStack(Material.STRUCTURE_VOID) { name(tr("menu.empty")) }
 
     final override fun build() {
         val all = entries()
@@ -41,13 +41,13 @@ abstract class PagedMenu(player: Player, title: String, back: Menu?) : Menu(play
         if (all.isEmpty()) button(22, emptyItem)
 
         if (page > 0) {
-            button(45, itemStack(Material.ARROW) { name("<yellow>Previous Page"); lore("<gray>Page $page/$pages") }) {
+            button(45, itemStack(Material.ARROW) { name(tr("menu.previous-page")); lore(tr("menu.page", "page" to page, "pages" to pages)) }) {
                 page--
                 render()
             }
         }
         if (page < pages - 1) {
-            button(53, itemStack(Material.ARROW) { name("<yellow>Next Page"); lore("<gray>Page ${page + 2}/$pages") }) {
+            button(53, itemStack(Material.ARROW) { name(tr("menu.next-page")); lore(tr("menu.page", "page" to page + 2, "pages" to pages)) }) {
                 page++
                 render()
             }

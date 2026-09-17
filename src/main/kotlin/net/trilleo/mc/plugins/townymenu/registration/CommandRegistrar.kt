@@ -1,7 +1,9 @@
 package net.trilleo.mc.plugins.townymenu.registration
 
+import net.kyori.adventure.text.minimessage.MiniMessage
 import net.trilleo.mc.plugins.townymenu.guis.MainMenu
 import net.trilleo.mc.plugins.townymenu.utils.sendPrefixed
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
@@ -157,10 +159,8 @@ object CommandRegistrar {
             if (sender is Player) {
                 MainMenu(sender).open()
             } else {
-                sender.sendMessage("Usage: /$ROOT_COMMAND <subcommand>")
-                sender.sendMessage(
-                    "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
-                )
+                sender.sendRichMessage(sender.tr("command.usage", "command" to ROOT_COMMAND))
+                sender.sendRichMessage(sender.tr("command.available", "commands" to subCommands.keys.sorted().joinToString(", ")))
             }
             return true
         }
@@ -168,25 +168,23 @@ object CommandRegistrar {
         val subName = args[0].lowercase()
         val subCommand = subCommands[subName]
         if (subCommand == null) {
+            val available = subCommands.keys.sorted().joinToString(", ")
             if (sender is Player) {
-                sender.sendPrefixed("Unknown sub-command: ${args[0]}")
-                sender.sendPrefixed(
-                    "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
-                )
+                sender.sendPrefixed(sender.tr("command.unknown", "command" to MiniMessage.miniMessage().escapeTags(args[0])))
+                sender.sendPrefixed(sender.tr("command.available", "commands" to available))
+            } else {
+                sender.sendRichMessage(sender.tr("command.unknown", "command" to MiniMessage.miniMessage().escapeTags(args[0])))
+                sender.sendRichMessage(sender.tr("command.available", "commands" to available))
             }
-            sender.sendMessage("Unknown sub-command: ${args[0]}")
-            sender.sendMessage(
-                "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
-            )
             return true
         }
 
         subCommand.permission?.let { perm ->
             if (!sender.hasPermission(perm)) {
                 if (sender is Player) {
-                    sender.sendPrefixed("<red>You don't have permission to use this command!")
+                    sender.sendPrefixed(sender.tr("command.no-permission"))
                 } else {
-                    sender.sendMessage("You do not have permission to use this command.")
+                    sender.sendRichMessage(sender.tr("command.no-permission"))
                 }
                 return true
             }

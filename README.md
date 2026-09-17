@@ -30,6 +30,8 @@
 - **Directories** — Browse and rank every town and nation by residents, claims, bank balance, and more; visit, join,
   donate, buy a town that is for sale, or propose alliances.
 - **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place.
+- **English and Chinese** — Every menu, dialog, and message follows each player's Minecraft language (English or
+  Simplified Chinese). Server owners can edit the translations or add new languages.
 - **Respects Towny** — Every action runs the matching Towny command, so Towny's permissions, costs, cooldowns, and
   messages apply unchanged. Buttons you lack permission for are shown greyed out.
 
@@ -59,18 +61,26 @@ Prebuilt jars are attached to every [GitHub release](https://github.com/Trilleo/
 
 All commands are sub-commands of `/townymenu` (alias `/tm`).
 
-| Command      | Description                               |
-|:-------------|:------------------------------------------|
-| `/tm`        | Open the main menu                        |
-| `/tm help`   | List all available commands               |
-| `/tm reload` | Reload the plugin configuration (OP only) |
+| Command      | Description                                         |
+|:-------------|:----------------------------------------------------|
+| `/tm`        | Open the main menu                                  |
+| `/tm help`   | List all available commands                         |
+| `/tm reload` | Reload the configuration and translations (OP only) |
 
 ## Configuration
 
-| Key                        | Default | Description                                                  |
-|:---------------------------|:--------|:-------------------------------------------------------------|
-| `message-prefix`           | —       | MiniMessage prefix shown before plugin messages              |
-| `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking  |
+| Key                        | Default | Description                                                                     |
+|:---------------------------|:--------|:--------------------------------------------------------------------------------|
+| `message-prefix`           | —       | MiniMessage prefix shown before plugin messages                                 |
+| `language`                 | `auto`  | `auto` follows each player's client language; `en_US` or `zh_CN` forces one    |
+| `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking                     |
+
+## Translations
+
+TownyMenu ships with English (`en_US`) and Simplified Chinese (`zh_CN`). On first start the language files are copied to
+`plugins/TownyMenu/lang/`. Edit them to change any text, or add a new `<id>.yml` (for example `de_DE.yml`) to support
+another language; players whose client uses that language see it automatically. Run `/tm reload` after editing. Keys
+missing from a file fall back to the bundled copy, then to English.
 
 ## Developer Documentation
 
