@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 0.1.1
+
 ### Technical Details
 
 #### Misc
