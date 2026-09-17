@@ -1,4 +1,8 @@
 # TownyMenu Configuration
 
 # A friendly prefix shown before plugin messages
-message-prefix: "<click:suggest_command:/townymenu><gradient:yellow:gold>[TownyMenu]"
+message-prefix: "<click:run_command:/townymenu><gradient:yellow:gold>[TownyMenu]"
+
+# Open the main menu when a player presses the swap-hand key (F by default) while sneaking.
+# Set to false if this conflicts with another plugin's controls.
+sneak-swap-hand-shortcut: true

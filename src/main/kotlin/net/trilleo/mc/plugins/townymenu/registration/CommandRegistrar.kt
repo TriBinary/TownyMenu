@@ -1,5 +1,6 @@
 package net.trilleo.mc.plugins.townymenu.registration
 
+import net.trilleo.mc.plugins.townymenu.guis.MainMenu
 import net.trilleo.mc.plugins.townymenu.utils.sendPrefixed
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -154,10 +155,7 @@ object CommandRegistrar {
     private fun executeParentCommand(sender: CommandSender, args: Array<out String>): Boolean {
         if (args.isEmpty()) {
             if (sender is Player) {
-                sender.sendPrefixed("Usage: /$ROOT_COMMAND <subcommand>")
-                sender.sendPrefixed(
-                    "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
-                )
+                MainMenu(sender).open()
             } else {
                 sender.sendMessage("Usage: /$ROOT_COMMAND <subcommand>")
                 sender.sendMessage(

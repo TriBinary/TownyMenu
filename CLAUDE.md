@@ -56,20 +56,19 @@ The local test server in `run/` (gitignored) also needs a Towny jar in `run/plug
 
 ```
 src/main/kotlin/net/trilleo/mc/plugins/townymenu/
-├── Main.kt                  # Plugin entry point
+├── Main.kt                  # Plugin entry point (Main.instance)
 ├── commands/                # Sub-commands (auto-registered)
 │   ├── info/
 │   └── moderation/
 ├── config/                  # PluginConfig (typed config.yml wrapper)
-├── data/                    # JSON persistence (player + server)
-├── enums/                   # Shared enumerations (FillMode, PagedGUIMode, DisplayLocation)
-├── guis/                    # Inventory GUIs (auto-registered)
-├── items/                   # Custom items (auto-registered)
+├── guis/                    # Inventory menus (created on demand, not registered)
+│   ├── framework/           # Menu, PagedMenu, MenuActions, Icons
+│   ├── common/              # ToggleMenu, PermissionMenu, BankMenu, RankMenu, Pickers
+│   ├── town/  nation/  plot/  resident/
+│   └── MainMenu.kt, MapMenu.kt, InvitesMenu.kt
 ├── listeners/               # Event listeners (auto-registered)
-├── recipes/                 # PluginRecipe implementations
 ├── registration/            # Auto-registration engine (do not modify lightly)
-├── tasks/                   # Scheduled tasks (auto-registered)
-└── utils/                   # Utility helpers (itemStack DSL, MessageUtil, PDCUtil, …)
+└── utils/                   # itemStack DSL, TownyUtil, DialogUtil, MessageUtil, LoreUtil
 ```
 
 ## Auto-Registration System
@@ -77,21 +76,28 @@ src/main/kotlin/net/trilleo/mc/plugins/townymenu/
 The plugin uses `PackageScanner` to discover components at startup — you **never** edit `plugin.yml` or wire things
 manually. Just extend the right base class and place the file in the correct package.
 
-| Component   | Base Class                     | Package                 |
-|:------------|:-------------------------------|:------------------------|
-| Command     | `PluginCommand`                | `commands` (any depth)  |
-| Listener    | `Listener`                     | `listeners` (any depth) |
-| GUI         | `PluginGUI` / `PagedPluginGUI` | `guis` (any depth)      |
-| Task        | `PluginTask`                   | `tasks` (any depth)     |
-| Item        | `PluginItem`                   | `items` (any depth)     |
-| Recipe      | `PluginRecipe`                 | `recipes` (any depth)   |
-| Config      | `PluginConfig`                 | `config`                |
-| Player data | `PlayerData`                   | `data`                  |
-| Server data | `ServerData`                   | `data`                  |
+| Component | Base Class      | Package                 |
+|:----------|:----------------|:------------------------|
+| Command   | `PluginCommand` | `commands` (any depth)  |
+| Listener  | `Listener`      | `listeners` (any depth) |
+| Config    | `PluginConfig`  | `config`                |
 
-Commands are sub-commands of `/townymenu` (alias `/tm`) unless `isMainCommand = true`. Permissions are derived from
-commands automatically. Every command, listener, GUI, and task needs either a no-arg constructor or one accepting a
-`JavaPlugin`. See [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
+Commands are sub-commands of `/townymenu` (alias `/tm`) unless `isMainCommand = true`; `/tm` with no arguments opens
+`MainMenu`. Permissions are derived from commands automatically. Every command and listener needs either a no-arg
+constructor or one accepting a `JavaPlugin`. See [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
+
+## Menus
+
+Menus are not registered: construct one with its context and call `open()` (e.g. `TownInfoMenu(player, town, this)`).
+Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on every render.
+
+- **Mutate through `run(command, probe)`** — it runs the Towny command and re-opens the menu if the probe changed, or
+  leaves it closed so Towny's chat reply is visible. Towny confirmations are shown as dialogs automatically.
+- **Gate buttons with `guarded(slot, PermissionNodes.X, …)`** using the node Towny's command checks.
+- **Collect text with `prompt(...)`** (Paper dialogs), never chat input.
+- **Escape player-written text** (names, boards, titles, tags) with `TownyUtil.name()` / `TownyUtil.text()` before
+  embedding it in MiniMessage.
+- **Keep `PagedMenu` entries lazy** — pass the icon as a lambda to `MenuEntry` so off-page icons are never built.
 
 ## Working with Towny
 
@@ -100,11 +106,13 @@ commands automatically. Every command, listener, GUI, and task needs either a no
 - **Read data through `TownyAPI`** — `TownyAPI.getInstance()` gives residents (`getResident(player)`), towns, nations,
   and `TownBlock`s. Handle `null` results: a player may have no resident record, town, or nation.
 - **Prefer Towny's own actions over reimplementing them** — for anything that changes Towny state (joining, claiming,
-  deposits, ranks, toggles), run the equivalent Towny command as the player (`player.performCommand("town ...")`) so
-  Towny's permission checks, costs, confirmations, and messages still apply. Only call Towny's mutating API directly
-  when no command covers the action, and then enforce the same permission nodes Towny would.
-- **GUIs are views, not a second source of truth** — never cache Towny data in `PlayerData`/`ServerData`; re-read it
-  from `TownyAPI` when a menu opens or refreshes.
+  deposits, ranks, toggles), run the equivalent Towny command as the player — from a menu, `run("towny:town ...")` —
+  so Towny's permission checks, costs, confirmations, and messages still apply. Always use the `towny:` namespace.
+  Only call Towny's mutating API directly when no command covers the action, and then enforce the same permission
+  nodes Towny would.
+- **GUIs are views, not a second source of truth** — never cache Towny data; re-read it from `TownyAPI` when a menu
+  opens or refreshes.
+- **Towny's package `com.palmergames.bukkit.towny.object` needs backticks in Kotlin imports** (`` `object` ``).
 - **React to Towny events** — listen to Towny's Bukkit events (`com.palmergames.bukkit.towny.event.*`) in `listeners/`
   when an open menu needs to update.
 - **Bumping Towny** — change `towny_version` in [gradle.properties](gradle.properties) and the Requirements table in

@@ -11,7 +11,27 @@
 
 ## Features
 
-- **Towny, without the commands** — Clickable inventory menus for the Towny actions players use every day.
+- **Towny, without the commands** — Players can do their everyday Towny tasks from clickable menus. Text input
+  (names, amounts, bios) uses native Minecraft dialogs, and Towny's confirmations appear as confirm/cancel dialogs.
+- **Open it anywhere** — `/townymenu` (or `/tm`), or press swap-hand (**F**) while sneaking.
+- **Town menu** — Residents and ranks, invites, the town bank, claims (single chunk, area, fill, outposts, unclaim,
+  bonus claims, auto-claim), PvP/mobs/fire/explosions/open/public/peaceful settings, name, board, tag, taxes, plot
+  prices, spawn and home block, map colour, selling the town, build permissions, trusted residents and towns,
+  outlaws, spawn and outpost teleports, and leaving or deleting the town.
+- **Nation menu** — Member towns and invitations, residents and nation ranks, the nation bank, allies and enemies,
+  peaceful/open/public settings, name, board, tag, taxes, capital, leader, spawn, map colour, and leaving or deleting
+  the nation.
+- **Plot menu** — For the plot you stand in: buy, sell, give up, evict, plot type, name, PvP/fire/explosion/mob/tax
+  settings, build permissions, trusted players, plot groups and districts, and clearing the plot.
+- **Profile menu** — Friends, personal plot permissions, a bio, bail, spawn, and every personal toggle (border titles,
+  auto map, auto claim, plot borders, info tool, and more).
+- **Map** — A 9×5 chunk map around you, coloured by your town, your plots, your nation, allies, and enemies, with plots
+  for sale highlighted.
+- **Directories** — Browse and rank every town and nation by residents, claims, bank balance, and more; visit, join,
+  donate, buy a town that is for sale, or propose alliances.
+- **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place.
+- **Respects Towny** — Every action runs the matching Towny command, so Towny's permissions, costs, cooldowns, and
+  messages apply unchanged. Buttons you lack permission for are shown greyed out.
 
 ## Requirements
 
@@ -41,17 +61,25 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 
 | Command      | Description                               |
 |:-------------|:------------------------------------------|
+| `/tm`        | Open the main menu                        |
 | `/tm help`   | List all available commands               |
 | `/tm reload` | Reload the plugin configuration (OP only) |
+
+## Configuration
+
+| Key                        | Default | Description                                                  |
+|:---------------------------|:--------|:-------------------------------------------------------------|
+| `message-prefix`           | —       | MiniMessage prefix shown before plugin messages              |
+| `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking  |
 
 ## Developer Documentation
 
 Full development guides are in the `docs/` directory:
 
-- [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) — How to add commands, listeners, GUIs, tasks, items, recipes, and
-  player/server data.
-- [UTILITY_GUIDE.md](docs/UTILITY_GUIDE.md) — Reference for all utility helpers (`itemStack` DSL, `MessageUtil`,
-  `PDCUtil`, etc.).
+- [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) — How to add commands, listeners, and menus, and use the
+  configuration.
+- [UTILITY_GUIDE.md](docs/UTILITY_GUIDE.md) — Reference for the utility helpers (`itemStack` DSL, `TownyUtil`,
+  `DialogUtil`, `MessageUtil`, `LoreUtil`).
 - [COMMIT_STRUCTURE.md](docs/COMMIT_STRUCTURE.md) — Commit message conventions.
 - [RELEASING.md](docs/RELEASING.md) — Writing the changelog and publishing a release.
 
