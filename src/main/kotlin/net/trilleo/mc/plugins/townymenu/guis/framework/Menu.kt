@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.trilleo.mc.plugins.townymenu.Main
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Chapter
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.TutorialChapterMenu
 import net.trilleo.mc.plugins.townymenu.utils.DialogUtil
@@ -74,6 +75,8 @@ abstract class Menu(
     internal fun click(slot: Int, click: ClickType) {
         // A double click also fires as a regular click first; acting on both would run commands twice.
         if (click == ClickType.DOUBLE_CLICK) return
+        // The menu shows the old state until the last command settles, so a second click would repeat it.
+        if (MenuActions.isBusy(player)) return
         val action = actions[slot] ?: return
         player.playSound(CLICK_SOUND)
         action(click)
@@ -97,10 +100,20 @@ abstract class Menu(
     protected inner class Layout(private val slots: IntArray) {
         private var next = 0
 
-        fun add(item: ItemStack, action: ((ClickType) -> Unit)? = null) = button(slots[next++], item, action)
+        fun add(item: ItemStack, action: ((ClickType) -> Unit)? = null) {
+            nextSlot()?.let { button(it, item, action) }
+        }
 
-        fun add(node: PermissionNodes, item: ItemStack, action: (ClickType) -> Unit) =
-            guarded(slots[next++], node, item, action)
+        fun add(node: PermissionNodes, item: ItemStack, action: (ClickType) -> Unit) {
+            nextSlot()?.let { guarded(it, node, item, action) }
+        }
+
+        /** The next free slot, or `null` (logged) when the layout is full, so an extra button never breaks the menu. */
+        private fun nextSlot(): Int? {
+            if (next < slots.size) return slots[next++]
+            Main.instance.logger.warning("${this@Menu::class.simpleName} has more buttons than its ${slots.size} layout slots")
+            return null
+        }
     }
 
     protected fun layout(vararg slots: Int) = Layout(slots)

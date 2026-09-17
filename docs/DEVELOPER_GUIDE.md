@@ -302,12 +302,12 @@ open inventory's holder — there is no registry and nothing to clean up when a 
 | `render()`                               | Clears the inventory (grey filler) and calls `build()`.                          |
 | `button(slot, item, action?)`            | Places an item; `action` receives the `ClickType`.                               |
 | `guarded(slot, node, item, action)`      | Like `button`, but shows a grey "no permission" icon without `node`.             |
-| `layout(vararg slots)`                   | Returns a `Layout` that fills the given slots in order, for optional buttons.    |
+| `layout(vararg slots)`                   | Fills slots in order, for optional buttons; extra buttons are logged, skipped.   |
 | `backButton(slot)`                       | Back arrow to `back`, or a close button when `back` is `null`.                   |
 | `tutorialButton(slot, chapter)`          | Help button opening the tutorial `Chapter` that explains this menu.              |
 | `run(command, probe?, returnTo?, delay)` | Runs a Towny command as the player (see below).                                  |
 | `runAndClose(command)`                   | Closes the menu, then runs the command (teleports, books, chat output).          |
-| `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel reopens the menu.                              |
+| `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel or empty input reopens the menu.               |
 | `tr(key, "name" to value, …)`            | Translates `key` into the viewer's language (see [Translations](#translations)). |
 | `resident`                               | The viewer's Towny `Resident`, or `null`.                                        |
 
@@ -319,6 +319,9 @@ lambda reading the state the command should change — and `MenuActions` compare
 
 - probe **changed** → `returnTo` (default: this menu) is re-opened, showing the new state;
 - probe **unchanged**, or no probe → the menu closes so the player can read Towny's chat reply (an error, a cost).
+
+Neither happens if the player has opened a different menu in the meantime. Until the command settles, `Menu` ignores
+that player's clicks, so a double click can't run a command twice.
 
 If the command raises a Towny confirmation, `MenuActions` suppresses the chat prompt (`ConfirmationSendEvent`) and shows
 a native confirmation dialog instead; accepting runs Towny's confirm command and then settles the probe as usual.
@@ -347,7 +350,7 @@ override fun entries(): List<MenuEntry> =
 
 | Class            | Purpose                                                                                       |
 |:-----------------|:----------------------------------------------------------------------------------------------|
-| `ToggleMenu`     | A grid of `Toggle`s (material, translated name and description, node, command, value reader). |
+| `ToggleMenu`     | Pages of `Toggle`s, 21 per page (material, name, description, node, command, value reader).   |
 | `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command.                            |
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                     |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                |

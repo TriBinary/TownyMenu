@@ -20,6 +20,8 @@ import java.util.*
  * - **unchanged, or no probe** → the menu stays closed so Towny's chat message
  *   (an error, a cost, a teleport notice) is visible.
  *
+ * Either way, nothing happens if the player has since opened a different menu.
+ *
  * Towny confirmations raised by a menu command are shown as a native dialog
  * instead of clickable chat text (see [interceptConfirmation]).
  */
@@ -28,7 +30,14 @@ object MenuActions {
     /** Ticks to wait before checking the probe; Towny runs some commands asynchronously. */
     const val DEFAULT_DELAY = 4L
 
-    private class Pending(val menu: Menu, val probe: (() -> Any?)?, val before: Any?, val delay: Long) {
+    /** [origin] is the menu open when the command ran, or `null` when none was (e.g. after a dialog). */
+    private class Pending(
+        val menu: Menu,
+        var origin: Menu?,
+        val probe: (() -> Any?)?,
+        val before: Any?,
+        val delay: Long,
+    ) {
         var awaitingConfirmation = false
     }
 
@@ -40,7 +49,7 @@ object MenuActions {
      */
     fun perform(menu: Menu, command: String, probe: (() -> Any?)?, delayTicks: Long) {
         val player = menu.player
-        val action = Pending(menu, probe, probe?.invoke(), delayTicks)
+        val action = Pending(menu, openMenu(player), probe, probe?.invoke(), delayTicks)
         pending[player.uniqueId] = action
         player.performCommand(command)
         later(delayTicks) { settle(player, action) }
@@ -56,6 +65,9 @@ object MenuActions {
         later(1) { showConfirmation(player, action, confirmation) }
     }
 
+    /** `true` while a command [player] started from a menu is still settling, so menu clicks are ignored. */
+    fun isBusy(player: Player): Boolean = pending[player.uniqueId]?.awaitingConfirmation == false
+
     fun forget(player: Player) {
         pending.remove(player.uniqueId)
     }
@@ -65,6 +77,7 @@ object MenuActions {
         val title = confirmation.title.locale(player).component()
         val body = if (confirmation.isSerious) player.tr("dialog.cannot-undo") else null
         val prefix = confirmation.pluginPrefix
+        action.origin = null
         DialogUtil.confirm(
             player, title, body,
             onYes = {
@@ -84,13 +97,16 @@ object MenuActions {
         if (pending[player.uniqueId] !== action || action.awaitingConfirmation) return
         pending.remove(player.uniqueId)
         if (!player.isOnline) return
+        if (openMenu(player) !== action.origin) return
         val probe = action.probe
         if (probe != null && probe() != action.before) {
             action.menu.open()
-        } else if (player.openInventory.topInventory.getHolder(false) is Menu) {
+        } else if (action.origin != null) {
             player.closeInventory()
         }
     }
+
+    private fun openMenu(player: Player): Menu? = player.openInventory.topInventory.getHolder(false) as? Menu
 
     private fun later(ticks: Long, block: () -> Unit) {
         Bukkit.getScheduler().runTaskLater(Main.instance, Runnable(block), ticks)

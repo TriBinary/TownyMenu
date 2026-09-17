@@ -3,6 +3,7 @@ package net.trilleo.mc.plugins.townymenu.guis.common
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.utils.itemStack
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -20,16 +21,20 @@ class Toggle(
     val value: () -> Boolean?,
 )
 
-/** A menu of [Toggle] switches, seven per row. */
+/** A menu of [Toggle] switches, seven per row and up to three rows per page. */
 class ToggleMenu(
     player: Player,
     title: String,
     back: Menu,
     private val toggles: List<Toggle>,
-) : Menu(player, title, 3 + (toggles.size + 6) / 7, back) {
+) : Menu(player, title, 3 + (minOf(toggles.size, PAGE_SIZE) + 6) / 7, back) {
+
+    private var page = 0
 
     override fun build() {
-        toggles.forEachIndexed { index, toggle ->
+        val pages = maxOf(1, (toggles.size + PAGE_SIZE - 1) / PAGE_SIZE)
+        page = page.coerceIn(0, pages - 1)
+        toggles.drop(page * PAGE_SIZE).take(PAGE_SIZE).forEachIndexed { index, toggle ->
             val slot = 10 + index / 7 * 9 + index % 7
             guarded(
                 slot,
@@ -39,6 +44,29 @@ class ToggleMenu(
                 run(toggle.command, toggle.value)
             }
         }
-        backButton(inventory.size - 5)
+
+        val bottom = inventory.size - 9
+        if (page > 0) {
+            button(bottom, pageArrow("menu.previous-page", page, pages)) {
+                page--
+                render()
+            }
+        }
+        if (page < pages - 1) {
+            button(bottom + 8, pageArrow("menu.next-page", page + 2, pages)) {
+                page++
+                render()
+            }
+        }
+        backButton(bottom + 4)
+    }
+
+    private fun pageArrow(key: String, target: Int, pages: Int) = itemStack(Material.ARROW) {
+        name(tr(key))
+        lore(tr("menu.page", "page" to target, "pages" to pages))
+    }
+
+    private companion object {
+        const val PAGE_SIZE = 21
     }
 }

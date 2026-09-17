@@ -32,10 +32,12 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("town-info.visit-description"),
-                if (TownyUtil.economy && town.spawnCost > 0) tr(
-                    "common.cost",
-                    "cost" to TownyUtil.money(town.spawnCost)
-                ) else ""
+                *listOfNotNull(
+                    if (TownyUtil.economy && town.spawnCost > 0) tr(
+                        "common.cost",
+                        "cost" to TownyUtil.money(town.spawnCost)
+                    ) else null
+                ).toTypedArray()
             )
         ) {
             runAndClose("towny:town spawn ${town.name}")

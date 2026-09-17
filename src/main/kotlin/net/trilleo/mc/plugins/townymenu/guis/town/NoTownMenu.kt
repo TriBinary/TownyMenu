@@ -17,10 +17,10 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
 
     override fun build() {
         val price =
-            if (TownyUtil.economy) tr("common.cost", "cost" to TownyUtil.money(TownySettings.getNewTownPrice())) else ""
+            if (TownyUtil.economy) tr("common.cost", "cost" to TownyUtil.money(TownySettings.getNewTownPrice())) else null
         guarded(
             11, PermissionNodes.TOWNY_COMMAND_TOWN_NEW,
-            Icons.icon(Material.BELL, tr("no-town.found"), tr("no-town.found-description"), price)
+            Icons.icon(Material.BELL, tr("no-town.found"), tr("no-town.found-description"), *listOfNotNull(price).toTypedArray())
         ) {
             prompt(tr("no-town.found-title"), tr("no-town.town-name")) { name ->
                 run(

@@ -19,10 +19,10 @@ class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nati
         val price = if (TownyUtil.economy) tr(
             "common.cost",
             "cost" to TownyUtil.money(TownySettings.getNewNationPrice())
-        ) else ""
+        ) else null
         guarded(
             11, PermissionNodes.TOWNY_COMMAND_NATION_NEW,
-            Icons.icon(Material.BEACON, tr("no-nation.found"), tr("no-nation.found-description"), price)
+            Icons.icon(Material.BEACON, tr("no-nation.found"), tr("no-nation.found-description"), *listOfNotNull(price).toTypedArray())
         ) {
             prompt(tr("no-nation.found-title"), tr("no-nation.nation-name")) { name ->
                 run(

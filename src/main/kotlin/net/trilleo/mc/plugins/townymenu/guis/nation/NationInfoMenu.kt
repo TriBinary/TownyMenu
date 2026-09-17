@@ -37,10 +37,12 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("nation-info.visit-description"),
-                if (TownyUtil.economy && nation.spawnCost > 0) tr(
-                    "common.cost",
-                    "cost" to TownyUtil.money(nation.spawnCost)
-                ) else ""
+                *listOfNotNull(
+                    if (TownyUtil.economy && nation.spawnCost > 0) tr(
+                        "common.cost",
+                        "cost" to TownyUtil.money(nation.spawnCost)
+                    ) else null
+                ).toTypedArray()
             )
         ) {
             runAndClose("towny:nation spawn ${nation.name}")

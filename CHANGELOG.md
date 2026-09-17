@@ -18,8 +18,20 @@
 #### Misc
 
 + Fixed the back button covering the Outsiders: Switch button in the permissions menu.
++ Fixed a menu reopening over, or closing, another menu opened while a command was still finishing.
++ Fixed clicking a button twice quickly running its command twice, such as toggling PvP on and straight back off.
++ Fixed pressing Escape in a text dialog leaving no menu open; the dialog now closes only with Confirm or Cancel.
++ Removed the empty line at the end of the Visit, Found a Town, and Found a Nation icons.
++ Fixed a leading space in a resident's full name when they have a surname but no title.
 + Town and nation boards and resident about texts no longer show Towny's placeholder (`/town set board [msg]`,
   `/res set about [msg]`) when none has been set, and the edit dialogs start empty instead of with the placeholder.
+
+### Technical Details
+
+#### Misc
+
++ `ToggleMenu` splits more than 21 toggles into pages instead of asking for an inventory taller than six rows.
++ `Layout.add` logs and skips buttons beyond its slots instead of throwing, so an overfull grid no longer breaks a menu.
 
 ## Version 0.1.1
 

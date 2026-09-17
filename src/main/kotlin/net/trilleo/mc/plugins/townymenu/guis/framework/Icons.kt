@@ -43,13 +43,12 @@ object Icons {
             val town = resident.townOrNull
             lore(buildList {
                 if (resident.hasTitle() || resident.hasSurname()) {
-                    add(
-                        "<gray>${TownyUtil.text(resident.title)} ${TownyUtil.name(resident.name)} ${
-                            TownyUtil.text(
-                                resident.surname
-                            )
-                        }".trim()
-                    )
+                    val fullName = listOf(
+                        TownyUtil.text(resident.title),
+                        TownyUtil.name(resident.name),
+                        TownyUtil.text(resident.surname)
+                    ).filter { it.isNotBlank() }
+                    add("<gray>${fullName.joinToString(" ")}")
                 }
                 add(
                     player.tr(
