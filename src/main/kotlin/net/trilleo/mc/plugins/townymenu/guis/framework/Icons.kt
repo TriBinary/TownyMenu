@@ -27,7 +27,11 @@ object Icons {
         itemStack(material) {
             name(name)
             loreWrapped("<gray>$description")
-            lore("", player.tr("icon.currently", "value" to TownyUtil.onOff(player, value)), player.tr("icon.click-toggle"))
+            lore(
+                "",
+                player.tr("icon.currently", "value" to TownyUtil.onOff(player, value)),
+                player.tr("icon.click-toggle")
+            )
             glow(value)
         }
 
@@ -39,9 +43,18 @@ object Icons {
             val town = resident.townOrNull
             lore(buildList {
                 if (resident.hasTitle() || resident.hasSurname()) {
-                    add("<gray>${TownyUtil.text(resident.title)} ${TownyUtil.name(resident.name)} ${TownyUtil.text(resident.surname)}".trim())
+                    add(
+                        "<gray>${TownyUtil.text(resident.title)} ${TownyUtil.name(resident.name)} ${
+                            TownyUtil.text(
+                                resident.surname
+                            )
+                        }".trim()
+                    )
                 }
-                add(player.tr("icon.resident.town", "town" to (town?.let { TownyUtil.name(it.name) } ?: player.tr("common.none"))))
+                add(
+                    player.tr(
+                        "icon.resident.town",
+                        "town" to (town?.let { TownyUtil.name(it.name) } ?: player.tr("common.none"))))
                 if (town != null) {
                     val ranks = buildList {
                         if (resident.isMayor) add(player.tr("icon.resident.mayor"))
@@ -67,9 +80,18 @@ object Icons {
                 add(player.tr("icon.town.mayor", "mayor" to (town.mayor?.let { TownyUtil.name(it.name) } ?: "-")))
                 add(player.tr("icon.town.residents", "count" to town.numResidents))
                 add(player.tr("icon.town.claims", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))
-                add(player.tr("icon.town.nation", "nation" to (town.nationOrNull?.let { TownyUtil.name(it.name) } ?: player.tr("common.none"))))
+                add(
+                    player.tr(
+                        "icon.town.nation",
+                        "nation" to (town.nationOrNull?.let { TownyUtil.name(it.name) } ?: player.tr("common.none"))))
                 if (TownyUtil.economy) add(player.tr("icon.bank", "balance" to TownyUtil.balance(town)))
-                add(player.tr("icon.open-public", "open" to TownyUtil.yesNo(player, town.isOpen), "public" to TownyUtil.yesNo(player, town.isPublic)))
+                add(
+                    player.tr(
+                        "icon.open-public",
+                        "open" to TownyUtil.yesNo(player, town.isOpen),
+                        "public" to TownyUtil.yesNo(player, town.isPublic)
+                    )
+                )
                 if (town.isForSale) add(player.tr("icon.town.for-sale", "price" to TownyUtil.money(town.forSalePrice)))
                 if (town.isRuined) add(player.tr("icon.town.ruined"))
                 addAll(lines)
@@ -84,12 +106,27 @@ object Icons {
             lore(buildList {
                 nation.board.takeIf { it.isNotBlank() }?.let { add("<gray><i>${TownyUtil.text(it).take(60)}") }
                 add(player.tr("icon.nation.leader", "leader" to (nation.king?.let { TownyUtil.name(it.name) } ?: "-")))
-                add(player.tr("icon.nation.capital", "capital" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")))
+                add(
+                    player.tr(
+                        "icon.nation.capital",
+                        "capital" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")))
                 add(player.tr("icon.nation.size", "towns" to nation.numTowns, "residents" to nation.numResidents))
                 if (TownyUtil.economy) add(player.tr("icon.bank", "balance" to TownyUtil.balance(nation)))
-                add(player.tr("icon.nation.relations", "allies" to nation.allies.size, "enemies" to nation.enemies.size))
-                add(player.tr("icon.nation.flags", "open" to TownyUtil.yesNo(player, nation.isOpen),
-                    "public" to TownyUtil.yesNo(player, nation.isPublic), "peaceful" to TownyUtil.yesNo(player, nation.isNeutral)))
+                add(
+                    player.tr(
+                        "icon.nation.relations",
+                        "allies" to nation.allies.size,
+                        "enemies" to nation.enemies.size
+                    )
+                )
+                add(
+                    player.tr(
+                        "icon.nation.flags",
+                        "open" to TownyUtil.yesNo(player, nation.isOpen),
+                        "public" to TownyUtil.yesNo(player, nation.isPublic),
+                        "peaceful" to TownyUtil.yesNo(player, nation.isNeutral)
+                    )
+                )
                 addAll(lines)
             })
         }

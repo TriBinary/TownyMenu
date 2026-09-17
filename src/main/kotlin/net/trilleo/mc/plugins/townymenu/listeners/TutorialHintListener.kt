@@ -18,7 +18,9 @@ class TutorialHintListener : Listener {
         // Towny registers new residents during the join tick, and the hint reads better after the join messages.
         player.server.scheduler.runTaskLater(Main.instance, Runnable {
             if (!player.isOnline || !Main.instance.pluginConfig.tutorialJoinHint) return@Runnable
-            if (TownyAPI.getInstance().getResident(player)?.hasTown() == true || Tutorial.isComplete(player)) return@Runnable
+            if (TownyAPI.getInstance().getResident(player)
+                    ?.hasTown() == true || Tutorial.isComplete(player)
+            ) return@Runnable
             player.sendPrefixed(player.tr("tutorial.join-hint"))
         }, HINT_DELAY_TICKS)
     }

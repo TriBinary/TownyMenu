@@ -18,7 +18,15 @@ class FriendsMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("fri
 
     override fun entries(): List<MenuEntry> =
         resident?.friends.orEmpty().sortedBy { it.name.lowercase() }.map { friend ->
-            MenuEntry({ Icons.resident(player, friend, "", tr("friends.left-view"), tr("friends.right-remove")) }) { click ->
+            MenuEntry({
+                Icons.resident(
+                    player,
+                    friend,
+                    "",
+                    tr("friends.left-view"),
+                    tr("friends.right-remove")
+                )
+            }) { click ->
                 if (click.isRightClick) {
                     run("towny:resident friend remove ${friend.name}", ::friendNames)
                 } else {
@@ -30,7 +38,10 @@ class FriendsMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("fri
     override fun controls() {
         tutorialButton(52, Tutorial.PROTECTION)
         button(47, Icons.icon(Material.PLAYER_HEAD, tr("friends.add-online"), tr("friends.add-online-description"))) {
-            Pickers.resident(this, tr("friends.add-title"), { candidate -> resident?.hasFriend(candidate) == false }) { picked ->
+            Pickers.resident(
+                this,
+                tr("friends.add-title"),
+                { candidate -> resident?.hasFriend(candidate) == false }) { picked ->
                 run("towny:resident friend add ${picked.name}", ::friendNames)
             }.open()
         }

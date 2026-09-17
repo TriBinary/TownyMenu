@@ -17,9 +17,13 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
         val total = chapters.sumOf { it.lessons.size }
         val read = chapters.sumOf { it.readCount(player) }
 
-        button(4, Icons.icon(Material.KNOWLEDGE_BOOK, tr("tutorial.hub"), tr("tutorial.hub-description"), "",
-            tr("tutorial.progress", "read" to read, "total" to total),
-            *listOfNotNull(if (read == total) tr("tutorial.all-read") else null).toTypedArray()))
+        button(
+            4, Icons.icon(
+                Material.KNOWLEDGE_BOOK, tr("tutorial.hub"), tr("tutorial.hub-description"), "",
+                tr("tutorial.progress", "read" to read, "total" to total),
+                *listOfNotNull(if (read == total) tr("tutorial.all-read") else null).toTypedArray()
+            )
+        )
 
         val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
         chapters.forEach { chapter ->
@@ -28,15 +32,20 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
 
         val next = Tutorial.nextUnread(player)
         if (next != null) {
-            button(38, Icons.icon(Material.SPECTRAL_ARROW, tr("tutorial.continue"), tr("tutorial.continue-description"),
-                tr("tutorial.chapter-line", "chapter" to tr(next.title)))) {
+            button(
+                38, Icons.icon(
+                    Material.SPECTRAL_ARROW, tr("tutorial.continue"), tr("tutorial.continue-description"),
+                    tr("tutorial.chapter-line", "chapter" to tr(next.title))
+                )
+            ) {
                 TutorialChapterMenu(player, next, this).open()
             }
         }
         backButton(40)
         if (read > 0) {
             button(42, Icons.icon(Material.WATER_BUCKET, tr("tutorial.reset"), tr("tutorial.reset-description"))) {
-                DialogUtil.confirm(player, MiniMessage.miniMessage().deserialize(tr("tutorial.reset-confirm")), null,
+                DialogUtil.confirm(
+                    player, MiniMessage.miniMessage().deserialize(tr("tutorial.reset-confirm")), null,
                     onYes = {
                         Tutorial.reset(player)
                         open()

@@ -37,17 +37,38 @@ abstract class PagedMenu(player: Player, title: String, back: Menu?) : Menu(play
         val pages = maxOf(1, (all.size + PAGE_SIZE - 1) / PAGE_SIZE)
         page = page.coerceIn(0, pages - 1)
 
-        all.drop(page * PAGE_SIZE).take(PAGE_SIZE).forEachIndexed { slot, entry -> button(slot, entry.item, entry.action) }
+        all.drop(page * PAGE_SIZE).take(PAGE_SIZE)
+            .forEachIndexed { slot, entry -> button(slot, entry.item, entry.action) }
         if (all.isEmpty()) button(22, emptyItem)
 
         if (page > 0) {
-            button(45, itemStack(Material.ARROW) { name(tr("menu.previous-page")); lore(tr("menu.page", "page" to page, "pages" to pages)) }) {
+            button(
+                45,
+                itemStack(Material.ARROW) {
+                    name(tr("menu.previous-page")); lore(
+                    tr(
+                        "menu.page",
+                        "page" to page,
+                        "pages" to pages
+                    )
+                )
+                }) {
                 page--
                 render()
             }
         }
         if (page < pages - 1) {
-            button(53, itemStack(Material.ARROW) { name(tr("menu.next-page")); lore(tr("menu.page", "page" to page + 2, "pages" to pages)) }) {
+            button(
+                53,
+                itemStack(Material.ARROW) {
+                    name(tr("menu.next-page")); lore(
+                    tr(
+                        "menu.page",
+                        "page" to page + 2,
+                        "pages" to pages
+                    )
+                )
+                }) {
                 page++
                 render()
             }

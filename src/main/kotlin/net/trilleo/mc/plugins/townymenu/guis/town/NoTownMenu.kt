@@ -16,18 +16,33 @@ import org.bukkit.entity.Player
 class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.title"), 3, back) {
 
     override fun build() {
-        val price = if (TownyUtil.economy) tr("common.cost", "cost" to TownyUtil.money(TownySettings.getNewTownPrice())) else ""
-        guarded(11, PermissionNodes.TOWNY_COMMAND_TOWN_NEW,
-            Icons.icon(Material.BELL, tr("no-town.found"), tr("no-town.found-description"), price)) {
+        val price =
+            if (TownyUtil.economy) tr("common.cost", "cost" to TownyUtil.money(TownySettings.getNewTownPrice())) else ""
+        guarded(
+            11, PermissionNodes.TOWNY_COMMAND_TOWN_NEW,
+            Icons.icon(Material.BELL, tr("no-town.found"), tr("no-town.found-description"), price)
+        ) {
             prompt(tr("no-town.found-title"), tr("no-town.town-name")) { name ->
-                run("towny:town new ${TownyUtil.nameArgument(name)}", { resident?.hasTown() }, returnTo = back ?: MainMenu(player))
+                run(
+                    "towny:town new ${TownyUtil.nameArgument(name)}",
+                    { resident?.hasTown() },
+                    returnTo = back ?: MainMenu(player)
+                )
             }
         }
         button(13, Icons.icon(Material.OAK_DOOR, tr("no-town.browse"), tr("no-town.browse-description"))) {
             TownListMenu(player, this).open()
         }
         val invites = resident?.receivedInvites?.size ?: 0
-        button(15, Icons.icon(Material.PAPER, tr("main.invites"), tr("no-town.invites-description"), tr("common.pending", "count" to invites))) {
+        button(
+            15,
+            Icons.icon(
+                Material.PAPER,
+                tr("main.invites"),
+                tr("no-town.invites-description"),
+                tr("common.pending", "count" to invites)
+            )
+        ) {
             InvitesMenu(player, this).open()
         }
         tutorialButton(26, Tutorial.FINDING_A_TOWN)

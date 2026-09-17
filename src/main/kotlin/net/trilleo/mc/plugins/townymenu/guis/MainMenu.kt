@@ -43,35 +43,70 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
         }
 
         when {
-            nation != null -> button(22, Icons.nation(player, nation, "", tr("main.nation-click"))) { NationMenu(player, this).open() }
+            nation != null -> button(22, Icons.nation(player, nation, "", tr("main.nation-click"))) {
+                NationMenu(
+                    player,
+                    this
+                ).open()
+            }
+
             town != null -> button(22, Icons.icon(Material.BEACON, tr("main.nation"), tr("main.nation-none"))) {
                 NoNationMenu(player, this).open()
             }
+
             else -> button(22, Icons.icon(Material.BEACON, tr("main.nation-locked"), tr("main.nation-no-town")))
         }
 
         val plot = TownyAPI.getInstance().getTownBlock(player)
-        button(24, Icons.icon(Material.GRASS_BLOCK, tr("main.plot"), tr("main.plot-description"),
-            tr("main.plot-here", "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))))) {
+        button(
+            24, Icons.icon(
+            Material.GRASS_BLOCK, tr("main.plot"), tr("main.plot-description"),
+            tr(
+                "main.plot-here",
+                "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))))) {
             PlotMenu(player, this).open()
         }
 
-        button(29, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("main.map-description"))) { MapMenu(player, this).open() }
-        button(30, Icons.icon(Material.BELL, tr("main.towns"), tr("main.towns-description"))) { TownListMenu(player, this).open() }
+        button(29, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("main.map-description"))) {
+            MapMenu(
+                player,
+                this
+            ).open()
+        }
+        button(30, Icons.icon(Material.BELL, tr("main.towns"), tr("main.towns-description"))) {
+            TownListMenu(
+                player,
+                this
+            ).open()
+        }
         button(31, Icons.icon(Material.KNOWLEDGE_BOOK, tr("main.tutorial"), tr("main.tutorial-description"))) {
             TutorialMenu(player, this).open()
         }
-        button(32, Icons.icon(Material.BEACON, tr("main.nations"), tr("main.nations-description"))) { NationListMenu(player, this).open() }
+        button(32, Icons.icon(Material.BEACON, tr("main.nations"), tr("main.nations-description"))) {
+            NationListMenu(
+                player,
+                this
+            ).open()
+        }
 
         val invites = resident.receivedInvites.size +
-            (town?.receivedInvites?.size ?: 0) + (nation?.receivedInvites?.size ?: 0)
-        button(33, Icons.icon(Material.PAPER, if (invites > 0) tr("main.invites-count", "count" to invites) else tr("main.invites"),
-            tr("main.invites-description"))) {
+                (town?.receivedInvites?.size ?: 0) + (nation?.receivedInvites?.size ?: 0)
+        button(
+            33, Icons.icon(
+                Material.PAPER, if (invites > 0) tr("main.invites-count", "count" to invites) else tr("main.invites"),
+                tr("main.invites-description")
+            )
+        ) {
             InvitesMenu(player, this).open()
         }
 
         if (player.hasPermission(AdminMenu.PERMISSION)) {
-            button(44, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) { AdminMenu(player, this).open() }
+            button(44, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) {
+                AdminMenu(
+                    player,
+                    this
+                ).open()
+            }
         }
 
         backButton(40)

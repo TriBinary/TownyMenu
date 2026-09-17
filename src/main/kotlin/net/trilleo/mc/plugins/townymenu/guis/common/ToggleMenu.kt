@@ -31,7 +31,11 @@ class ToggleMenu(
     override fun build() {
         toggles.forEachIndexed { index, toggle ->
             val slot = 10 + index / 7 * 9 + index % 7
-            guarded(slot, toggle.node, Icons.toggle(player, toggle.material, toggle.name, toggle.value() ?: false, toggle.description)) {
+            guarded(
+                slot,
+                toggle.node,
+                Icons.toggle(player, toggle.material, toggle.name, toggle.value() ?: false, toggle.description)
+            ) {
                 run(toggle.command, toggle.value)
             }
         }

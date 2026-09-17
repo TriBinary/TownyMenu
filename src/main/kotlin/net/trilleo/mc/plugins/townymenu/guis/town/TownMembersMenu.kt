@@ -27,27 +27,49 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
             .sortedWith(compareByDescending<Resident> { it.isMayor }
                 .thenByDescending { it.isOnline }
                 .thenBy { it.name.lowercase() })
-            .map { member -> MenuEntry({ Icons.resident(player, member, "", tr("common.click-view")) }) { ResidentProfileMenu(player, member, this).open() } }
+            .map { member ->
+                MenuEntry({
+                    Icons.resident(
+                        player,
+                        member,
+                        "",
+                        tr("common.click-view")
+                    )
+                }) { ResidentProfileMenu(player, member, this).open() }
+            }
 
     override fun controls() {
         tutorialButton(52, Tutorial.TOWN)
         if (!isMember) return
         val sent = { town.sentInvites.size }
-        guarded(47, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
-            Icons.icon(Material.PLAYER_HEAD, tr("town-members.invite-online"), tr("town-members.invite-online-description"))) {
+        guarded(
+            47, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
+            Icons.icon(
+                Material.PLAYER_HEAD,
+                tr("town-members.invite-online"),
+                tr("town-members.invite-online-description")
+            )
+        ) {
             Pickers.resident(this, tr("town-members.invite-title"), { !it.hasTown() }) { picked ->
                 run("towny:town add ${picked.name}", sent)
             }.open()
         }
-        guarded(48, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
-            Icons.icon(Material.NAME_TAG, tr("town-members.invite-name"), tr("town-members.invite-name-description"))) {
-            prompt(tr("town-members.invite-title"), tr("common.player-name")) { name -> run("towny:town add ${TownyUtil.argument(name)}", sent) }
+        guarded(
+            48, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
+            Icons.icon(Material.NAME_TAG, tr("town-members.invite-name"), tr("town-members.invite-name-description"))
+        ) {
+            prompt(
+                tr("town-members.invite-title"),
+                tr("common.player-name")
+            ) { name -> run("towny:town add ${TownyUtil.argument(name)}", sent) }
         }
         val pending = town.sentInvites
-        guarded(51, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD, Icons.icon(
-            Material.PAPER, tr("common.sent-invites"), tr("common.sent-invites-description"),
-            *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
-            tr("common.pending", "count" to pending.size),
-        )) { click -> if (click.isRightClick) run("towny:town invite sent removeall", sent) }
+        guarded(
+            51, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD, Icons.icon(
+                Material.PAPER, tr("common.sent-invites"), tr("common.sent-invites-description"),
+                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
+                tr("common.pending", "count" to pending.size),
+            )
+        ) { click -> if (click.isRightClick) run("towny:town invite sent removeall", sent) }
     }
 }

@@ -47,17 +47,21 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
         tutorialButton(52, Tutorial.NATIONS)
         if (!isMember) return
         val sent = { nation.sentInvites.size }
-        guarded(47, PermissionNodes.TOWNY_COMMAND_NATION_INVITE_ADD,
-            Icons.icon(Material.BELL, tr("nation-towns.invite"), tr("nation-towns.invite-description"))) {
+        guarded(
+            47, PermissionNodes.TOWNY_COMMAND_NATION_INVITE_ADD,
+            Icons.icon(Material.BELL, tr("nation-towns.invite"), tr("nation-towns.invite-description"))
+        ) {
             Pickers.town(this, tr("nation-towns.invite-title"), { !it.hasNation() }) { picked ->
                 run("towny:nation add ${picked.name}", sent)
             }.open()
         }
         val pending = nation.sentInvites
-        button(51, Icons.icon(
-            Material.PAPER, tr("common.sent-invites"), null,
-            *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
-            tr("common.pending", "count" to pending.size),
-        ))
+        button(
+            51, Icons.icon(
+                Material.PAPER, tr("common.sent-invites"), null,
+                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
+                tr("common.pending", "count" to pending.size),
+            )
+        )
     }
 }

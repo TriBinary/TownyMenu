@@ -29,8 +29,12 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
         button(10, Icons.icon(Material.COMPARATOR, tr("admin.config"), tr("admin.config-description"))) {
             TownyConfigMenu(player, "", this).open()
         }
-        button(12, Icons.icon(Material.GRASS_BLOCK, tr("admin.worlds"), tr("admin.worlds-description"),
-            tr("admin.worlds-count", "count" to TownyUniverse.getInstance().townyWorlds.size))) {
+        button(
+            12, Icons.icon(
+                Material.GRASS_BLOCK, tr("admin.worlds"), tr("admin.worlds-description"),
+                tr("admin.worlds-count", "count" to TownyUniverse.getInstance().townyWorlds.size)
+            )
+        ) {
             worlds().open()
         }
         button(14, Icons.icon(Material.COMMAND_BLOCK, tr("admin.server"), tr("admin.server-description"))) {
@@ -41,20 +45,44 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
         }
 
         val towny = TownyAPI.getInstance()
-        button(20, Icons.icon(Material.BELL, tr("admin.towns"), tr("admin.towns-description"),
-            tr("admin.count", "count" to towny.towns.size))) {
+        button(
+            20, Icons.icon(
+                Material.BELL, tr("admin.towns"), tr("admin.towns-description"),
+                tr("admin.count", "count" to towny.towns.size)
+            )
+        ) {
             lateinit var list: Menu
-            list = Pickers.town(this, tr("admin.towns-title"), { true }) { town -> AdminTownMenu(player, town, list).open() }
+            list = Pickers.town(this, tr("admin.towns-title"), { true }) { town ->
+                AdminTownMenu(
+                    player,
+                    town,
+                    list
+                ).open()
+            }
             list.open()
         }
-        button(22, Icons.icon(Material.BEACON, tr("admin.nations"), tr("admin.nations-description"),
-            tr("admin.count", "count" to towny.nations.size))) {
+        button(
+            22, Icons.icon(
+                Material.BEACON, tr("admin.nations"), tr("admin.nations-description"),
+                tr("admin.count", "count" to towny.nations.size)
+            )
+        ) {
             lateinit var list: Menu
-            list = Pickers.nation(this, tr("admin.nations-title"), { true }) { nation -> AdminNationMenu(player, nation, list).open() }
+            list = Pickers.nation(this, tr("admin.nations-title"), { true }) { nation ->
+                AdminNationMenu(
+                    player,
+                    nation,
+                    list
+                ).open()
+            }
             list.open()
         }
-        button(24, Icons.icon(Material.PLAYER_HEAD, tr("admin.residents"), tr("admin.residents-description"),
-            tr("admin.count", "count" to towny.residents.size))) {
+        button(
+            24, Icons.icon(
+                Material.PLAYER_HEAD, tr("admin.residents"), tr("admin.residents-description"),
+                tr("admin.count", "count" to towny.residents.size)
+            )
+        ) {
             AdminResidentListMenu(player, this).open()
         }
 
@@ -64,11 +92,13 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
     private fun worlds(): Menu = ListMenu(player, tr("admin-world.list-title"), this) { list ->
         TownyUniverse.getInstance().townyWorlds.sortedBy { it.name.lowercase() }.map { world ->
             val icon = {
-                itemStack(when (world.bukkitWorld?.environment) {
-                    World.Environment.NETHER -> Material.NETHERRACK
-                    World.Environment.THE_END -> Material.END_STONE
-                    else -> Material.GRASS_BLOCK
-                }) {
+                itemStack(
+                    when (world.bukkitWorld?.environment) {
+                        World.Environment.NETHER -> Material.NETHERRACK
+                        World.Environment.THE_END -> Material.END_STONE
+                        else -> Material.GRASS_BLOCK
+                    }
+                ) {
                     name("<green>${TownyUtil.text(world.name)}")
                     lore(
                         tr("admin-world.using-towny", "value" to TownyUtil.yesNo(player, world.isUsingTowny)),

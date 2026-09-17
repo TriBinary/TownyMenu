@@ -160,7 +160,12 @@ object CommandRegistrar {
                 MainMenu(sender).open()
             } else {
                 sender.sendRichMessage(sender.tr("command.usage", "command" to ROOT_COMMAND))
-                sender.sendRichMessage(sender.tr("command.available", "commands" to subCommands.keys.sorted().joinToString(", ")))
+                sender.sendRichMessage(
+                    sender.tr(
+                        "command.available",
+                        "commands" to subCommands.keys.sorted().joinToString(", ")
+                    )
+                )
             }
             return true
         }
@@ -170,10 +175,20 @@ object CommandRegistrar {
         if (subCommand == null) {
             val available = subCommands.keys.sorted().joinToString(", ")
             if (sender is Player) {
-                sender.sendPrefixed(sender.tr("command.unknown", "command" to MiniMessage.miniMessage().escapeTags(args[0])))
+                sender.sendPrefixed(
+                    sender.tr(
+                        "command.unknown",
+                        "command" to MiniMessage.miniMessage().escapeTags(args[0])
+                    )
+                )
                 sender.sendPrefixed(sender.tr("command.available", "commands" to available))
             } else {
-                sender.sendRichMessage(sender.tr("command.unknown", "command" to MiniMessage.miniMessage().escapeTags(args[0])))
+                sender.sendRichMessage(
+                    sender.tr(
+                        "command.unknown",
+                        "command" to MiniMessage.miniMessage().escapeTags(args[0])
+                    )
+                )
                 sender.sendRichMessage(sender.tr("command.available", "commands" to available))
             }
             return true

@@ -68,17 +68,21 @@ object Lang {
     fun find(sender: CommandSender?, key: String): String? = language(sender).values[key]
 
     private fun language(sender: CommandSender?): Language {
-        val id = if (configured.equals(AUTO, ignoreCase = true)) (sender as? Player)?.locale()?.toString() else configured
+        val id =
+            if (configured.equals(AUTO, ignoreCase = true)) (sender as? Player)?.locale()?.toString() else configured
         return id?.let(::match) ?: fallback
     }
 
     /** Matches `zh_tw` to `zh_TW` if present, otherwise to any language sharing its prefix (`zh_CN`). */
     private fun match(id: String): Language? =
         languages[id.lowercase()]
-            ?: languages.values.firstOrNull { it.id.substringBefore('_').equals(id.substringBefore('_'), ignoreCase = true) }
+            ?: languages.values.firstOrNull {
+                it.id.substringBefore('_').equals(id.substringBefore('_'), ignoreCase = true)
+            }
 
     private fun bundled(plugin: JavaPlugin, id: String): Map<String, String> =
-        plugin.getResource("lang/$id.yml")?.reader(Charsets.UTF_8)?.use { flatten(YamlConfiguration.loadConfiguration(it)) }
+        plugin.getResource("lang/$id.yml")?.reader(Charsets.UTF_8)
+            ?.use { flatten(YamlConfiguration.loadConfiguration(it)) }
             .orEmpty()
 
     private fun flatten(yaml: YamlConfiguration): Map<String, String> =

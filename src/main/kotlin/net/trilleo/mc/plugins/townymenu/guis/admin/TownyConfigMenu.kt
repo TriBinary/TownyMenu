@@ -2,17 +2,9 @@ package net.trilleo.mc.plugins.townymenu.guis.admin
 
 import com.palmergames.bukkit.towny.TownySettings
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
-import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
-import net.trilleo.mc.plugins.townymenu.guis.framework.ListMenu
-import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
-import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
-import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
-import net.trilleo.mc.plugins.townymenu.utils.TownyConfig
+import net.trilleo.mc.plugins.townymenu.guis.framework.*
+import net.trilleo.mc.plugins.townymenu.utils.*
 import net.trilleo.mc.plugins.townymenu.utils.TownyConfig.Kind
-import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
-import net.trilleo.mc.plugins.townymenu.utils.itemStack
-import net.trilleo.mc.plugins.townymenu.utils.sendPrefixed
-import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -22,7 +14,10 @@ import org.bukkit.entity.Player
  */
 class TownyConfigMenu(player: Player, private val section: String, back: Menu) : PagedMenu(
     player,
-    if (section.isEmpty()) player.tr("admin-config.title") else player.tr("admin-config.section-title", "section" to section.substringAfterLast('.').replace('_', ' ')),
+    if (section.isEmpty()) player.tr("admin-config.title") else player.tr(
+        "admin-config.section-title",
+        "section" to section.substringAfterLast('.').replace('_', ' ')
+    ),
     back,
 ) {
 
@@ -32,7 +27,11 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                 itemStack(Material.BOOKSHELF) {
                     name("<gold>${child.name}")
                     if (child.description.isNotEmpty()) loreWrapped("<gray>${shorten(child.description)}")
-                    lore("", tr("admin-config.settings-count", "count" to TownyConfig.count(child.path)), tr("common.click-view"))
+                    lore(
+                        "",
+                        tr("admin-config.settings-count", "count" to TownyConfig.count(child.path)),
+                        tr("common.click-view")
+                    )
                 }
             }) { TownyConfigMenu(player, child.path, this).open() }
         } + TownyConfig.settings(section).map { settingEntry(this, it) }
@@ -45,8 +44,10 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                 }.open()
             }
         }
-        guarded(51, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RELOAD,
-            Icons.icon(Material.REPEATER, tr("admin-config.reload"), tr("admin-config.reload-description"))) {
+        guarded(
+            51, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RELOAD,
+            Icons.icon(Material.REPEATER, tr("admin-config.reload"), tr("admin-config.reload-description"))
+        ) {
             run(RELOAD, ::loadedConfig)
         }
     }
@@ -65,16 +66,19 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
         fun settingEntry(menu: Menu, setting: TownyConfig.Setting): MenuEntry {
             val player = menu.player
             val kind = setting.kind
-            val editable = kind != Kind.READ_ONLY && TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RELOAD)
+            val editable =
+                kind != Kind.READ_ONLY && TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RELOAD)
             val icon = {
                 val value = setting.value
                 val on = kind == Kind.BOOLEAN && value.toBoolean()
-                itemStack(when (kind) {
-                    Kind.BOOLEAN -> if (on) Material.LIME_DYE else Material.GRAY_DYE
-                    Kind.INTEGER, Kind.DECIMAL -> Material.GOLD_NUGGET
-                    Kind.TEXT -> Material.PAPER
-                    Kind.READ_ONLY -> Material.BOOK
-                }) {
+                itemStack(
+                    when (kind) {
+                        Kind.BOOLEAN -> if (on) Material.LIME_DYE else Material.GRAY_DYE
+                        Kind.INTEGER, Kind.DECIMAL -> Material.GOLD_NUGGET
+                        Kind.TEXT -> Material.PAPER
+                        Kind.READ_ONLY -> Material.BOOK
+                    }
+                ) {
                     name("<yellow>${setting.name}")
                     if (setting.description.isNotEmpty()) loreWrapped("<gray>${shorten(setting.description)}")
                     lore(buildList {
@@ -86,11 +90,15 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                             add(menu.tr("common.current", "value" to display(player, kind, value)))
                             add(menu.tr("admin-config.default", "value" to display(player, kind, setting.default)))
                             add("")
-                            add(menu.tr(when {
-                                !editable -> "menu.no-permission"
-                                kind == Kind.BOOLEAN -> "icon.click-toggle"
-                                else -> "common.click-change"
-                            }))
+                            add(
+                                menu.tr(
+                                    when {
+                                        !editable -> "menu.no-permission"
+                                        kind == Kind.BOOLEAN -> "icon.click-toggle"
+                                        else -> "common.click-change"
+                                    }
+                                )
+                            )
                             if (editable && value != setting.default) add(menu.tr("admin-config.right-reset"))
                         }
                     })

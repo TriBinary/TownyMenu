@@ -35,32 +35,61 @@ class NationRelationsMenu(player: Player, private val nation: Nation, back: Menu
     }
 
     private fun relation(other: Nation, label: String, canRemove: Boolean, removeCommand: String): MenuEntry {
-        val lines = listOfNotNull("", label, tr("common.left-details"), if (canRemove) tr("nation-relations.right-remove") else null)
+        val lines = listOfNotNull(
+            "",
+            label,
+            tr("common.left-details"),
+            if (canRemove) tr("nation-relations.right-remove") else null
+        )
         return MenuEntry({ Icons.nation(player, other, *lines.toTypedArray()) }) { click ->
-            if (click.isRightClick && canRemove) run(removeCommand, ::snapshot) else NationInfoMenu(player, other, this).open()
+            if (click.isRightClick && canRemove) run(removeCommand, ::snapshot) else NationInfoMenu(
+                player,
+                other,
+                this
+            ).open()
         }
     }
 
     override fun controls() {
         tutorialButton(52, Tutorial.NATIONS)
         if (!isMember) return
-        guarded(47, PermissionNodes.TOWNY_COMMAND_NATION_ALLY_ADD,
-            Icons.icon(Material.SHIELD, tr("nation.propose-alliance"), tr("nation-relations.propose-alliance-description"))) {
-            Pickers.nation(this, tr("nation-relations.propose-alliance-title"), { it != nation && !nation.hasAlly(it) }) { picked ->
+        guarded(
+            47, PermissionNodes.TOWNY_COMMAND_NATION_ALLY_ADD,
+            Icons.icon(
+                Material.SHIELD,
+                tr("nation.propose-alliance"),
+                tr("nation-relations.propose-alliance-description")
+            )
+        ) {
+            Pickers.nation(
+                this,
+                tr("nation-relations.propose-alliance-title"),
+                { it != nation && !nation.hasAlly(it) }) { picked ->
                 run("towny:nation ally add ${picked.name}", ::snapshot)
             }.open()
         }
-        guarded(48, PermissionNodes.TOWNY_COMMAND_NATION_ENEMY,
-            Icons.icon(Material.IRON_SWORD, tr("nation.declare-enemy"), tr("nation-relations.declare-enemy-description"))) {
-            Pickers.nation(this, tr("nation-relations.declare-enemy-title"), { it != nation && !nation.hasEnemy(it) }) { picked ->
+        guarded(
+            48, PermissionNodes.TOWNY_COMMAND_NATION_ENEMY,
+            Icons.icon(
+                Material.IRON_SWORD,
+                tr("nation.declare-enemy"),
+                tr("nation-relations.declare-enemy-description")
+            )
+        ) {
+            Pickers.nation(
+                this,
+                tr("nation-relations.declare-enemy-title"),
+                { it != nation && !nation.hasEnemy(it) }) { picked ->
                 run("towny:nation enemy add ${picked.name}", ::snapshot)
             }.open()
         }
         val pending = nation.sentAllyInvites
-        button(51, Icons.icon(
-            Material.PAPER, tr("nation-relations.sent-requests"), null,
-            *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
-            tr("common.pending", "count" to pending.size),
-        ))
+        button(
+            51, Icons.icon(
+                Material.PAPER, tr("nation-relations.sent-requests"), null,
+                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
+                tr("common.pending", "count" to pending.size),
+            )
+        )
     }
 }

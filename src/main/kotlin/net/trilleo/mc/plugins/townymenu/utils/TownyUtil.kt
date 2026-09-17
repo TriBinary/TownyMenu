@@ -31,7 +31,8 @@ object TownyUtil {
     fun name(name: String): String = text(name.replace('_', ' '))
 
     /** A plot type name in [player]'s language (`plot-type.<type>`), or the raw name for custom types. */
-    fun plotType(player: Player, type: String): String = Lang.find(player, "plot-type.${type.lowercase()}") ?: name(type)
+    fun plotType(player: Player, type: String): String =
+        Lang.find(player, "plot-type.${type.lowercase()}") ?: name(type)
 
     /** Formats [amount] with the server economy's currency, or `-` when no economy is active. */
     fun money(amount: Double): String =

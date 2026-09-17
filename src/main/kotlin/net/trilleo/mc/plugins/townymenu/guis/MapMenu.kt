@@ -39,20 +39,28 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
             }
         }
 
-        button(45, Icons.icon(Material.PAPER, tr("map.legend"), null,
-            tr("map.legend-wilderness"), tr("map.legend-town"), tr("map.legend-plot"),
-            tr("map.legend-nation"), tr("map.legend-ally"), tr("map.legend-enemy"),
-            tr("map.legend-other"), tr("map.legend-for-sale"), tr("map.legend-north")))
+        button(
+            45, Icons.icon(
+                Material.PAPER, tr("map.legend"), null,
+                tr("map.legend-wilderness"), tr("map.legend-town"), tr("map.legend-plot"),
+                tr("map.legend-nation"), tr("map.legend-ally"), tr("map.legend-enemy"),
+                tr("map.legend-other"), tr("map.legend-for-sale"), tr("map.legend-north")
+            )
+        )
 
         val town = viewer?.townOrNull
         if (town != null) {
             val claims = { town.numTownBlocks }
-            guarded(47, PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
-                Icons.icon(Material.GRASS_BLOCK, tr("map.claim"), tr("map.claim-description"))) {
+            guarded(
+                47, PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
+                Icons.icon(Material.GRASS_BLOCK, tr("map.claim"), tr("map.claim-description"))
+            ) {
                 run("towny:town claim", claims, delayTicks = 20)
             }
-            guarded(48, PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
-                Icons.icon(Material.COARSE_DIRT, tr("map.unclaim"), tr("map.unclaim-description"))) {
+            guarded(
+                48, PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
+                Icons.icon(Material.COARSE_DIRT, tr("map.unclaim"), tr("map.unclaim-description"))
+            ) {
                 run("towny:town unclaim", claims, delayTicks = 20)
             }
         }
@@ -82,7 +90,10 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
                 add(tr("map.chunk", "x" to coord.x, "z" to coord.z))
                 if (plot != null) {
                     nation?.let { add(tr("icon.town.nation", "nation" to TownyUtil.name(it.name))) }
-                    add(tr("map.owner", "owner" to (plot.residentOrNull?.let { TownyUtil.name(it.name) } ?: tr("map.owner-town"))))
+                    add(
+                        tr(
+                            "map.owner",
+                            "owner" to (plot.residentOrNull?.let { TownyUtil.name(it.name) } ?: tr("map.owner-town"))))
                     add(tr("map.type", "type" to TownyUtil.plotType(player, plot.type.name)))
                     if (plot.isHomeBlock) add(tr("map.home-block"))
                     if (plot.isOutpost) add(tr("map.outpost"))

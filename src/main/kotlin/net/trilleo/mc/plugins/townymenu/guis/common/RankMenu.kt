@@ -16,7 +16,8 @@ object RankMenu {
 
     fun create(player: Player, target: Resident, nation: Boolean, back: Menu): Menu {
         val scope = if (nation) "nation" else "town"
-        val title = player.tr(if (nation) "rank.nation-title" else "rank.town-title", "name" to TownyUtil.name(target.name))
+        val title =
+            player.tr(if (nation) "rank.nation-title" else "rank.town-title", "name" to TownyUtil.name(target.name))
         return ListMenu(player, title, back) { menu ->
             val ranks = if (nation) TownyPerms.getNationRanks() else TownyPerms.getTownRanks()
             ranks.map { rank ->

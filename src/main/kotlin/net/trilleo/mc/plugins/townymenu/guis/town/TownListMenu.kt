@@ -30,7 +30,16 @@ class TownListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("to
     override fun entries(): List<MenuEntry> =
         TownyAPI.getInstance().towns
             .sortedWith(sort.comparator)
-            .map { town -> MenuEntry({ Icons.town(player, town, "", tr("common.click-details")) }) { TownInfoMenu(player, town, this).open() } }
+            .map { town ->
+                MenuEntry({
+                    Icons.town(
+                        player,
+                        town,
+                        "",
+                        tr("common.click-details")
+                    )
+                }) { TownInfoMenu(player, town, this).open() }
+            }
 
     override fun controls() {
         tutorialButton(52, Tutorial.FINDING_A_TOWN)

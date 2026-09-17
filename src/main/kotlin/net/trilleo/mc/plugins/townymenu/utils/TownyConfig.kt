@@ -30,7 +30,8 @@ object TownyConfig {
 
         /** The value currently loaded by Towny, or the default when the file lacks it. */
         val value: String
-            get() = TownySettings.getConfig().get(path)?.takeUnless { it is ConfigurationSection || it is List<*> }?.toString() ?: default
+            get() = TownySettings.getConfig().get(path)?.takeUnless { it is ConfigurationSection || it is List<*> }
+                ?.toString() ?: default
 
         /** [input] as this setting stores it, or `null` when it is not a valid value for [kind]. */
         fun parse(input: String): String? = when (kind) {

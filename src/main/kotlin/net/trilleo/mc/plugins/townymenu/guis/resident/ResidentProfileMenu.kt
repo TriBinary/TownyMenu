@@ -35,71 +35,143 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
 
         if (!self) {
             val friend = viewer.hasFriend(target)
-            actions.add(PermissionNodes.TOWNY_COMMAND_RESIDENT_FRIEND, Icons.icon(
-                if (friend) Material.WITHER_ROSE else Material.POPPY,
-                tr(if (friend) "resident-profile.remove-friend" else "resident-profile.add-friend"),
-                tr("profile.friends-description"),
-            )) { run("towny:resident friend ${if (friend) "remove" else "add"} ${target.name}", { viewer.hasFriend(target) }) }
+            actions.add(
+                PermissionNodes.TOWNY_COMMAND_RESIDENT_FRIEND, Icons.icon(
+                    if (friend) Material.WITHER_ROSE else Material.POPPY,
+                    tr(if (friend) "resident-profile.remove-friend" else "resident-profile.add-friend"),
+                    tr("profile.friends-description"),
+                )
+            ) {
+                run(
+                    "towny:resident friend ${if (friend) "remove" else "add"} ${target.name}",
+                    { viewer.hasFriend(target) })
+            }
         }
 
         if (sameTown) {
-            actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_RANK,
-                Icons.icon(Material.NAME_TAG, tr("resident-profile.town-ranks"), tr("resident-profile.town-ranks-description"))) {
+            actions.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_RANK,
+                Icons.icon(
+                    Material.NAME_TAG,
+                    tr("resident-profile.town-ranks"),
+                    tr("resident-profile.town-ranks-description")
+                )
+            ) {
                 RankMenu.create(player, target, false, this).open()
             }
-            actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_TITLE,
-                Icons.icon(Material.OAK_HANGING_SIGN, tr("resident-profile.title"), tr("resident-profile.title-description"))) { click ->
-                editTitle("title", click.isRightClick, tr("resident-profile.title-prompt"), tr("resident-profile.title-label")) { target.title }
+            actions.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_SET_TITLE,
+                Icons.icon(
+                    Material.OAK_HANGING_SIGN,
+                    tr("resident-profile.title"),
+                    tr("resident-profile.title-description")
+                )
+            ) { click ->
+                editTitle(
+                    "title",
+                    click.isRightClick,
+                    tr("resident-profile.title-prompt"),
+                    tr("resident-profile.title-label")
+                ) { target.title }
             }
-            actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_SURNAME,
-                Icons.icon(Material.OAK_SIGN, tr("resident-profile.surname"), tr("resident-profile.surname-description"))) { click ->
-                editTitle("surname", click.isRightClick, tr("resident-profile.surname-prompt"), tr("resident-profile.surname-label")) { target.surname }
+            actions.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_SET_SURNAME,
+                Icons.icon(
+                    Material.OAK_SIGN,
+                    tr("resident-profile.surname"),
+                    tr("resident-profile.surname-description")
+                )
+            ) { click ->
+                editTitle(
+                    "surname",
+                    click.isRightClick,
+                    tr("resident-profile.surname-prompt"),
+                    tr("resident-profile.surname-label")
+                ) { target.surname }
             }
             if (!self && !target.isMayor) {
-                actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_SET_MAYOR,
-                    Icons.icon(Material.GOLDEN_HELMET, tr("resident-profile.make-mayor"), tr("resident-profile.make-mayor-description"))) {
+                actions.add(
+                    PermissionNodes.TOWNY_COMMAND_TOWN_SET_MAYOR,
+                    Icons.icon(
+                        Material.GOLDEN_HELMET,
+                        tr("resident-profile.make-mayor"),
+                        tr("resident-profile.make-mayor-description")
+                    )
+                ) {
                     run("towny:town set mayor ${target.name}", { town.mayor })
                 }
-                actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_KICK,
-                    Icons.icon(Material.IRON_BOOTS, tr("resident-profile.kick"), tr("resident-profile.kick-description"))) {
-                    run("towny:town kick ${target.name}", { town.hasResident(target) }, returnTo = back ?: MainMenu(player))
+                actions.add(
+                    PermissionNodes.TOWNY_COMMAND_TOWN_KICK,
+                    Icons.icon(
+                        Material.IRON_BOOTS,
+                        tr("resident-profile.kick"),
+                        tr("resident-profile.kick-description")
+                    )
+                ) {
+                    run(
+                        "towny:town kick ${target.name}",
+                        { town.hasResident(target) },
+                        returnTo = back ?: MainMenu(player)
+                    )
                 }
             }
         }
 
         if (town != null && !self) {
             val trusted = town.hasTrustedResident(target)
-            actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_TRUST, Icons.icon(
-                Material.TRIPWIRE_HOOK,
-                tr(if (trusted) "resident-profile.untrust" else "resident-profile.trust"),
-                tr("resident-profile.trust-description"),
-            )) { run("towny:town trust ${if (trusted) "remove" else "add"} ${target.name}", { town.hasTrustedResident(target) }) }
+            actions.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_TRUST, Icons.icon(
+                    Material.TRIPWIRE_HOOK,
+                    tr(if (trusted) "resident-profile.untrust" else "resident-profile.trust"),
+                    tr("resident-profile.trust-description"),
+                )
+            ) {
+                run(
+                    "towny:town trust ${if (trusted) "remove" else "add"} ${target.name}",
+                    { town.hasTrustedResident(target) })
+            }
         }
 
         if (town != null && !sameTown && !self) {
             val outlaw = town.hasOutlaw(target)
-            actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_OUTLAW, Icons.icon(
-                Material.IRON_BARS,
-                tr(if (outlaw) "resident-profile.pardon" else "resident-profile.outlaw"),
-                tr("resident-profile.outlaw-description"),
-            )) { run("towny:town outlaw ${if (outlaw) "remove" else "add"} ${target.name}", { town.hasOutlaw(target) }) }
+            actions.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_OUTLAW, Icons.icon(
+                    Material.IRON_BARS,
+                    tr(if (outlaw) "resident-profile.pardon" else "resident-profile.outlaw"),
+                    tr("resident-profile.outlaw-description"),
+                )
+            ) { run("towny:town outlaw ${if (outlaw) "remove" else "add"} ${target.name}", { town.hasOutlaw(target) }) }
 
             if (!target.hasTown()) {
-                actions.add(PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
-                    Icons.icon(Material.PAPER, tr("resident-profile.invite"), tr("resident-profile.invite-description"))) {
+                actions.add(
+                    PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
+                    Icons.icon(Material.PAPER, tr("resident-profile.invite"), tr("resident-profile.invite-description"))
+                ) {
                     run("towny:town add ${target.name}", { town.sentInvites.size })
                 }
             }
         }
 
         if (sameNation) {
-            actions.add(PermissionNodes.TOWNY_COMMAND_NATION_RANK,
-                Icons.icon(Material.NAME_TAG, tr("resident-profile.nation-ranks"), tr("resident-profile.nation-ranks-description"))) {
+            actions.add(
+                PermissionNodes.TOWNY_COMMAND_NATION_RANK,
+                Icons.icon(
+                    Material.NAME_TAG,
+                    tr("resident-profile.nation-ranks"),
+                    tr("resident-profile.nation-ranks-description")
+                )
+            ) {
                 RankMenu.create(player, target, true, this).open()
             }
             if (!self && !target.isKing && target.townOrNull == nation.capital) {
-                actions.add(PermissionNodes.TOWNY_COMMAND_NATION_SET_KING,
-                    Icons.icon(Material.GOLDEN_HELMET, tr("resident-profile.make-leader"), tr("resident-profile.make-leader-description"))) {
+                actions.add(
+                    PermissionNodes.TOWNY_COMMAND_NATION_SET_KING,
+                    Icons.icon(
+                        Material.GOLDEN_HELMET,
+                        tr("resident-profile.make-leader"),
+                        tr("resident-profile.make-leader-description")
+                    )
+                ) {
                     run("towny:nation set king ${target.name}", { nation.king })
                 }
             }

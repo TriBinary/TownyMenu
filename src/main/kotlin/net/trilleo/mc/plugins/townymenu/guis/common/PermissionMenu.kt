@@ -57,7 +57,10 @@ class PermissionMenu(
                 val allowed = perms.getPerm(level, action)
                 val cell = itemStack(if (allowed) Material.LIME_CONCRETE else Material.RED_CONCRETE) {
                     name("${if (allowed) "<green>" else "<red>"}${levelName(level)}: ${actionName(action)}")
-                    lore(tr("icon.currently", "value" to tr(if (allowed) "perm.allowed" else "perm.denied")), tr("icon.click-toggle"))
+                    lore(
+                        tr("icon.currently", "value" to tr(if (allowed) "perm.allowed" else "perm.denied")),
+                        tr("icon.click-toggle")
+                    )
                 }
                 guarded(20 + row * 9 + column, node, cell) {
                     run("$command ${level.arg} ${action.arg} ${if (allowed) "off" else "on"}", ::snapshot)

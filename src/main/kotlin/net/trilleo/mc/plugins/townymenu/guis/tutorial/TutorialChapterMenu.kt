@@ -45,19 +45,39 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
         val chapters = Tutorial.visibleChapters
         val index = chapters.indexOf(chapter)
         chapters.getOrNull(index - 1)?.let { previous ->
-            button(45, Icons.icon(Material.ARROW, tr("tutorial.previous-chapter"), null, tr("tutorial.chapter-line", "chapter" to tr(previous.title)))) {
+            button(
+                45,
+                Icons.icon(
+                    Material.ARROW,
+                    tr("tutorial.previous-chapter"),
+                    null,
+                    tr("tutorial.chapter-line", "chapter" to tr(previous.title))
+                )
+            ) {
                 TutorialChapterMenu(player, previous, back).open()
             }
         }
         chapters.getOrNull(index + 1)?.let { next ->
-            button(53, Icons.icon(Material.ARROW, tr("tutorial.next-chapter"), null, tr("tutorial.chapter-line", "chapter" to tr(next.title)))) {
+            button(
+                53,
+                Icons.icon(
+                    Material.ARROW,
+                    tr("tutorial.next-chapter"),
+                    null,
+                    tr("tutorial.chapter-line", "chapter" to tr(next.title))
+                )
+            ) {
                 TutorialChapterMenu(player, next, back).open()
             }
         }
 
         val allRead = read == lessons.size
-        button(51, Icons.icon(if (allRead) Material.BOOK else Material.WRITABLE_BOOK,
-            tr(if (allRead) "tutorial.mark-all-unread" else "tutorial.mark-all-read"))) {
+        button(
+            51, Icons.icon(
+                if (allRead) Material.BOOK else Material.WRITABLE_BOOK,
+                tr(if (allRead) "tutorial.mark-all-unread" else "tutorial.mark-all-read")
+            )
+        ) {
             Tutorial.setRead(player, lessons, !allRead)
             render()
         }

@@ -24,7 +24,16 @@ object Pickers {
         ListMenu(back.player, title, back) {
             TownyUtil.otherOnlineResidents(back.player)
                 .filter(filter)
-                .map { resident -> MenuEntry({ Icons.resident(back.player, resident, "", back.tr("picker.select")) }) { onPick(resident) } }
+                .map { resident ->
+                    MenuEntry({
+                        Icons.resident(
+                            back.player,
+                            resident,
+                            "",
+                            back.tr("picker.select")
+                        )
+                    }) { onPick(resident) }
+                }
         }
 
     /** Picks a town matching [filter]. */
@@ -33,7 +42,16 @@ object Pickers {
             TownyAPI.getInstance().towns
                 .filter(filter)
                 .sortedBy { it.name.lowercase() }
-                .map { town -> MenuEntry({ Icons.town(back.player, town, "", back.tr("picker.select")) }) { onPick(town) } }
+                .map { town ->
+                    MenuEntry({
+                        Icons.town(
+                            back.player,
+                            town,
+                            "",
+                            back.tr("picker.select")
+                        )
+                    }) { onPick(town) }
+                }
         }
 
     /** Picks a nation matching [filter]. */
@@ -42,11 +60,27 @@ object Pickers {
             TownyAPI.getInstance().nations
                 .filter(filter)
                 .sortedBy { it.name.lowercase() }
-                .map { nation -> MenuEntry({ Icons.nation(back.player, nation, "", back.tr("picker.select")) }) { onPick(nation) } }
+                .map { nation ->
+                    MenuEntry({
+                        Icons.nation(
+                            back.player,
+                            nation,
+                            "",
+                            back.tr("picker.select")
+                        )
+                    }) { onPick(nation) }
+                }
         }
 
     /** Picks one of [options] (id to MiniMessage label), marking [current] as selected. */
-    fun option(back: Menu, title: String, options: List<Pair<String, String>>, current: String?, material: Material, onPick: (String) -> Unit): Menu =
+    fun option(
+        back: Menu,
+        title: String,
+        options: List<Pair<String, String>>,
+        current: String?,
+        material: Material,
+        onPick: (String) -> Unit
+    ): Menu =
         ListMenu(back.player, title, back) {
             options.map { (id, label) ->
                 val selected = id.equals(current, ignoreCase = true)

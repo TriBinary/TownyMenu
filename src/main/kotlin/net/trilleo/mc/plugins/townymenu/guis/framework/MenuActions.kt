@@ -7,7 +7,7 @@ import net.trilleo.mc.plugins.townymenu.utils.DialogUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import java.util.UUID
+import java.util.*
 
 /**
  * Runs Towny commands on behalf of a menu and decides what the player sees next.

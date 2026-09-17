@@ -29,42 +29,79 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                 TownMenu(player, this).open()
             }
         }
-        grid.add(Icons.icon(Material.ENDER_PEARL, tr("town-info.visit"), tr("town-info.visit-description"),
-            if (TownyUtil.economy && town.spawnCost > 0) tr("common.cost", "cost" to TownyUtil.money(town.spawnCost)) else "")) {
+        grid.add(
+            Icons.icon(
+                Material.ENDER_PEARL, tr("town-info.visit"), tr("town-info.visit-description"),
+                if (TownyUtil.economy && town.spawnCost > 0) tr(
+                    "common.cost",
+                    "cost" to TownyUtil.money(town.spawnCost)
+                ) else ""
+            )
+        ) {
             runAndClose("towny:town spawn ${town.name}")
         }
-        grid.add(Icons.icon(Material.PLAYER_HEAD, tr("town.residents"), null, tr("icon.town.residents", "count" to town.numResidents))) {
+        grid.add(
+            Icons.icon(
+                Material.PLAYER_HEAD,
+                tr("town.residents"),
+                null,
+                tr("icon.town.residents", "count" to town.numResidents)
+            )
+        ) {
             TownMembersMenu(player, town, this).open()
         }
         town.nationOrNull?.let { nation ->
-            grid.add(Icons.icon(Material.BEACON, tr("town-info.nation", "nation" to TownyUtil.name(nation.name)), tr("town-info.nation-description"))) {
+            grid.add(
+                Icons.icon(
+                    Material.BEACON,
+                    tr("town-info.nation", "nation" to TownyUtil.name(nation.name)),
+                    tr("town-info.nation-description")
+                )
+            ) {
                 NationInfoMenu(player, nation, this).open()
             }
         }
         if (viewer != null && !viewer.hasTown() && town.isOpen) {
-            grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_JOIN,
-                Icons.icon(Material.OAK_DOOR, tr("town-info.join"), tr("town-info.join-description"))) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_JOIN,
+                Icons.icon(Material.OAK_DOOR, tr("town-info.join"), tr("town-info.join-description"))
+            ) {
                 run("towny:town join ${town.name}", { viewer.hasTown() }, returnTo = MainMenu(player))
             }
         }
         if (TownyUtil.economy && viewer?.townOrNull != town) {
-            grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_DEPOSIT_OTHERTOWN,
-                Icons.icon(Material.EMERALD, tr("town-info.donate"), tr("town-info.donate-description"))) {
-                prompt(tr("town-info.donate-title", "town" to TownyUtil.name(town.name)), tr("common.amount")) { amount ->
-                    run("towny:town deposit ${TownyUtil.argument(amount)} ${town.name}", { town.account.holdingBalance })
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_DEPOSIT_OTHERTOWN,
+                Icons.icon(Material.EMERALD, tr("town-info.donate"), tr("town-info.donate-description"))
+            ) {
+                prompt(
+                    tr("town-info.donate-title", "town" to TownyUtil.name(town.name)),
+                    tr("common.amount")
+                ) { amount ->
+                    run(
+                        "towny:town deposit ${TownyUtil.argument(amount)} ${town.name}",
+                        { town.account.holdingBalance })
                 }
             }
         }
         if (TownyUtil.economy && town.isForSale && viewer?.townOrNull != town) {
-            grid.add(PermissionNodes.TOWNY_COMMAND_TOWN_BUYTOWN, Icons.icon(
-                Material.GOLD_BLOCK, tr("town-info.buy"), tr("town-info.buy-description"),
-                tr("common.price", "price" to TownyUtil.money(town.forSalePrice)),
-            )) { run("towny:town buytown ${town.name}", { town.mayor }, returnTo = MainMenu(player)) }
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_BUYTOWN, Icons.icon(
+                    Material.GOLD_BLOCK, tr("town-info.buy"), tr("town-info.buy-description"),
+                    tr("common.price", "price" to TownyUtil.money(town.forSalePrice)),
+                )
+            ) { run("towny:town buytown ${town.name}", { town.mayor }, returnTo = MainMenu(player)) }
         }
         val nation = viewer?.nationOrNull
         if (nation != null && !town.hasNation() && viewer.isKing) {
-            grid.add(PermissionNodes.TOWNY_COMMAND_NATION_INVITE_ADD,
-                Icons.icon(Material.PAPER, tr("town-info.invite"), tr("town-info.invite-description", "nation" to TownyUtil.name(nation.name)))) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_NATION_INVITE_ADD,
+                Icons.icon(
+                    Material.PAPER,
+                    tr("town-info.invite"),
+                    tr("town-info.invite-description", "nation" to TownyUtil.name(nation.name))
+                )
+            ) {
                 run("towny:nation add ${town.name}", { nation.sentInvites.size })
             }
         }

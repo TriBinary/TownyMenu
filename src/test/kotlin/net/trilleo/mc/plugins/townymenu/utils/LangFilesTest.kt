@@ -65,13 +65,17 @@ class LangFilesTest {
     private fun placeholders(text: String): Set<String> = placeholder.findAll(text).map { it.groupValues[1] }.toSet()
 
     private fun load(id: String): Map<String, String> {
-        val stream = checkNotNull(javaClass.classLoader.getResourceAsStream("lang/$id.yml")) { "lang/$id.yml is not bundled" }
+        val stream =
+            checkNotNull(javaClass.classLoader.getResourceAsStream("lang/$id.yml")) { "lang/$id.yml is not bundled" }
         return flatten(stream.reader(Charsets.UTF_8).use { Yaml().load<Map<String, Any?>>(it) })
     }
 
     private fun flatten(map: Map<*, *>, prefix: String = ""): Map<String, String> =
         map.entries.flatMap { (key, value) ->
             val path = prefix + key
-            if (value is Map<*, *>) flatten(value, "$path.").entries.map { it.toPair() } else listOf(path to value.toString())
+            if (value is Map<*, *>) flatten(
+                value,
+                "$path."
+            ).entries.map { it.toPair() } else listOf(path to value.toString())
         }.toMap()
 }

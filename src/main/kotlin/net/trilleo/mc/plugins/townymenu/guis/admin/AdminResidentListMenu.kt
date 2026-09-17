@@ -26,8 +26,12 @@ class AdminResidentListMenu(player: Player, back: Menu) : PagedMenu(player, play
             }
 
     override fun controls() {
-        button(47, Icons.icon(Material.COMPASS, tr("admin.search"), tr("admin.search-description"),
-            tr("admin.filter", "filter" to if (filter.isEmpty()) tr("common.none") else TownyUtil.text(filter)))) { click ->
+        button(
+            47, Icons.icon(
+                Material.COMPASS, tr("admin.search"), tr("admin.search-description"),
+                tr("admin.filter", "filter" to if (filter.isEmpty()) tr("common.none") else TownyUtil.text(filter))
+            )
+        ) { click ->
             if (click.isRightClick) {
                 filter = ""
                 render()

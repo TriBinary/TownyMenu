@@ -146,11 +146,13 @@ object LoreUtil {
                     lines.addAll(broken.dropLast(1))
                     currentLine = broken.last().toMutableList()
                 }
+
                 currentLine.isEmpty() -> currentLine.addAll(segment)
                 width(currentLine) + separator + width(segment) <= maxWidth -> {
                     if (separator == 1) currentLine.add(StyledChar(' ', segment.first().style))
                     currentLine.addAll(segment)
                 }
+
                 else -> {
                     lines.add(currentLine)
                     currentLine = segment.toMutableList()
@@ -216,7 +218,7 @@ object LoreUtil {
 
     private fun isWide(char: Char): Boolean =
         char in '\u3000'..'\u303F' || char in '\uFF00'..'\uFFEF' ||
-            Character.UnicodeScript.of(char.code) in WIDE_SCRIPTS
+                Character.UnicodeScript.of(char.code) in WIDE_SCRIPTS
 
     private val WIDE_SCRIPTS = setOf(
         Character.UnicodeScript.HAN,

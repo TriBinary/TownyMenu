@@ -41,7 +41,8 @@ abstract class Menu(
     val back: Menu? = null,
 ) : InventoryHolder {
 
-    private val inventory: Inventory = Bukkit.createInventory(this, rows * 9, MiniMessage.miniMessage().deserialize(title))
+    private val inventory: Inventory =
+        Bukkit.createInventory(this, rows * 9, MiniMessage.miniMessage().deserialize(title))
     private val actions = HashMap<Int, (ClickType) -> Unit>()
 
     /** The viewer's Towny resident record, or `null` if Towny has not registered them. */
@@ -116,9 +117,13 @@ abstract class Menu(
 
     /** Places a help button opening the tutorial [chapter] that explains this menu. */
     protected fun tutorialButton(slot: Int, chapter: Chapter) {
-        button(slot, Icons.icon(Material.KNOWLEDGE_BOOK, tr("tutorial.help"), tr("tutorial.help-description"),
-            tr("tutorial.chapter-line", "chapter" to tr(chapter.title)),
-            tr("tutorial.progress", "read" to chapter.readCount(player), "total" to chapter.lessons.size))) {
+        button(
+            slot, Icons.icon(
+                Material.KNOWLEDGE_BOOK, tr("tutorial.help"), tr("tutorial.help-description"),
+                tr("tutorial.chapter-line", "chapter" to tr(chapter.title)),
+                tr("tutorial.progress", "read" to chapter.readCount(player), "total" to chapter.lessons.size)
+            )
+        ) {
             TutorialChapterMenu(player, chapter, this).open()
         }
     }

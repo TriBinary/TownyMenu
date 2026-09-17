@@ -1,12 +1,12 @@
 package net.trilleo.mc.plugins.townymenu.commands.info
 
-import net.trilleo.mc.plugins.townymenu.registration.CommandRegistrar
-import net.trilleo.mc.plugins.townymenu.utils.Lang
-import net.trilleo.mc.plugins.townymenu.utils.tr
-import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.trilleo.mc.plugins.townymenu.registration.CommandRegistrar
+import net.trilleo.mc.plugins.townymenu.registration.PluginCommand
+import net.trilleo.mc.plugins.townymenu.utils.Lang
+import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.command.CommandSender
 
 class HelpCommand : PluginCommand(
@@ -35,7 +35,10 @@ class HelpCommand : PluginCommand(
             sender.sendMessage(
                 Component.text("» ", NamedTextColor.GOLD)
                     .append(
-                        Component.text(Lang.find(sender, "command.category.${category.lowercase()}") ?: category, NamedTextColor.YELLOW)
+                        Component.text(
+                            Lang.find(sender, "command.category.${category.lowercase()}") ?: category,
+                            NamedTextColor.YELLOW
+                        )
                             .decorate(TextDecoration.BOLD)
                     )
             )
@@ -50,7 +53,12 @@ class HelpCommand : PluginCommand(
                 sender.sendMessage(
                     Component.text("  $commandText", NamedTextColor.GREEN)
                         .append(Component.text(" - ", NamedTextColor.DARK_GRAY))
-                        .append(Component.text(Lang.find(sender, "command.${info.command.name}.description") ?: info.command.description, NamedTextColor.GRAY))
+                        .append(
+                            Component.text(
+                                Lang.find(sender, "command.${info.command.name}.description")
+                                    ?: info.command.description, NamedTextColor.GRAY
+                            )
+                        )
                 )
             }
         }

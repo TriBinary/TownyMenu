@@ -16,18 +16,35 @@ import org.bukkit.entity.Player
 class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nation.title"), 3, back) {
 
     override fun build() {
-        val price = if (TownyUtil.economy) tr("common.cost", "cost" to TownyUtil.money(TownySettings.getNewNationPrice())) else ""
-        guarded(11, PermissionNodes.TOWNY_COMMAND_NATION_NEW,
-            Icons.icon(Material.BEACON, tr("no-nation.found"), tr("no-nation.found-description"), price)) {
+        val price = if (TownyUtil.economy) tr(
+            "common.cost",
+            "cost" to TownyUtil.money(TownySettings.getNewNationPrice())
+        ) else ""
+        guarded(
+            11, PermissionNodes.TOWNY_COMMAND_NATION_NEW,
+            Icons.icon(Material.BEACON, tr("no-nation.found"), tr("no-nation.found-description"), price)
+        ) {
             prompt(tr("no-nation.found-title"), tr("no-nation.nation-name")) { name ->
-                run("towny:nation new ${TownyUtil.nameArgument(name)}", { resident?.hasNation() }, returnTo = back ?: MainMenu(player))
+                run(
+                    "towny:nation new ${TownyUtil.nameArgument(name)}",
+                    { resident?.hasNation() },
+                    returnTo = back ?: MainMenu(player)
+                )
             }
         }
         button(13, Icons.icon(Material.OAK_DOOR, tr("no-nation.browse"), tr("no-nation.browse-description"))) {
             NationListMenu(player, this).open()
         }
         val invites = resident?.townOrNull?.receivedInvites?.size ?: 0
-        button(15, Icons.icon(Material.PAPER, tr("main.invites"), tr("no-nation.invites-description"), tr("common.pending", "count" to invites))) {
+        button(
+            15,
+            Icons.icon(
+                Material.PAPER,
+                tr("main.invites"),
+                tr("no-nation.invites-description"),
+                tr("common.pending", "count" to invites)
+            )
+        ) {
             InvitesMenu(player, this).open()
         }
         tutorialButton(26, Tutorial.NATIONS)

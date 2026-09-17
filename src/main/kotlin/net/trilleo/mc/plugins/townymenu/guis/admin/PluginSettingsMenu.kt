@@ -18,29 +18,58 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
 
     override fun build() {
         val language = config.language
-        button(10, Icons.icon(Material.BOOK, tr("admin-plugin.language"), tr("admin-plugin.language-description"),
-            tr("common.current", "value" to if (language.equals(Lang.AUTO, ignoreCase = true)) tr("admin-plugin.language-auto") else TownyUtil.text(language)),
-            tr("common.click-change"))) {
-            val options = listOf(Lang.AUTO to tr("admin-plugin.language-auto")) + Lang.ids.map { it to "<white>${TownyUtil.text(it)}" }
+        button(
+            10, Icons.icon(
+                Material.BOOK, tr("admin-plugin.language"), tr("admin-plugin.language-description"),
+                tr(
+                    "common.current",
+                    "value" to if (language.equals(
+                            Lang.AUTO,
+                            ignoreCase = true
+                        )
+                    ) tr("admin-plugin.language-auto") else TownyUtil.text(language)
+                ),
+                tr("common.click-change")
+            )
+        ) {
+            val options =
+                listOf(Lang.AUTO to tr("admin-plugin.language-auto")) + Lang.ids.map { it to "<white>${TownyUtil.text(it)}" }
             Pickers.option(this, tr("admin-plugin.language-title"), options, language, Material.BOOK) { id ->
                 config.language = id
                 apply()
             }.open()
         }
-        button(12, Icons.icon(Material.NAME_TAG, tr("admin-plugin.prefix"), tr("admin-plugin.prefix-description"),
-            tr("common.current", "value" to config.messagePrefix), tr("common.click-change"))) {
-            prompt(tr("admin-plugin.prefix"), tr("admin-plugin.prefix-label"), initial = config.messagePrefix, maxLength = 256) { prefix ->
+        button(
+            12, Icons.icon(
+                Material.NAME_TAG, tr("admin-plugin.prefix"), tr("admin-plugin.prefix-description"),
+                tr("common.current", "value" to config.messagePrefix), tr("common.click-change")
+            )
+        ) {
+            prompt(
+                tr("admin-plugin.prefix"),
+                tr("admin-plugin.prefix-label"),
+                initial = config.messagePrefix,
+                maxLength = 256
+            ) { prefix ->
                 config.messagePrefix = prefix
                 apply()
             }
         }
-        button(14, Icons.toggle(player, Material.SHIELD, tr("admin-plugin.shortcut"), config.sneakSwapHandShortcut,
-            tr("admin-plugin.shortcut-description"))) {
+        button(
+            14, Icons.toggle(
+                player, Material.SHIELD, tr("admin-plugin.shortcut"), config.sneakSwapHandShortcut,
+                tr("admin-plugin.shortcut-description")
+            )
+        ) {
             config.sneakSwapHandShortcut = !config.sneakSwapHandShortcut
             apply()
         }
-        button(16, Icons.toggle(player, Material.KNOWLEDGE_BOOK, tr("admin-plugin.join-hint"), config.tutorialJoinHint,
-            tr("admin-plugin.join-hint-description"))) {
+        button(
+            16, Icons.toggle(
+                player, Material.KNOWLEDGE_BOOK, tr("admin-plugin.join-hint"), config.tutorialJoinHint,
+                tr("admin-plugin.join-hint-description")
+            )
+        ) {
             config.tutorialJoinHint = !config.tutorialJoinHint
             apply()
         }

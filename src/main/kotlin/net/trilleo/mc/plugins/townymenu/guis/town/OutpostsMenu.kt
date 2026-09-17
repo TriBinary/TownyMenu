@@ -10,7 +10,8 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Teleport targets for each of a town's outpost spawns. */
-class OutpostsMenu(player: Player, private val town: Town, back: Menu) : PagedMenu(player, player.tr("outposts.title"), back) {
+class OutpostsMenu(player: Player, private val town: Town, back: Menu) :
+    PagedMenu(player, player.tr("outposts.title"), back) {
 
     override fun entries(): List<MenuEntry> =
         town.allOutpostSpawns.mapIndexed { index, location ->

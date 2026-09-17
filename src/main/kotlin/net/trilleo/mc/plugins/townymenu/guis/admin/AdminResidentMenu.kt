@@ -38,49 +38,91 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
                 AdminTownMenu(player, town, this).open()
             }
             if (!target.isMayor) {
-                grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_KICK,
-                    Icons.icon(Material.IRON_BOOTS, tr("admin-resident.kick"), tr("admin-resident.kick-description"))) {
+                grid.add(
+                    PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_KICK,
+                    Icons.icon(Material.IRON_BOOTS, tr("admin-resident.kick"), tr("admin-resident.kick-description"))
+                ) {
                     run("towny:townyadmin town ${town.name} kick ${target.name}", { target.hasTown() })
                 }
             }
         } else {
-            grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_ADD,
-                Icons.icon(Material.BELL, tr("admin-resident.add-to-town"), tr("admin-resident.add-to-town-description"))) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_ADD,
+                Icons.icon(
+                    Material.BELL,
+                    tr("admin-resident.add-to-town"),
+                    tr("admin-resident.add-to-town-description")
+                )
+            ) {
                 Pickers.town(this, tr("admin-resident.add-to-town"), { true }) { picked ->
                     run("towny:townyadmin town ${picked.name} add ${target.name}", { target.hasTown() })
                 }.open()
             }
         }
 
-        grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_RENAME,
-            Icons.icon(Material.NAME_TAG, tr("admin.rename"), tr("admin-resident.rename-description"),
-                tr("common.current", "value" to TownyUtil.name(target.name)))) {
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_RENAME,
+            Icons.icon(
+                Material.NAME_TAG, tr("admin.rename"), tr("admin-resident.rename-description"),
+                tr("common.current", "value" to TownyUtil.name(target.name))
+            )
+        ) {
             prompt(tr("admin.rename"), tr("common.new-name"), initial = target.name, maxLength = 16) { name ->
                 run("towny:townyadmin resident ${target.name} rename ${TownyUtil.argument(name)}", { target.name })
             }
         }
-        grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_TITLE,
-            Icons.icon(Material.OAK_HANGING_SIGN, tr("resident-profile.title"), tr("resident-profile.title-description"),
-                tr("common.current", "value" to TownyUtil.text(target.title)))) { click ->
-            editTitle("title", click.isRightClick, tr("resident-profile.title-prompt"), tr("resident-profile.title-label")) { target.title }
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_TITLE,
+            Icons.icon(
+                Material.OAK_HANGING_SIGN, tr("resident-profile.title"), tr("resident-profile.title-description"),
+                tr("common.current", "value" to TownyUtil.text(target.title))
+            )
+        ) { click ->
+            editTitle(
+                "title",
+                click.isRightClick,
+                tr("resident-profile.title-prompt"),
+                tr("resident-profile.title-label")
+            ) { target.title }
         }
-        grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_SURNAME,
-            Icons.icon(Material.OAK_SIGN, tr("resident-profile.surname"), tr("resident-profile.surname-description"),
-                tr("common.current", "value" to TownyUtil.text(target.surname)))) { click ->
-            editTitle("surname", click.isRightClick, tr("resident-profile.surname-prompt"), tr("resident-profile.surname-label")) { target.surname }
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_SURNAME,
+            Icons.icon(
+                Material.OAK_SIGN, tr("resident-profile.surname"), tr("resident-profile.surname-description"),
+                tr("common.current", "value" to TownyUtil.text(target.surname))
+            )
+        ) { click ->
+            editTitle(
+                "surname",
+                click.isRightClick,
+                tr("resident-profile.surname-prompt"),
+                tr("resident-profile.surname-label")
+            ) { target.surname }
         }
-        grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOGGLE_NPC,
-            Icons.toggle(player, Material.ARMOR_STAND, tr("admin-resident.npc"), target.isNPC, tr("admin-resident.npc-description"))) {
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOGGLE_NPC,
+            Icons.toggle(
+                player,
+                Material.ARMOR_STAND,
+                tr("admin-resident.npc"),
+                target.isNPC,
+                tr("admin-resident.npc-description")
+            )
+        ) {
             run("towny:townyadmin toggle npc ${target.name}", { target.isNPC })
         }
         if (target.isJailed) {
-            grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_UNJAIL,
-                Icons.icon(Material.IRON_BARS, tr("admin-resident.unjail"), tr("admin-resident.unjail-description"))) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_UNJAIL,
+                Icons.icon(Material.IRON_BARS, tr("admin-resident.unjail"), tr("admin-resident.unjail-description"))
+            ) {
                 run("towny:townyadmin resident ${target.name} unjail", { target.isJailed })
             }
         }
-        grid.add(PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_DELETE,
-            Icons.icon(Material.TNT, tr("admin-resident.delete"), tr("admin-resident.delete-description"))) {
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_DELETE,
+            Icons.icon(Material.TNT, tr("admin-resident.delete"), tr("admin-resident.delete-description"))
+        ) {
             run("towny:townyadmin resident ${target.name} delete", ::exists, returnTo = back ?: this)
         }
 

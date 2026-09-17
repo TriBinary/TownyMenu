@@ -17,7 +17,8 @@ import org.bukkit.entity.Player
  * Players trusted on one plot. Towny's `/plot trust` acts on the plot the player
  * stands in, so this menu is tied to the plot it was opened for.
  */
-class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) : PagedMenu(player, player.tr("plot-trust.title"), back) {
+class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) :
+    PagedMenu(player, player.tr("plot-trust.title"), back) {
 
     private fun count() = plot.trustedResidents.size
 
@@ -30,15 +31,22 @@ class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) : P
 
     override fun controls() {
         tutorialButton(52, Tutorial.PLOTS)
-        guarded(47, PermissionNodes.TOWNY_COMMAND_PLOT_TRUST,
-            Icons.icon(Material.PLAYER_HEAD, tr("common.trust-online"), tr("plot-trust.trust-online-description"))) {
+        guarded(
+            47, PermissionNodes.TOWNY_COMMAND_PLOT_TRUST,
+            Icons.icon(Material.PLAYER_HEAD, tr("common.trust-online"), tr("plot-trust.trust-online-description"))
+        ) {
             Pickers.resident(this, tr("plot-trust.trust-title"), { !plot.hasTrustedResident(it) }) { picked ->
                 run("towny:plot trust add ${picked.name}", ::count)
             }.open()
         }
-        guarded(48, PermissionNodes.TOWNY_COMMAND_PLOT_TRUST,
-            Icons.icon(Material.NAME_TAG, tr("common.trust-name"), tr("common.trust-name-description"))) {
-            prompt(tr("plot-trust.trust-title"), tr("common.player-name")) { name -> run("towny:plot trust add ${TownyUtil.argument(name)}", ::count) }
+        guarded(
+            48, PermissionNodes.TOWNY_COMMAND_PLOT_TRUST,
+            Icons.icon(Material.NAME_TAG, tr("common.trust-name"), tr("common.trust-name-description"))
+        ) {
+            prompt(
+                tr("plot-trust.trust-title"),
+                tr("common.player-name")
+            ) { name -> run("towny:plot trust add ${TownyUtil.argument(name)}", ::count) }
         }
     }
 }

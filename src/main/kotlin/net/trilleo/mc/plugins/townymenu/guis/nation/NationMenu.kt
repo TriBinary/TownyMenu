@@ -35,21 +35,44 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
         button(4, Icons.nation(player, nation, *buildList {
             add(tr("common.founded", "date" to TownyUtil.date(nation.registered)))
             if (TownyUtil.economy) {
-                add(tr("nation.daily-tax", "tax" to if (nation.isTaxPercentage) "${nation.taxes}%" else TownyUtil.money(nation.taxes)))
+                add(
+                    tr(
+                        "nation.daily-tax",
+                        "tax" to if (nation.isTaxPercentage) "${nation.taxes}%" else TownyUtil.money(nation.taxes)
+                    )
+                )
             }
         }.toTypedArray()))
 
         val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
 
-        grid.add(Icons.icon(Material.BELL, tr("nation.towns"), tr("nation.towns-description"), tr("nation.towns-count", "count" to nation.numTowns))) {
+        grid.add(
+            Icons.icon(
+                Material.BELL,
+                tr("nation.towns"),
+                tr("nation.towns-description"),
+                tr("nation.towns-count", "count" to nation.numTowns)
+            )
+        ) {
             NationTownsMenu(player, nation, this).open()
         }
-        grid.add(Icons.icon(Material.PLAYER_HEAD, tr("town.residents"), tr("nation.residents-description"),
-            tr("icon.town.residents", "count" to nation.numResidents))) {
+        grid.add(
+            Icons.icon(
+                Material.PLAYER_HEAD, tr("town.residents"), tr("nation.residents-description"),
+                tr("icon.town.residents", "count" to nation.numResidents)
+            )
+        ) {
             residents(nation).open()
         }
         if (TownyUtil.economy) {
-            grid.add(Icons.icon(Material.GOLD_INGOT, tr("nation.bank"), tr("town.bank-description"), tr("bank.balance", "balance" to TownyUtil.balance(nation)))) {
+            grid.add(
+                Icons.icon(
+                    Material.GOLD_INGOT,
+                    tr("nation.bank"),
+                    tr("town.bank-description"),
+                    tr("bank.balance", "balance" to TownyUtil.balance(nation))
+                )
+            ) {
                 BankMenu(player, nation, this).open()
             }
         }
@@ -66,13 +89,17 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
             runAndClose("towny:nation spawn")
         }
         if (viewer.isKing) {
-            grid.add(PermissionNodes.TOWNY_COMMAND_NATION_DELETE,
-                Icons.icon(Material.TNT, tr("nation.delete"), tr("nation.delete-description"))) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_NATION_DELETE,
+                Icons.icon(Material.TNT, tr("nation.delete"), tr("nation.delete-description"))
+            ) {
                 run("towny:nation delete", { viewer.hasNation() }, returnTo = MainMenu(player))
             }
         } else if (viewer.isMayor) {
-            grid.add(PermissionNodes.TOWNY_COMMAND_NATION_LEAVE,
-                Icons.icon(Material.OAK_DOOR, tr("nation.leave"), tr("nation.leave-description"))) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_NATION_LEAVE,
+                Icons.icon(Material.OAK_DOOR, tr("nation.leave"), tr("nation.leave-description"))
+            ) {
                 run("towny:nation leave", { viewer.hasNation() }, returnTo = MainMenu(player))
             }
         }
@@ -87,18 +114,60 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                 .sortedWith(compareByDescending<Resident> { it.isKing }
                     .thenByDescending { it.isOnline }
                     .thenBy { it.name.lowercase() })
-                .map { member -> MenuEntry({ Icons.resident(player, member, "", tr("common.click-view")) }) { ResidentProfileMenu(player, member, menu).open() } }
+                .map { member ->
+                    MenuEntry({
+                        Icons.resident(
+                            player,
+                            member,
+                            "",
+                            tr("common.click-view")
+                        )
+                    }) { ResidentProfileMenu(player, member, menu).open() }
+                }
         }
 
     fun toggles(): Menu {
-        fun toggle(material: Material, key: String, label: String, description: String, node: PermissionNodes, read: (Nation) -> Boolean) =
+        fun toggle(
+            material: Material,
+            key: String,
+            label: String,
+            description: String,
+            node: PermissionNodes,
+            read: (Nation) -> Boolean
+        ) =
             Toggle(material, label, description, node, "towny:nation toggle $key") { nation?.let(read) }
 
-        return ToggleMenu(player, tr("nation.settings-title"), this, listOf(
-            toggle(Material.WHITE_BANNER, "peaceful", tr("toggle.peaceful"), tr("toggle.nation-peaceful-description"), PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_NEUTRAL) { it.isNeutral },
-            toggle(Material.OAK_DOOR, "open", tr("toggle.open"), tr("toggle.nation-open-description"), PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_OPEN) { it.isOpen },
-            toggle(Material.ENDER_EYE, "public", tr("toggle.public"), tr("toggle.nation-public-description"), PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_PUBLIC) { it.isPublic },
-            toggle(Material.GOLD_NUGGET, "taxpercent", tr("toggle.tax-percent"), tr("toggle.nation-tax-percent-description"), PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_TAXPERCENT) { it.isTaxPercentage },
-        ))
+        return ToggleMenu(
+            player, tr("nation.settings-title"), this, listOf(
+                toggle(
+                    Material.WHITE_BANNER,
+                    "peaceful",
+                    tr("toggle.peaceful"),
+                    tr("toggle.nation-peaceful-description"),
+                    PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_NEUTRAL
+                ) { it.isNeutral },
+                toggle(
+                    Material.OAK_DOOR,
+                    "open",
+                    tr("toggle.open"),
+                    tr("toggle.nation-open-description"),
+                    PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_OPEN
+                ) { it.isOpen },
+                toggle(
+                    Material.ENDER_EYE,
+                    "public",
+                    tr("toggle.public"),
+                    tr("toggle.nation-public-description"),
+                    PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_PUBLIC
+                ) { it.isPublic },
+                toggle(
+                    Material.GOLD_NUGGET,
+                    "taxpercent",
+                    tr("toggle.tax-percent"),
+                    tr("toggle.nation-tax-percent-description"),
+                    PermissionNodes.TOWNY_COMMAND_NATION_TOGGLE_TAXPERCENT
+                ) { it.isTaxPercentage },
+            )
+        )
     }
 }

@@ -30,7 +30,16 @@ class NationListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("
     override fun entries(): List<MenuEntry> =
         TownyAPI.getInstance().nations
             .sortedWith(sort.comparator)
-            .map { nation -> MenuEntry({ Icons.nation(player, nation, "", tr("common.click-details")) }) { NationInfoMenu(player, nation, this).open() } }
+            .map { nation ->
+                MenuEntry({
+                    Icons.nation(
+                        player,
+                        nation,
+                        "",
+                        tr("common.click-details")
+                    )
+                }) { NationInfoMenu(player, nation, this).open() }
+            }
 
     override fun controls() {
         tutorialButton(52, Tutorial.NATIONS)

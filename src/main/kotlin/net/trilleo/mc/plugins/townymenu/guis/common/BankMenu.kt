@@ -23,26 +23,45 @@ class BankMenu(
     private val command = if (isNation) "towny:nation" else "towny:town"
 
     override fun build() {
-        button(4, Icons.icon(
-            Material.GOLD_BLOCK, tr("bank.info", "name" to TownyUtil.name(government.name)), null,
-            tr("bank.balance", "balance" to TownyUtil.balance(government)),
-            tr("bank.daily-tax", "tax" to if (isNation) TownyUtil.money(government.taxes) else taxLabel()),
-        ))
+        button(
+            4, Icons.icon(
+                Material.GOLD_BLOCK, tr("bank.info", "name" to TownyUtil.name(government.name)), null,
+                tr("bank.balance", "balance" to TownyUtil.balance(government)),
+                tr("bank.daily-tax", "tax" to if (isNation) TownyUtil.money(government.taxes) else taxLabel()),
+            )
+        )
 
-        guarded(11, if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_DEPOSIT else PermissionNodes.TOWNY_COMMAND_TOWN_DEPOSIT,
-            Icons.icon(Material.EMERALD, tr("bank.deposit"), tr("bank.deposit-description"))) {
-            prompt(tr("bank.deposit-title"), tr("common.amount"), tr("bank.prompt-balance", "balance" to TownyUtil.balance(government))) { amount ->
+        guarded(
+            11,
+            if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_DEPOSIT else PermissionNodes.TOWNY_COMMAND_TOWN_DEPOSIT,
+            Icons.icon(Material.EMERALD, tr("bank.deposit"), tr("bank.deposit-description"))
+        ) {
+            prompt(
+                tr("bank.deposit-title"),
+                tr("common.amount"),
+                tr("bank.prompt-balance", "balance" to TownyUtil.balance(government))
+            ) { amount ->
                 run("$command deposit ${TownyUtil.argument(amount)}", ::balance)
             }
         }
-        guarded(13, if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_WITHDRAW else PermissionNodes.TOWNY_COMMAND_TOWN_WITHDRAW,
-            Icons.icon(Material.REDSTONE, tr("bank.withdraw"), tr("bank.withdraw-description"))) {
-            prompt(tr("bank.withdraw-title"), tr("common.amount"), tr("bank.prompt-balance", "balance" to TownyUtil.balance(government))) { amount ->
+        guarded(
+            13,
+            if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_WITHDRAW else PermissionNodes.TOWNY_COMMAND_TOWN_WITHDRAW,
+            Icons.icon(Material.REDSTONE, tr("bank.withdraw"), tr("bank.withdraw-description"))
+        ) {
+            prompt(
+                tr("bank.withdraw-title"),
+                tr("common.amount"),
+                tr("bank.prompt-balance", "balance" to TownyUtil.balance(government))
+            ) { amount ->
                 run("$command withdraw ${TownyUtil.argument(amount)}", ::balance)
             }
         }
-        guarded(15, if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_BANKHISTORY else PermissionNodes.TOWNY_COMMAND_TOWN_BANKHISTORY,
-            Icons.icon(Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"))) {
+        guarded(
+            15,
+            if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_BANKHISTORY else PermissionNodes.TOWNY_COMMAND_TOWN_BANKHISTORY,
+            Icons.icon(Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"))
+        ) {
             runAndClose("$command bankhistory")
         }
         tutorialButton(26, Tutorial.ECONOMY)
