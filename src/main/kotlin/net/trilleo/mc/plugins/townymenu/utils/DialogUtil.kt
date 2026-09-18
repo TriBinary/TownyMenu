@@ -33,7 +33,8 @@ object DialogUtil {
         .build()
 
     /**
-     * Asks [player] for a line (or, with [multiline], a paragraph) of text.
+     * Asks [player] for a line (or, with [multiline], a paragraph) of text. The
+     * dialog cannot be dismissed with Escape, so exactly one callback always runs.
      *
      * @param title     MiniMessage dialog title
      * @param label     MiniMessage label above the text field
@@ -61,7 +62,7 @@ object DialogUtil {
         show(
             player,
             DialogBase.builder(miniMessage.deserialize(title))
-                .canCloseWithEscape(true)
+                .canCloseWithEscape(false)
                 .afterAction(DialogBase.DialogAfterAction.CLOSE)
                 .body(listOfNotNull(body?.let { DialogBody.plainMessage(miniMessage.deserialize(it)) }))
                 .inputs(listOf(field))

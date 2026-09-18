@@ -22,7 +22,7 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
 
     override fun build() {
         val nation = nation ?: return backButton(40)
-        val grid = layout(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
+        val grid = layout(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25)
 
         grid.add(
             PermissionNodes.TOWNY_COMMAND_NATION_SET_NAME,
@@ -47,7 +47,7 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 prompt(
                     tr("nation-details.board-title"),
                     tr("common.message"),
-                    initial = nation.board,
+                    initial = TownyUtil.board(nation).orEmpty(),
                     maxLength = 256,
                     multiline = true
                 ) { board ->

@@ -27,7 +27,7 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
             glow(read == lessons.size)
         }) { if (chapter.link?.open(player, this) != true) render() }
 
-        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43)
+        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
         lessons.forEach { lesson ->
             val isRead = Tutorial.isRead(player, lesson)
             val link = lesson.link?.takeIf { it.available(player) }

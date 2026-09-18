@@ -2,6 +2,138 @@
 
 ## Unreleased
 
+## Version 1.0.0
+
+### New Features
+
+#### Misc
+
++ Open menus now update themselves when Towny changes what they show: residents joining or leaving, land being claimed,
+  ranks, bank transactions, plot settings, deletions, and the new day. Turn this off with `live-menu-refresh`.
++ TownyMenu now announces in chat when you are invited to a town, your town is invited to a nation, your nation is asked
+  for an alliance, or your town goes bankrupt or falls into ruin. Each message opens the menu that answers it. Turn this
+  off with `towny-alerts`.
++ Added `/townymenu invites`, which opens the invites menu.
+
+#### Main Menu
+
++ Added Leaderboards: towns and nations ranked by residents, land, and bank balance, players ranked by the plots they
+  own, and the richest residents of your town and nation.
++ Added Prices & New Day: a countdown to the next Towny day and what the server charges for founding, claiming, upkeep,
+  plots, and taxes.
+
+#### Town Menu
+
++ Clicking your town at the top of the town menu opens its status: level and what the next level needs, claim and
+  outpost limits, the nation zone, and the upkeep due on the next new day.
+    + Warnings for ruins, bankruptcy, conquest, overclaiming, and upkeep the bank cannot cover are shown there and on
+      the town icon.
+
++ Added a town jail menu: see prisoners and release them, jail online residents with a chosen sentence, bail, jail, and
+  cell, and list the town's jails.
++ Added Cede This Plot and Take Over Claim to the claims menu, for giving a chunk to another town and taking land from
+  an overclaimed town.
++ Added Merge into Your Town to other towns' pages, for mayors asking another town to merge into theirs.
++ Added Announce to Town to the residents menu.
++ Added a Nation Zone switch to town settings for towns that have a nation zone.
++ Residents of a ruined town can reclaim it from the town menu, and players without a town can reclaim ruins from Find a
+  Town when the server allows it.
+
+#### Nation Menu
+
++ Clicking your nation at the top of the nation menu opens its status: level, what the next level needs, the bonuses
+  member towns receive, and the nation's daily upkeep.
++ Added sanctioned towns, under the nation's Towns menu: sanction towns outside the nation and lift sanctions.
++ Added Announce to Nation to the nation menu.
+
+#### Plot Menu
+
++ Added Join-Day Limits, setting the fewest and most days a buyer must have lived in the town.
++ Added Jail Cells to jail plots, for adding and removing cells where you stand.
++ Added Player Overrides to plot permissions: add or remove players with their own permissions on a plot, and open
+  Towny's editor to change them.
++ Right-clicking Evict Owner now evicts the owner and puts the plot back up for sale.
++ Added Many Plots at Once: buy, sell, stop selling, or give up every plot in a square or circle around you, or give up
+  all your plots.
++ Added Make Outpost and Move Outpost Spawn for your town's claims.
++ Added a Plot HUD switch, and clicking the plot icon shows Towny's plot info in chat.
++ Right-clicking Rename Plot removes the plot's name.
++ Putting a plot up for sale now suggests the town's price for that plot type instead of 0.
+
+#### Map
+
++ Right-clicking a plot for sale on the map buys it without walking there.
+
+#### Resident Menu
+
++ Added My Plots, Daily Tax, Outlawed In, and Trusted In to the profile.
++ Added Display Modes to the profile, turning every mode off or restoring the server's defaults.
++ Added Chat Spy and Disable Admin Powers to personal settings for players allowed to use them.
+
+#### Admin Menus
+
++ Added More Town Tools: town level, merging another town in, putting a town up for sale, removing conquered status,
+  checking outposts, resident ranks, outlaws, trusted residents, and trusted towns.
++ Added More Nation Tools: nation level, merging, moving a town in, rechecking town distances, sanctioned towns, and
+  resident ranks.
++ Added a plot menu for the chunk you stand in: claim it for a player, move it to another town, trust players, and
+  unclaim.
++ Added a Towny Permissions editor for `townyperms.yml`: permission groups and their nodes, and the town and nation
+  ranks mayors and leaders can hand out, including adding, removing, and renaming ranks.
++ Added purging inactive residents, checking a player's permission node, and depositing into every bank to the server
+  menu.
+
+#### Tutorial
+
++ Added lessons on announcements, merging towns, ceding land, taking over claims, many plots at once, join-day limits,
+  player overrides, jailing players, nation sanctions, town and nation levels, your plots and taxes, leaderboards, and
+  prices.
+    + The ruins, plot selling, plot groups, and display lessons now cover reclaiming, evicting for resale, group-wide
+      settings, and display modes.
+    + The map, plot, buying, and outpost lessons now cover buying from the map, the Plot HUD, and making outposts.
+
+### Improvements
+
+#### Town Menu
+
++ The town directory can be sorted by distance from you, and then shows how far away each town's spawn is.
+
+#### Misc
+
++ Menus now leave an empty row between their buttons and the bottom row holding the back button.
+    + Lists show four rows of entries per page instead of five.
+
+### Fixes
+
+#### Plot Menu
+
++ Fixed selling, plot type, settings, permissions, and trust failing on plots in a plot group; on grouped plots they now
+  change the whole group, and their buttons say so.
+
+#### Town Menu
+
++ Fixed the second row of the claims menu starting one slot too far right.
+
+#### Misc
+
++ Fixed the back button covering the Outsiders: Switch button in the permissions menu.
++ Fixed a menu reopening over, or closing, another menu opened while a command was still finishing.
++ Fixed clicking a button twice quickly running its command twice, such as toggling PvP on and straight back off.
++ Fixed pressing Escape in a text dialog leaving no menu open; the dialog now closes only with Confirm or Cancel.
++ Removed the empty line at the end of the Visit, Found a Town, and Found a Nation icons.
++ Fixed a leading space in a resident's full name when they have a surname but no title.
++ Town and nation boards and resident about texts no longer show Towny's placeholder (`/town set board [msg]`,
+  `/res set about [msg]`) when none has been set, and the edit dialogs start empty instead of with the placeholder.
+
+### Technical Details
+
+#### Misc
+
++ `PermissionMenu` takes an optional `overrides` menu, and a `Toggle` with a `null` node is shown unguarded.
++ `TownyUtil` gained `duration` and `secondsUntilNewDay` for Towny's new-day countdown.
++ `ToggleMenu` splits more than 21 toggles into pages instead of asking for an inventory taller than six rows.
++ `Layout.add` logs and skips buttons beyond its slots instead of throwing, so an overfull grid no longer breaks a menu.
+
 ## Version 0.1.1
 
 ### Technical Details

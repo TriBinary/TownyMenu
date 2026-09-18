@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.TownySettings
 import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.MapMenu
+import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
@@ -13,13 +14,13 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Claiming, unclaiming, outposts, and bonus claim purchases for the viewer's town. */
-class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claims.title"), 5, back) {
+class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claims.title"), 6, back) {
 
     private val town: Town?
         get() = resident?.townOrNull
 
     override fun build() {
-        val town = town ?: return backButton(40)
+        val town = town ?: return backButton(49)
 
         button(4, Icons.icon(Material.GRASS_BLOCK, tr("claims.info"), null, *buildList {
             add(tr("claims.claimed", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))
@@ -34,7 +35,7 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             if (TownyUtil.economy) add(tr("claims.price", "price" to TownyUtil.money(town.townBlockCost)))
         }.toTypedArray()))
 
-        val grid = layout(19, 20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33)
+        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
         val claims = { town.numTownBlocks }
 
         grid.add(
@@ -109,6 +110,22 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
                 }
             }
         }
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_TOWN_CEDE_PLOT,
+            Icons.icon(Material.OAK_BOAT, tr("claims.cede"), tr("claims.cede-description"))
+        ) {
+            Pickers.town(this, tr("claims.cede-title"), { it != town }) { picked ->
+                run("towny:town cede plot ${picked.name}")
+            }.open()
+        }
+        if (TownySettings.isOverClaimingAllowingStolenLand()) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_TAKEOVERCLAIM,
+                Icons.icon(Material.IRON_SWORD, tr("claims.takeover"), tr("claims.takeover-description"))
+            ) {
+                run("towny:town takeoverclaim", claims, delayTicks = CLAIM_DELAY)
+            }
+        }
         val autoClaim = resident?.hasMode("townclaim") == true
         grid.add(
             PermissionNodes.TOWNY_COMMAND_RESIDENT_TOGGLE_TOWNCLAIM,
@@ -126,8 +143,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             MapMenu(player, this).open()
         }
 
-        tutorialButton(44, Tutorial.CLAIMS)
-        backButton(40)
+        tutorialButton(53, Tutorial.CLAIMS)
+        backButton(49)
     }
 
     private companion object {

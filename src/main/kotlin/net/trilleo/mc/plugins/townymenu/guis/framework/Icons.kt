@@ -43,13 +43,12 @@ object Icons {
             val town = resident.townOrNull
             lore(buildList {
                 if (resident.hasTitle() || resident.hasSurname()) {
-                    add(
-                        "<gray>${TownyUtil.text(resident.title)} ${TownyUtil.name(resident.name)} ${
-                            TownyUtil.text(
-                                resident.surname
-                            )
-                        }".trim()
-                    )
+                    val fullName = listOf(
+                        TownyUtil.text(resident.title),
+                        TownyUtil.name(resident.name),
+                        TownyUtil.text(resident.surname)
+                    ).filter { it.isNotBlank() }
+                    add("<gray>${fullName.joinToString(" ")}")
                 }
                 add(
                     player.tr(
@@ -76,7 +75,7 @@ object Icons {
         itemStack(if (town.isCapital) Material.GOLDEN_HELMET else Material.BELL) {
             name("<gold>${TownyUtil.name(town.name)}")
             lore(buildList {
-                town.board.takeIf { it.isNotBlank() }?.let { add("<gray><i>${TownyUtil.text(it).take(60)}") }
+                TownyUtil.board(town)?.let { add("<gray><i>${TownyUtil.text(it).take(60)}") }
                 add(player.tr("icon.town.mayor", "mayor" to (town.mayor?.let { TownyUtil.name(it.name) } ?: "-")))
                 add(player.tr("icon.town.residents", "count" to town.numResidents))
                 add(player.tr("icon.town.claims", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))
@@ -104,7 +103,7 @@ object Icons {
         itemStack(Material.BEACON) {
             name("<aqua>${TownyUtil.name(nation.name)}")
             lore(buildList {
-                nation.board.takeIf { it.isNotBlank() }?.let { add("<gray><i>${TownyUtil.text(it).take(60)}") }
+                TownyUtil.board(nation)?.let { add("<gray><i>${TownyUtil.text(it).take(60)}") }
                 add(player.tr("icon.nation.leader", "leader" to (nation.king?.let { TownyUtil.name(it.name) } ?: "-")))
                 add(
                     player.tr(

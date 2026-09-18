@@ -16,16 +16,16 @@ import org.bukkit.entity.Player
  * outlawing, and inviting.
  */
 class ResidentProfileMenu(player: Player, private val target: Resident, back: Menu) :
-    Menu(player, TownyUtil.name(target.name), 5, back) {
+    Menu(player, TownyUtil.name(target.name), 6, back) {
 
     override fun build() {
         button(4, Icons.resident(player, target, *buildList {
             add(tr("profile.registered", "date" to TownyUtil.date(target.registered)))
             target.nationOrNull?.let { add(tr("icon.town.nation", "nation" to TownyUtil.name(it.name))) }
-            if (target.about.isNotBlank()) add(tr("profile.about-line", "about" to TownyUtil.text(target.about)))
+            TownyUtil.about(target)?.let { add(tr("profile.about-line", "about" to TownyUtil.text(it))) }
         }.toTypedArray()))
 
-        val viewer = resident ?: return backButton(40)
+        val viewer = resident ?: return backButton(49)
         val self = viewer == target
         val town = viewer.townOrNull
         val sameTown = town != null && town == target.townOrNull
@@ -177,7 +177,7 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
             }
         }
 
-        backButton(40)
+        backButton(49)
     }
 
     private fun editTitle(field: String, clear: Boolean, title: String, label: String, current: () -> String) {

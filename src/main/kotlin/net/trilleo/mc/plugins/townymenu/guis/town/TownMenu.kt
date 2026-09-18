@@ -1,6 +1,7 @@
 package net.trilleo.mc.plugins.townymenu.guis.town
 
 import com.palmergames.bukkit.towny.TownyAPI
+import com.palmergames.bukkit.towny.TownySettings
 import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.MainMenu
@@ -59,9 +60,18 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                     "explosions" to TownyUtil.onOff(player, town.isExplosion)
                 )
             )
-        }.toTypedArray()))
+            val warnings = TownStatusMenu.warnings(this@TownMenu, town)
+            if (warnings.isNotEmpty()) {
+                add("")
+                warnings.forEach { add(it.line) }
+            }
+            add("")
+            add(tr("town.click-status"))
+        }.toTypedArray())) {
+            TownStatusMenu(player, town, this).open()
+        }
 
-        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43)
+        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
 
         grid.add(
             Icons.icon(
@@ -121,6 +131,28 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
         ) {
             OutlawsMenu(player, town, this).open()
         }
+        if (town.isRuined) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_RECLAIM,
+                Icons.icon(
+                    Material.MOSSY_STONE_BRICKS, tr("town.reclaim"), tr("town.reclaim-description"),
+                    *reclaimLines().toTypedArray()
+                )
+            ) {
+                run("towny:town reclaim", { town.isRuined })
+            }
+        } else {
+            grid.add(
+                Icons.icon(
+                    Material.IRON_CHAIN,
+                    tr("town.jail"),
+                    tr("town.jail-description"),
+                    tr("town.jail-count", "count" to town.jailedPlayerCount)
+                )
+            ) {
+                TownJailMenu(player, town, this).open()
+            }
+        }
         grid.add(Icons.icon(Material.ENDER_PEARL, tr("town.spawn"), tr("town.spawn-description"))) {
             runAndClose("towny:town spawn")
         }
@@ -166,6 +198,13 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
 
         tutorialButton(53, Tutorial.TOWN)
         backButton(49)
+    }
+
+    /** The cost and waiting time Towny applies before a ruined town can be reclaimed. */
+    private fun reclaimLines(): List<String> = buildList {
+        if (TownyUtil.economy) add(tr("common.cost", "cost" to TownyUtil.money(TownySettings.getEcoPriceReclaimTown())))
+        TownySettings.getTownRuinsMinDurationHours().takeIf { it > 0 }
+            ?.let { add(tr("town.reclaim-wait", "hours" to it)) }
     }
 
     fun permissions(): Menu =
@@ -243,6 +282,14 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                     tr("toggle.tax-percent-description"),
                     PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_TAXPERCENT
                 ) { it.isTaxPercentage },
+            ) + listOfNotNull(
+                if ((town?.nationZoneSize ?: 0) > 0) toggle(
+                    Material.BEACON,
+                    "nationzone",
+                    tr("toggle.nation-zone"),
+                    tr("toggle.nation-zone-description"),
+                    PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_NATIONZONE
+                ) { it.isNationZoneEnabled } else null
             )
         )
     }

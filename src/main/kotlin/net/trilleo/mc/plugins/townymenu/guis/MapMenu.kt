@@ -18,7 +18,8 @@ import org.bukkit.inventory.ItemStack
 
 /**
  * A 9×5 chunk map centred on the viewer (north is up). Clicking claimed land
- * opens that town; the bottom row claims or unclaims the viewer's own chunk.
+ * opens that town, right-clicking a plot for sale buys it, and the bottom row
+ * claims or unclaims the viewer's own chunk.
  */
 class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title"), 6, back) {
 
@@ -33,8 +34,12 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
                 val plot = api.getTownBlock(coord)
                 val here = column == 4 && row == 2
                 val town = plot?.townOrNull
-                button(row * 9 + column, cell(coord, plot, viewer, here)) {
-                    if (town != null) TownInfoMenu(player, town, this).open()
+                button(row * 9 + column, cell(coord, plot, viewer, here)) { click ->
+                    if (click.isRightClick && canBuy(plot, viewer)) {
+                        run("towny:plot claim ${coord.worldName} x${coord.x} z${coord.z}", { plot?.residentOrNull })
+                    } else if (town != null) {
+                        TownInfoMenu(player, town, this).open()
+                    }
                 }
             }
         }
@@ -69,6 +74,11 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
         tutorialButton(53, Tutorial.GETTING_STARTED)
     }
 
+    /** Towny's `/plot claim <world> x<x> z<z>` buys a plot for sale without standing in it. */
+    private fun canBuy(plot: TownBlock?, viewer: Resident?): Boolean =
+        plot != null && plot.isForSale && viewer != null && plot.residentOrNull != viewer &&
+                TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_PLOT_CLAIM)
+
     private fun cell(coord: WorldCoord, plot: TownBlock?, viewer: Resident?, here: Boolean): ItemStack {
         val town = plot?.townOrNull
         val nation = town?.nationOrNull
@@ -100,6 +110,7 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
                     if (plot.isForSale) add(tr("map.for-sale", "price" to TownyUtil.money(plot.plotPrice)))
                     add("")
                     add(tr("map.click-town"))
+                    if (canBuy(plot, viewer)) add(tr("map.right-buy"))
                 }
             })
             glow(plot?.isForSale == true)

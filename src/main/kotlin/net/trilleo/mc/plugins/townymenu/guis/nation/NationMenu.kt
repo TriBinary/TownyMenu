@@ -42,7 +42,11 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                     )
                 )
             }
-        }.toTypedArray()))
+            add("")
+            add(tr("nation.click-status"))
+        }.toTypedArray())) {
+            NationStatusMenu(player, nation, this).open()
+        }
 
         val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
 
@@ -87,6 +91,14 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
         }
         grid.add(Icons.icon(Material.ENDER_PEARL, tr("nation.spawn"), tr("nation.spawn-description"))) {
             runAndClose("towny:nation spawn")
+        }
+        grid.add(
+            PermissionNodes.TOWNY_COMMAND_NATION_SAY,
+            Icons.icon(Material.GOAT_HORN, tr("nation.announce"), tr("nation.announce-description"))
+        ) {
+            prompt(tr("nation.announce-title"), tr("common.message"), maxLength = 200) { text ->
+                run("towny:nation say $text")
+            }
         }
         if (viewer.isKing) {
             grid.add(

@@ -19,13 +19,13 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** The entry point opened by `/townymenu` or sneak + swap-hand. */
-class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
+class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
 
     override fun build() {
         val resident = resident
         if (resident == null) {
             button(22, Icons.icon(Material.BARRIER, tr("main.unregistered"), tr("main.unregistered-hint")))
-            return backButton(40)
+            return backButton(49)
         }
         val town = resident.townOrNull
         val nation = resident.nationOrNull
@@ -60,13 +60,21 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
         val plot = TownyAPI.getInstance().getTownBlock(player)
         button(
             24, Icons.icon(
-            Material.GRASS_BLOCK, tr("main.plot"), tr("main.plot-description"),
-            tr(
-                "main.plot-here",
-                "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))))) {
+                Material.GRASS_BLOCK, tr("main.plot"), tr("main.plot-description"),
+                tr(
+                    "main.plot-here",
+                    "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))))) {
             PlotMenu(player, this).open()
         }
 
+        button(
+            28, Icons.icon(
+                Material.CLOCK, tr("main.prices"), tr("main.prices-description"),
+                tr("town-status.new-day", "time" to TownyUtil.duration(player, TownyUtil.secondsUntilNewDay()))
+            )
+        ) {
+            PricesMenu(player, this).open()
+        }
         button(29, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("main.map-description"))) {
             MapMenu(
                 player,
@@ -89,6 +97,10 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
             ).open()
         }
 
+        button(34, Icons.icon(Material.LECTERN, tr("main.leaderboards"), tr("main.leaderboards-description"))) {
+            LeaderboardMenu(player, this).open()
+        }
+
         val invites = resident.receivedInvites.size +
                 (town?.receivedInvites?.size ?: 0) + (nation?.receivedInvites?.size ?: 0)
         button(
@@ -101,7 +113,7 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
         }
 
         if (player.hasPermission(AdminMenu.PERMISSION)) {
-            button(44, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) {
+            button(53, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) {
                 AdminMenu(
                     player,
                     this
@@ -109,6 +121,6 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 5) {
             }
         }
 
-        backButton(40)
+        backButton(49)
     }
 }

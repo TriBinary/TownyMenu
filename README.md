@@ -18,24 +18,36 @@
   lesson opens the menu it explains, every feature menu has a Tutorial button for its chapter, and reading progress is
   saved. New players without a town are pointed to it when they join.
 - **Town menu** — Residents and ranks, invites, the town bank, claims (single chunk, area, fill, outposts, unclaim,
-  bonus claims, auto-claim), PvP/mobs/fire/explosions/open/public/peaceful settings, name, board, tag, taxes, plot
-  prices, spawn and home block, map colour, selling the town, build permissions, trusted residents and towns, outlaws,
-  spawn and outpost teleports, and leaving or deleting the town.
+  bonus claims, auto-claim, ceding a chunk to another town, taking over claims), PvP/mobs/fire/explosions/open/public/
+  peaceful/nation zone settings, name, board, tag, taxes, plot prices, spawn and home block, map colour, selling the
+  town, build permissions, trusted residents and towns, outlaws, the jail (jailing and releasing prisoners, jails and
+  cells), announcements, merging towns, reclaiming ruins, spawn and outpost teleports, and leaving or deleting the town.
 - **Nation menu** — Member towns and invitations, residents and nation ranks, the nation bank, allies and enemies,
-  peaceful/open/public settings, name, board, tag, taxes, capital, leader, spawn, map colour, and leaving or deleting
-  the nation.
-- **Plot menu** — For the plot you stand in: buy, sell, give up, evict, plot type, name, PvP/fire/explosion/mob/tax
-  settings, build permissions, trusted players, plot groups and districts, and clearing the plot.
-- **Profile menu** — Friends, personal plot permissions, a bio, bail, spawn, and every personal toggle (border titles,
-  auto map, auto claim, plot borders, info tool, and more).
+  sanctioned towns, announcements, peaceful/open/public settings, name, board, tag, taxes, capital, leader, spawn, map
+  colour, and leaving or deleting the nation.
+- **Plot menu** — For the plot you stand in: buy, sell, give up, evict (and resell), plot type, name,
+  PvP/fire/explosion/mob/tax settings, build permissions and per-player overrides, trusted players, join-day limits,
+  jail cells, outposts, plot groups and districts, clearing the plot, the plot HUD, and buying, selling, or giving up
+  every plot in an area at once. On a plot in a group, these settings change the whole group.
+- **Profile menu** — Friends, your plots, daily tax, the towns that outlaw or trust you, personal plot permissions, a
+  bio, bail, spawn, every personal toggle (border titles, auto map, auto claim, plot borders, info tool, chat spy, admin
+  bypass, and more), and clearing or resetting all modes at once.
 - **Map** — A 9×5 chunk map around you, coloured by your town, your plots, your nation, allies, and enemies, with plots
-  for sale highlighted.
-- **Directories** — Browse and rank every town and nation by residents, claims, bank balance, and more; visit, join,
-  donate, buy a town that is for sale, or propose alliances.
-- **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place.
+  for sale highlighted; right-click one to buy it.
+- **Status pages** — Click your town or nation to see its level, what the next level needs, its limits, the daily
+  upkeep, and warnings for debt, ruins, conquest, and overclaiming.
+- **Leaderboards and prices** — Rank towns, nations, and players by residents, land, and money, and see every price on
+  the server with a countdown to the next Towny day.
+- **Directories** — Browse and rank every town and nation by residents, claims, bank balance, distance, and more; visit,
+  join, donate, buy a town that is for sale, or propose alliances.
+- **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place, or
+  open them from the chat alert TownyMenu sends when one arrives.
+- **Live menus** — An open menu updates itself when Towny changes what it shows: a resident joins, land is claimed, the
+  bank moves, or the new day passes.
 - **Admin menus** — Server admins can edit every setting in Towny's `config.yml` (grouped by section, searchable,
-  applied instantly), change per-world settings, run new days, backups, and reloads, manage any town, nation, or
-  resident, and change TownyMenu's own settings. Open them with `/tm admin` or from the main menu.
+  applied instantly) and `townyperms.yml` (groups, nodes, and the ranks mayors hand out), change per-world settings, run
+  new days, backups, reloads, and purges, manage any town, nation, resident, or plot — including levels, merges, sales,
+  sanctions, and ranks — and change TownyMenu's own settings. Open them with `/tm admin` or from the main menu.
 - **English and Chinese** — Every menu, dialog, and message follows each player's Minecraft language (English or
   Simplified Chinese). Server owners can edit the translations or add new languages.
 - **Respects Towny** — Every action runs the matching Towny command, so Towny's permissions, costs, cooldowns, and
@@ -74,6 +86,7 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `/tm`          | Open the main menu                                  |
 | `/tm help`     | List all available commands                         |
 | `/tm tutorial` | Open the tutorial                                   |
+| `/tm invites`  | Answer town, nation, and alliance invitations       |
 | `/tm reload`   | Reload the configuration and translations (OP only) |
 | `/tm admin`    | Open the admin menu (OP only)                       |
 
@@ -85,6 +98,8 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `language`                 | `auto`  | `auto` follows each player's client language; `en_US` or `zh_CN` forces one |
 | `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking                 |
 | `tutorial-join-hint`       | `true`  | Suggest the tutorial to players without a town when they join               |
+| `live-menu-refresh`        | `true`  | Update open menus when Towny changes what they show                         |
+| `towny-alerts`             | `true`  | Announce invites, bankruptcy, and ruin in chat, linked to the right menu    |
 
 ## Translations
 

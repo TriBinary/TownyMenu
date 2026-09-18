@@ -39,7 +39,7 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             )
         )
 
-        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43)
+        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
 
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_SPAWN,
@@ -181,6 +181,12 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             Icons.icon(Material.TNT, tr("admin-town.delete"), tr("admin-town.delete-description"))
         ) {
             run("$command delete", ::exists, returnTo = back ?: this)
+        }
+
+        grid.add(
+            Icons.icon(Material.ANVIL, tr("admin-town-tools.open"), tr("admin-town-tools.open-description"))
+        ) {
+            AdminTownToolsMenu(player, town, this).open()
         }
 
         backButton(49)

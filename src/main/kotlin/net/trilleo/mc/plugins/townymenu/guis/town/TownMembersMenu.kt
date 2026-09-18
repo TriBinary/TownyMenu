@@ -63,6 +63,14 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
                 tr("common.player-name")
             ) { name -> run("towny:town add ${TownyUtil.argument(name)}", sent) }
         }
+        guarded(
+            50, PermissionNodes.TOWNY_COMMAND_TOWN_SAY,
+            Icons.icon(Material.BELL, tr("town-members.announce"), tr("town-members.announce-description"))
+        ) {
+            prompt(tr("town-members.announce-title"), tr("common.message"), maxLength = 200) { text ->
+                run("towny:town say $text")
+            }
+        }
         val pending = town.sentInvites
         guarded(
             51, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD, Icons.icon(

@@ -1,6 +1,8 @@
 package net.trilleo.mc.plugins.townymenu.guis.plot
 
 import com.palmergames.bukkit.towny.TownyAPI
+import com.palmergames.bukkit.towny.TownySettings
+import com.palmergames.bukkit.towny.`object`.PlotGroup
 import com.palmergames.bukkit.towny.`object`.TownBlock
 import com.palmergames.bukkit.towny.`object`.TownBlockTypeHandler
 import com.palmergames.bukkit.towny.`object`.WorldCoord
@@ -22,6 +24,10 @@ import org.bukkit.entity.Player
 /**
  * The plot the viewer is standing in. Every render re-reads the player's
  * location, so walking to another chunk and refreshing shows that chunk.
+ *
+ * Towny refuses most single-plot commands on a plot in a group, so for grouped
+ * plots the sale, type, settings, permission, trust, and join-day buttons run
+ * the matching `/plot group` command and change every plot in the group.
  */
 class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title"), 6, back) {
 
@@ -31,6 +37,15 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
     override fun build() {
         val plot = plot
         if (plot == null) wilderness() else claimed(plot)
+        guarded(
+            48, PermissionNodes.TOWNY_COMMAND_PLOT_PERM_HUD,
+            Icons.icon(Material.SPYGLASS, tr("plot.hud"), tr("plot.hud-description"))
+        ) {
+            runAndClose("towny:plot perm hud")
+        }
+        button(47, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) {
+            MapMenu(player, this).open()
+        }
         button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"))) { render() }
         tutorialButton(53, Tutorial.PLOTS)
         backButton(49)
@@ -64,11 +79,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 run("towny:town claim outpost", { town.numTownBlocks }, delayTicks = 20)
             }
         }
-        grid.add(Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) {
-            MapMenu(
-                player,
-                this
-            ).open()
+        grid.add(Icons.icon(Material.MAP, tr("plot.area"), tr("plot.area-description"))) {
+            PlotAreaMenu(player, this).open()
         }
     }
 
@@ -76,6 +88,14 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         val town = plot.townOrNull
         val owner = plot.residentOrNull
         val viewer = resident
+        val group = plot.plotObjectGroup
+        val scope = if (group != null) "towny:plot group" else "towny:plot"
+        val groupLines = listOfNotNull(group?.let {
+            tr("plot.group-applies", "group" to TownyUtil.name(it.name), "count" to it.townBlocks.size)
+        }).toTypedArray()
+        val forSale = if (group != null) group.price >= 0 else plot.isForSale
+        val price = group?.price ?: plot.plotPrice
+        val canInfo = TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_PLOT_PERM_INFO)
         button(
             4,
             Icons.icon(
@@ -89,17 +109,13 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                     add(tr("map.chunk", "x" to plot.x, "z" to plot.z))
                     if (plot.isHomeBlock) add(tr("map.home-block"))
                     if (plot.isOutpost) add(tr("map.outpost"))
-                    if (plot.hasPlotObjectGroup()) add(
-                        tr(
-                            "plot.group",
-                            "group" to TownyUtil.name(plot.plotObjectGroup.name)
-                        )
-                    )
+                    if (group != null) add(tr("plot.group", "group" to TownyUtil.name(group.name)))
                     if (plot.hasDistrict()) add(tr("plot.district", "district" to TownyUtil.name(plot.district.name)))
                     if (TownyUtil.economy) {
-                        if (plot.isForSale) add(tr("map.for-sale", "price" to TownyUtil.money(plot.plotPrice)))
+                        if (forSale) add(tr("map.for-sale", "price" to TownyUtil.money(price)))
                         if (plot.isTaxed) add(tr("bank.daily-tax", "tax" to TownyUtil.money(plot.plotTax)))
                     }
+                    addAll(joinDayLines(plot, group))
                     add(
                         tr(
                             "town.pvp-mobs",
@@ -114,19 +130,22 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                         )
                     )
                     add(tr("plot.claimed", "date" to TownyUtil.date(plot.claimedAt)))
+                    if (canInfo) add(tr("plot.click-info"))
                 }.toTypedArray()
             )
-        )
+        ) {
+            if (canInfo) runAndClose("towny:plot info")
+        }
 
-        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43)
+        val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
         val ownerProbe = { plot.residentOrNull }
-        val saleProbe = { plot.isForSale to plot.plotPrice }
+        val saleProbe = { plot.plotObjectGroup?.price to plot.plotPrice }
 
-        if (plot.isForSale && owner != viewer) {
+        if (forSale && owner != viewer) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_CLAIM, Icons.icon(
                     Material.EMERALD, tr("plot.buy"), tr("plot.buy-description"),
-                    tr("common.price", "price" to TownyUtil.money(plot.plotPrice)),
+                    tr("common.price", "price" to TownyUtil.money(price)),
                 )
             ) { run("towny:plot claim", ownerProbe) }
         }
@@ -138,25 +157,31 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 run("towny:plot unclaim", ownerProbe)
             }
         }
-        if (plot.isForSale) {
+        if (forSale) {
             grid.add(
-                PermissionNodes.TOWNY_COMMAND_PLOT_NOTFORSALE,
-                Icons.icon(Material.RED_BANNER, tr("plot.not-for-sale"), tr("plot.not-for-sale-description"))
+                if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_NOTFORSALE else PermissionNodes.TOWNY_COMMAND_PLOT_NOTFORSALE,
+                Icons.icon(
+                    Material.RED_BANNER,
+                    tr("plot.not-for-sale"),
+                    tr("plot.not-for-sale-description"),
+                    *groupLines
+                )
             ) {
-                run("towny:plot notforsale", saleProbe)
+                run("$scope notforsale", saleProbe)
             }
         } else {
             grid.add(
-                PermissionNodes.TOWNY_COMMAND_PLOT_FORSALE,
-                Icons.icon(Material.GREEN_BANNER, tr("plot.for-sale"), tr("plot.for-sale-description"))
+                if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_FORSALE else PermissionNodes.TOWNY_COMMAND_PLOT_FORSALE,
+                Icons.icon(Material.GREEN_BANNER, tr("plot.for-sale"), tr("plot.for-sale-description"), *groupLines)
             ) {
                 prompt(
                     tr("plot.for-sale-title"),
                     tr("common.price-label"),
-                    tr("plot.for-sale-hint"),
-                    initial = "0"
-                ) { price ->
-                    run("towny:plot forsale ${TownyUtil.argument(price)}", saleProbe)
+                    if (group == null) tr("plot.for-sale-hint") else null,
+                    initial = (town?.getPlotTypePrice(plot.type) ?: 0.0).toBigDecimal().stripTrailingZeros()
+                        .toPlainString()
+                ) { input ->
+                    run("$scope forsale ${TownyUtil.argument(input)}", saleProbe)
                 }
             }
         }
@@ -166,20 +191,28 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 Icons.icon(
                     Material.IRON_BOOTS,
                     tr("plot.evict"),
-                    tr("plot.evict-description", "owner" to TownyUtil.name(owner.name))
+                    tr("plot.evict-description", "owner" to TownyUtil.name(owner.name)),
+                    *listOfNotNull(if (group == null) tr("plot.evict-resell") else null).toTypedArray(),
+                    *groupLines
                 )
-            ) {
-                run("towny:plot evict", ownerProbe)
+            ) { click ->
+                run(
+                    if (click.isRightClick && group == null) "towny:plot evict forsale" else "towny:plot evict",
+                    ownerProbe
+                )
             }
         }
         grid.add(
             Icons.icon(
                 Material.OAK_SIGN, tr("plot.type"), tr("plot.type-description"),
-                tr("common.current", "value" to TownyUtil.plotType(player, plot.type.name))
+                tr("common.current", "value" to TownyUtil.plotType(player, plot.type.name)),
+                *groupLines
             )
         ) {
             val types = listOf("reset" to "<white>${TownyUtil.plotType(player, "default")}") +
-                    TownBlockTypeHandler.getTypeNames().filter { it != "default" }.sorted()
+                    TownBlockTypeHandler.getTypeNames()
+                        .filter { it != "default" && (group == null || it != "jail") }
+                        .sorted()
                         .map { it to "<white>${TownyUtil.plotType(player, it)}" }
             Pickers.option(
                 this,
@@ -187,35 +220,99 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 types,
                 plot.type.name.takeIf { it != "default" } ?: "reset",
                 Material.OAK_SIGN) { type ->
-                run("towny:plot set $type", { plot.type.name }, returnTo = this)
+                run("$scope set $type", { plot.type.name }, returnTo = this)
             }.open()
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_SET_NAME,
             Icons.icon(Material.NAME_TAG, tr("plot.rename"), tr("plot.rename-description"))
-        ) {
-            prompt(tr("plot.rename-title"), tr("plot.plot-name"), initial = plot.name.orEmpty()) { name ->
-                run("towny:plot set name ${TownyUtil.nameArgument(name)}", { plot.name })
+        ) { click ->
+            if (click.isRightClick) {
+                run("towny:plot set name", { plot.name })
+            } else {
+                prompt(tr("plot.rename-title"), tr("plot.plot-name"), initial = plot.name.orEmpty()) { name ->
+                    run("towny:plot set name ${TownyUtil.nameArgument(name)}", { plot.name })
+                }
             }
         }
-        grid.add(Icons.icon(Material.LEVER, tr("plot.settings"), tr("plot.settings-description"))) {
-            toggles(plot).open()
+        grid.add(Icons.icon(Material.LEVER, tr("plot.settings"), tr("plot.settings-description"), *groupLines)) {
+            toggles(plot, group != null).open()
         }
+        val permNode =
+            if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_SET else PermissionNodes.TOWNY_COMMAND_PLOT_SET_PERM
         grid.add(
-            PermissionNodes.TOWNY_COMMAND_PLOT_SET_PERM,
-            Icons.icon(Material.IRON_DOOR, tr("common.permissions"), tr("plot.permissions-description"))
+            permNode,
+            Icons.icon(Material.IRON_DOOR, tr("common.permissions"), tr("plot.permissions-description"), *groupLines)
         ) {
             PermissionMenu(
-                player, tr("plot.permissions-title"), this, "towny:plot set perm",
-                PermissionNodes.TOWNY_COMMAND_PLOT_SET_PERM, owner != null
-            ) { plot.takeIf { it.exists() }?.permissions }.open()
+                player, tr("plot.permissions-title"), this, "$scope set perm", permNode, owner != null,
+                overrides = { back -> PlotOverridesMenu(player, plot, back) }
+            ) { plot.takeIf { it.exists() }?.let { it.plotObjectGroup?.permissions ?: it.permissions } }.open()
         }
         grid.add(
-            PermissionNodes.TOWNY_COMMAND_PLOT_TRUST, Icons.icon(
+            if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_TRUST else PermissionNodes.TOWNY_COMMAND_PLOT_TRUST,
+            Icons.icon(
                 Material.TRIPWIRE_HOOK, tr("plot.trusted"), tr("plot.trusted-description"),
-                tr("plot.trusted-count", "count" to plot.trustedResidents.size),
+                tr("plot.trusted-count", "count" to (group?.trustedResidents ?: plot.trustedResidents).size),
+                *groupLines
             )
         ) { PlotTrustMenu(player, plot, this).open() }
+        grid.add(
+            if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_SET else PermissionNodes.TOWNY_COMMAND_PLOT_ASMAYOR,
+            Icons.icon(
+                Material.CLOCK, tr("plot.join-days"), tr("plot.join-days-description"),
+                *joinDayLines(plot, group).ifEmpty { listOf(tr("plot.join-days-none")) }.toTypedArray(),
+                *groupLines
+            )
+        ) { click ->
+            val key = if (click.isRightClick) "maxjoindays" else "minjoindays"
+            val probe = {
+                plot.plotObjectGroup?.let { it.minTownMembershipDays to it.maxTownMembershipDays }
+                    ?: (plot.minTownMembershipDays to plot.maxTownMembershipDays)
+            }
+            prompt(
+                tr(if (click.isRightClick) "plot.max-join-days-title" else "plot.min-join-days-title"),
+                tr("plot.days"),
+                tr("plot.join-days-hint"),
+                maxLength = 5
+            ) { input ->
+                val days = TownyUtil.argument(input)
+                run("$scope set $key ${if (days == "0") "clear" else days}", probe)
+            }
+        }
+        if (plot.isJail) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_PLOT_JAILCELL,
+                Icons.icon(
+                    Material.IRON_CHAIN, tr("plot.jail-cells"), tr("plot.jail-cells-description"),
+                    tr("plot.jail-cells-count", "count" to (plot.jail?.jailCellCount ?: 0))
+                )
+            ) { click ->
+                run(
+                    "towny:plot jailcell ${if (click.isRightClick) "remove" else "add"}",
+                    { plot.jail?.jailCellCount })
+            }
+        }
+        if (TownySettings.isAllowingOutposts() && group == null && town != null && town == viewer?.townOrNull) {
+            if (plot.isOutpost) {
+                grid.add(
+                    PermissionNodes.TOWNY_COMMAND_TOWN_SET_OUTPOST,
+                    Icons.icon(Material.RESPAWN_ANCHOR, tr("plot.outpost-spawn"), tr("plot.outpost-spawn-description"))
+                ) {
+                    run("towny:plot set outpost spawn", { town.allOutpostSpawns.toList() })
+                }
+            } else if (!plot.isHomeBlock) {
+                grid.add(
+                    PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_OUTPOST,
+                    Icons.icon(
+                        Material.COMPASS, tr("plot.make-outpost"), tr("plot.make-outpost-description"),
+                        *outpostCost().toTypedArray()
+                    )
+                ) {
+                    run("towny:plot set outpost", { plot.isOutpost to town.allOutpostSpawns.size })
+                }
+            }
+        }
         grid.add(Icons.icon(Material.CHEST, tr("plot.groups"), tr("plot.groups-description"))) {
             PlotGroupMenu(player, this).open()
         }
@@ -225,20 +322,34 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         ) {
             runAndClose("towny:plot clear")
         }
+        grid.add(Icons.icon(Material.MAP, tr("plot.area"), tr("plot.area-description"))) {
+            PlotAreaMenu(player, this).open()
+        }
         if (town != null) {
-            grid.add(Icons.icon(Material.BELL, "<gold>${TownyUtil.name(town.name)}", tr("plot.town-description"))) {
+            button(46, Icons.icon(Material.BELL, "<gold>${TownyUtil.name(town.name)}", tr("plot.town-description"))) {
                 TownInfoMenu(player, town, this).open()
             }
         }
-        grid.add(Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) {
-            MapMenu(
-                player,
-                this
-            ).open()
-        }
     }
 
-    private fun toggles(plot: TownBlock): Menu {
+    private fun outpostCost(): List<String> =
+        if (TownyUtil.economy && TownySettings.getOutpostCost() > 0) {
+            listOf(tr("common.cost", "cost" to TownyUtil.money(TownySettings.getOutpostCost())))
+        } else emptyList()
+
+    /** The join-day limits Towny places on buying [plot], or on every plot of its [group]. */
+    private fun joinDayLines(plot: TownBlock, group: PlotGroup?): List<String> {
+        val min = group?.minTownMembershipDays ?: plot.minTownMembershipDays
+        val max = group?.maxTownMembershipDays ?: plot.maxTownMembershipDays
+        return listOfNotNull(
+            if (min > 0) tr("plot.min-join-days", "days" to min) else null,
+            if (max > 0) tr("plot.max-join-days", "days" to max) else null,
+        )
+    }
+
+    private fun toggles(plot: TownBlock, grouped: Boolean): Menu {
+        val scope = if (grouped) "towny:plot group" else "towny:plot"
+
         fun toggle(
             material: Material,
             key: String,
@@ -247,7 +358,11 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             node: PermissionNodes,
             read: (TownBlock) -> Boolean
         ) =
-            Toggle(material, label, description, node, "towny:plot toggle $key") {
+            Toggle(
+                material, label, description,
+                if (grouped) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_TOGGLE else node,
+                "$scope toggle $key"
+            ) {
                 plot.takeIf { it.exists() }?.let(read)
             }
 

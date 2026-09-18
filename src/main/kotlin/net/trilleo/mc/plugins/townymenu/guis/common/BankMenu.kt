@@ -17,7 +17,7 @@ class BankMenu(
     player: Player,
     private val government: Government,
     back: Menu,
-) : Menu(player, player.tr("bank.title", "name" to TownyUtil.name(government.name)), 3, back) {
+) : Menu(player, player.tr("bank.title", "name" to TownyUtil.name(government.name)), 4, back) {
 
     private val isNation = government is Nation
     private val command = if (isNation) "towny:nation" else "towny:town"
@@ -64,8 +64,8 @@ class BankMenu(
         ) {
             runAndClose("$command bankhistory")
         }
-        tutorialButton(26, Tutorial.ECONOMY)
-        backButton(22)
+        tutorialButton(35, Tutorial.ECONOMY)
+        backButton(31)
     }
 
     private fun balance(): Double = government.account.holdingBalance

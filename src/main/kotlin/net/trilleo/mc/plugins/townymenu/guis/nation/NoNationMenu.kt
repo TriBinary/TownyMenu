@@ -13,16 +13,21 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 
 /** Shown when the viewer's town has no nation: found one, browse nations, or answer invites. */
-class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nation.title"), 3, back) {
+class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nation.title"), 4, back) {
 
     override fun build() {
         val price = if (TownyUtil.economy) tr(
             "common.cost",
             "cost" to TownyUtil.money(TownySettings.getNewNationPrice())
-        ) else ""
+        ) else null
         guarded(
             11, PermissionNodes.TOWNY_COMMAND_NATION_NEW,
-            Icons.icon(Material.BEACON, tr("no-nation.found"), tr("no-nation.found-description"), price)
+            Icons.icon(
+                Material.BEACON,
+                tr("no-nation.found"),
+                tr("no-nation.found-description"),
+                *listOfNotNull(price).toTypedArray()
+            )
         ) {
             prompt(tr("no-nation.found-title"), tr("no-nation.nation-name")) { name ->
                 run(
@@ -47,7 +52,7 @@ class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nati
         ) {
             InvitesMenu(player, this).open()
         }
-        tutorialButton(26, Tutorial.NATIONS)
-        backButton(22)
+        tutorialButton(35, Tutorial.NATIONS)
+        backButton(31)
     }
 }

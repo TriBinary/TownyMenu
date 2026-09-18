@@ -46,6 +46,16 @@ class PluginConfig(private val plugin: JavaPlugin) {
         get() = plugin.config.getBoolean("tutorial-join-hint", true)
         set(value) = save("tutorial-join-hint", value)
 
+    /** Whether open menus are re-rendered when Towny changes what they show (`live-menu-refresh`). */
+    var liveMenuRefresh: Boolean
+        get() = plugin.config.getBoolean("live-menu-refresh", true)
+        set(value) = save("live-menu-refresh", value)
+
+    /** Whether TownyMenu announces invitations, bankruptcy, and ruin in chat (`towny-alerts`). */
+    var townyAlerts: Boolean
+        get() = plugin.config.getBoolean("towny-alerts", true)
+        set(value) = save("towny-alerts", value)
+
     private fun save(path: String, value: Any) {
         plugin.config.set(path, value)
         plugin.saveConfig()

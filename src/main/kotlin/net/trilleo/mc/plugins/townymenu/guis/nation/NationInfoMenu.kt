@@ -10,12 +10,12 @@ import org.bukkit.entity.Player
 
 /** Public view of any nation: visit, join, towns, relations, and diplomacy with the viewer's nation. */
 class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
-    Menu(player, TownyUtil.name(nation.name), 4, back) {
+    Menu(player, TownyUtil.name(nation.name), 5, back) {
 
     override fun build() {
         if (!nation.exists()) {
             button(13, Icons.icon(Material.BARRIER, tr("nation-info.gone")))
-            return backButton(31)
+            return backButton(40)
         }
         button(4, Icons.nation(player, nation, tr("common.founded", "date" to TownyUtil.date(nation.registered))))
 
@@ -37,10 +37,12 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("nation-info.visit-description"),
-                if (TownyUtil.economy && nation.spawnCost > 0) tr(
-                    "common.cost",
-                    "cost" to TownyUtil.money(nation.spawnCost)
-                ) else ""
+                *listOfNotNull(
+                    if (TownyUtil.economy && nation.spawnCost > 0) tr(
+                        "common.cost",
+                        "cost" to TownyUtil.money(nation.spawnCost)
+                    ) else null
+                ).toTypedArray()
             )
         ) {
             runAndClose("towny:nation spawn ${nation.name}")
@@ -107,6 +109,6 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
             ) { run("towny:nation enemy ${if (own.hasEnemy(nation)) "remove" else "add"} ${nation.name}", snapshot) }
         }
 
-        backButton(31)
+        backButton(40)
     }
 }

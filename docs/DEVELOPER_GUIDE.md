@@ -281,6 +281,9 @@ permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/
   can't intercept the command.
 - **Grey out what the player can't do.** Use `guarded(slot, PermissionNodes.X, item) { … }` (or `Layout.add(node, …)`)
   with the same node Towny's command checks.
+- **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom row;
+  leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such as the
+  chunk map and the 4×4 permission grid, skip it.
 - **Escape player-written text.** Pass names, boards, titles, and tags through `TownyUtil.name()` / `TownyUtil.text()`
   before embedding them in MiniMessage.
 - **Translate every string.** Icon names, lore, titles, and prompts come from `tr("key")`, never from Kotlin literals.
@@ -299,12 +302,12 @@ open inventory's holder — there is no registry and nothing to clean up when a 
 | `render()`                               | Clears the inventory (grey filler) and calls `build()`.                          |
 | `button(slot, item, action?)`            | Places an item; `action` receives the `ClickType`.                               |
 | `guarded(slot, node, item, action)`      | Like `button`, but shows a grey "no permission" icon without `node`.             |
-| `layout(vararg slots)`                   | Returns a `Layout` that fills the given slots in order, for optional buttons.    |
+| `layout(vararg slots)`                   | Fills slots in order, for optional buttons; extra buttons are logged, skipped.   |
 | `backButton(slot)`                       | Back arrow to `back`, or a close button when `back` is `null`.                   |
 | `tutorialButton(slot, chapter)`          | Help button opening the tutorial `Chapter` that explains this menu.              |
 | `run(command, probe?, returnTo?, delay)` | Runs a Towny command as the player (see below).                                  |
 | `runAndClose(command)`                   | Closes the menu, then runs the command (teleports, books, chat output).          |
-| `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel reopens the menu.                              |
+| `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel or empty input reopens the menu.               |
 | `tr(key, "name" to value, …)`            | Translates `key` into the viewer's language (see [Translations](#translations)). |
 | `resident`                               | The viewer's Towny `Resident`, or `null`.                                        |
 
@@ -317,6 +320,9 @@ lambda reading the state the command should change — and `MenuActions` compare
 - probe **changed** → `returnTo` (default: this menu) is re-opened, showing the new state;
 - probe **unchanged**, or no probe → the menu closes so the player can read Towny's chat reply (an error, a cost).
 
+Neither happens if the player has opened a different menu in the meantime. Until the command settles, `Menu` ignores
+that player's clicks, so a double click can't run a command twice.
+
 If the command raises a Towny confirmation, `MenuActions` suppresses the chat prompt (`ConfirmationSendEvent`) and shows
 a native confirmation dialog instead; accepting runs Towny's confirm command and then settles the probe as usual.
 
@@ -325,9 +331,10 @@ town, joining a town).
 
 ### PagedMenu and ListMenu
 
-`PagedMenu(player, title, back)` is a six-row menu. Override `entries()` to return `MenuEntry` objects; the top five
-rows show one page, slot 45/53 page back and forth, 49 is the back button, and `controls()` may place extra buttons in
-46–48 and 50–52. `MenuEntry` takes a **lambda** that builds the icon, so only entries on the visible page are built:
+`PagedMenu(player, title, back)` is a six-row menu. Override `entries()` to return `MenuEntry` objects; the top four
+rows show one page, the fifth row stays empty, slot 45/53 page back and forth, 49 is the back button, and `controls()`
+may place extra buttons in 46–48 and 50–52. `MenuEntry` takes a **lambda** that builds the icon, so only entries on the
+visible page are built:
 
 ```kotlin
 override fun entries(): List<MenuEntry> =
@@ -342,13 +349,13 @@ override fun entries(): List<MenuEntry> =
 
 ### Shared Menus (`guis/common`)
 
-| Class            | Purpose                                                                                       |
-|:-----------------|:----------------------------------------------------------------------------------------------|
-| `ToggleMenu`     | A grid of `Toggle`s (material, translated name and description, node, command, value reader). |
-| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command.                            |
-| `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                     |
-| `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                |
-| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                      |
+| Class            | Purpose                                                                                                                                                                    |
+|:-----------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ToggleMenu`     | Pages of `Toggle`s, 21 per page (material, name, description, node, command, value reader). A `null` node leaves the toggle unguarded, for modes Towny checks no node for. |
+| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command. Pass `overrides` to add a Player Overrides button (used for plots).                                     |
+| `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                                                                                                  |
+| `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                                                                                             |
+| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                                                                                                   |
 
 ### Tutorial (`guis/tutorial`)
 
@@ -381,6 +388,16 @@ When a change adds a Towny feature to a menu, add or update its lesson in `Tutor
 (`tutorial.<chapter>.<topic>` and `tutorial.<chapter>.<topic>-body`). New feature menus should place a
 `tutorialButton` in a free bottom-row slot (the bottom-right corner, or slot 52 in a `PagedMenu`).
 
+### Reacting to Towny (`listeners`)
+
+Menus are views, so when Towny changes their data from outside — another player, a command, or the new day —
+`MenuRefreshListener` calls `OpenMenus.refreshSoon()`, which re-renders every open menu once on the next tick (skipping
+players whose own command is still settling). Add the Towny event to that listener when a change should show up live,
+and keep the handler a one-liner. Players can turn this off with `live-menu-refresh`.
+
+`TownyAlertListener` sends the chat alerts for invitations, bankruptcy, and ruin, each linking to the menu that answers
+it (`towny-alerts`).
+
 ### Admin Menus (`guis/admin`)
 
 `AdminMenu` is the server admin hub, opened by `/townymenu admin` or a main-menu button. Both entry points require
@@ -394,6 +411,11 @@ of the `/townyadmin` or `/townyworld` command it runs.
 | `AdminServerMenu`       | New day and hour, backup, database save, reloads, and global `/townyadmin toggle`s.        |
 | `AdminTownMenu`         | Any town through `/townyadmin town`: mayor, residents, claims, bank, overrides, deletion.  |
 | `AdminNationMenu`       | Any nation through `/townyadmin nation`: leader, capital, towns, bank, toggles, deletion.  |
+| `AdminTownToolsMenu`    | The rest of `/townyadmin town`: level, merging, sale, outlaws, trust, and ranks.           |
+| `AdminNationToolsMenu`  | The rest of `/townyadmin nation`: level, merging, transfers, sanctions, ranks, recheck.    |
+| `AdminPlotMenu`         | `/townyadmin plot` for the plot the admin stands in, plus `set plot` and `unclaim`.        |
+| `AdminPermsMenu`        | `townyperms.yml`: permission groups, and the town and nation ranks mayors may hand out.    |
+| `AdminNamesMenu`        | The names an admin `add`/`remove` subcommand holds (outlaws, trust, sanctions).            |
 | `AdminResidentListMenu` | Every resident, online first, with a name filter.                                          |
 | `AdminResidentMenu`     | Any resident: town, rename, title, surname, NPC flag, unjail, deletion.                    |
 | `PluginSettingsMenu`    | Edits TownyMenu's own `config.yml` through `PluginConfig`, then calls `Main.reload()`.     |
@@ -402,6 +424,9 @@ Towny has no command that edits its config, so `TownyConfigMenu` is the one plac
 `TownyConfig.write` saves the value, then the menu runs `/townyadmin reload config` as the player. Editing is therefore
 gated by `towny.command.townyadmin.reload`, and the probe is `TownySettings.getConfig()`, which a successful reload
 replaces.
+
+`RankMenu.create` takes an optional `admin` town or nation name. With it the menu runs
+`/townyadmin town|nation <name> rank` and checks the admin node, so staff can hand out ranks in towns they are not in.
 
 ### Icons
 
@@ -425,8 +450,10 @@ class TownPvpMenu(player: Player, back: Menu) : Menu(player, player.tr("town-pvp
 
     override fun build() {
         val town = resident?.townOrNull ?: return backButton(22)
-        guarded(13, PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP,
-            Icons.toggle(player, Material.IRON_SWORD, tr("toggle.pvp"), town.isPVP, tr("toggle.town-pvp-description"))) {
+        guarded(
+            13, PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP,
+            Icons.toggle(player, Material.IRON_SWORD, tr("toggle.pvp"), town.isPVP, tr("toggle.town-pvp-description"))
+        ) {
             run("towny:town toggle pvp", { town.isPVP })
         }
         backButton(22)
@@ -1085,8 +1112,8 @@ To add a setting, add the key to `config.yml` and a matching property to `Plugin
 
 ```kotlin
 var menuSounds: Boolean
-    get() = plugin.config.getBoolean("menu-sounds", true)
-    set(value) = save("menu-sounds", value)
+get() = plugin.config.getBoolean("menu-sounds", true)
+set(value) = save("menu-sounds", value)
 ```
 
 ### Reloading

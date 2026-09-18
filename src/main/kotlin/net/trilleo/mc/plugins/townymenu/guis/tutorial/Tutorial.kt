@@ -7,12 +7,11 @@ import com.palmergames.bukkit.towny.`object`.Resident
 import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.`object`.TownyPermission
 import net.trilleo.mc.plugins.townymenu.Main
-import net.trilleo.mc.plugins.townymenu.guis.InvitesMenu
-import net.trilleo.mc.plugins.townymenu.guis.MainMenu
-import net.trilleo.mc.plugins.townymenu.guis.MapMenu
+import net.trilleo.mc.plugins.townymenu.guis.*
 import net.trilleo.mc.plugins.townymenu.guis.common.BankMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.*
+import net.trilleo.mc.plugins.townymenu.guis.plot.PlotAreaMenu
 import net.trilleo.mc.plugins.townymenu.guis.plot.PlotGroupMenu
 import net.trilleo.mc.plugins.townymenu.guis.plot.PlotMenu
 import net.trilleo.mc.plugins.townymenu.guis.resident.FriendsMenu
@@ -200,6 +199,10 @@ object Tutorial {
             Lesson(
                 "start/invites", Material.PAPER, "tutorial.start.invites", "tutorial.start.invites-body",
                 always { player, back -> InvitesMenu(player, back) }),
+            Lesson(
+                "start/leaderboards", Material.LECTERN, "tutorial.start.leaderboards",
+                "tutorial.start.leaderboards-body",
+                always { player, back -> LeaderboardMenu(player, back) }),
         ),
     )
 
@@ -268,12 +271,39 @@ object Tutorial {
                 "town/details", Material.WRITABLE_BOOK, "tutorial.town.details", "tutorial.town.details-body",
                 withTown { player, _, back -> TownSettingsMenu(player, back) }),
             Lesson(
+                "town/status", Material.EXPERIENCE_BOTTLE, "tutorial.town.status", "tutorial.town.status-body",
+                withTown { player, town, back -> TownStatusMenu(player, town, back) }) { player ->
+                town(player)?.let {
+                    listOf(
+                        player.tr(
+                            "town-status.level-number",
+                            "level" to TownySettings.getTownLevelNumber(it),
+                            "max" to TownySettings.getTownLevelMax()
+                        )
+                    )
+                }.orEmpty()
+            },
+            Lesson(
+                "town/announce", Material.GOAT_HORN, "tutorial.town.announce", "tutorial.town.announce-body",
+                withTown { player, town, back -> TownMembersMenu(player, town, back) }),
+            Lesson(
+                "town/merge", Material.STRUCTURE_VOID, "tutorial.town.merge", "tutorial.town.merge-body",
+                always { player, back -> TownListMenu(player, back) }) { player ->
+                buildList {
+                    addAll(player.money(TownySettings.getBaseCostForTownMerge().toDouble(), "tutorial.fact.merge-cost"))
+                    TownySettings.getMaxDistanceForTownMerge().takeIf { it > 0 }?.let {
+                        add(player.tr("tutorial.fact.merge-distance", "distance" to it))
+                    }
+                }
+            },
+            Lesson(
                 "town/sell", Material.EMERALD, "tutorial.town.sell", "tutorial.town.sell-body",
                 withTown { player, _, back -> TownSettingsMenu(player, back) }, economy
             ),
             Lesson(
                 "town/ruins", Material.CRACKED_STONE_BRICKS, "tutorial.town.ruins", "tutorial.town.ruins-body",
-                withTown { player, _, back -> TownMenu(player, back) }) { player ->
+                townOrFind
+            ) { player ->
                 buildList {
                     add(
                         player.tr(
@@ -294,6 +324,18 @@ object Tutorial {
                                 "value" to TownyUtil.yesNo(player, TownySettings.getTownRuinsReclaimEnabled())
                             )
                         )
+                        if (TownySettings.getTownRuinsReclaimEnabled()) {
+                            addAll(player.money(TownySettings.getEcoPriceReclaimTown(), "tutorial.fact.reclaim-cost"))
+                            add(
+                                player.tr(
+                                    "tutorial.fact.reclaim-townless",
+                                    "value" to TownyUtil.yesNo(
+                                        player,
+                                        TownySettings.canRuinsBeReclaimedByTownlessPlayers()
+                                    )
+                                )
+                            )
+                        }
                     }
                 }
             },
@@ -365,6 +407,14 @@ object Tutorial {
             ) { player ->
                 player.money(TownySettings.getPurchasedBonusBlocksCost(), "tutorial.fact.bonus-cost")
             },
+            Lesson(
+                "claims/cede", Material.OAK_BOAT, "tutorial.claims.cede", "tutorial.claims.cede-body",
+                withTown { player, _, back -> TownClaimsMenu(player, back) }),
+            Lesson(
+                "claims/takeover", Material.IRON_SWORD, "tutorial.claims.takeover", "tutorial.claims.takeover-body",
+                withTown { player, _, back -> TownClaimsMenu(player, back) },
+                { TownySettings.isOverClaimingAllowingStolenLand() }
+            ),
         ),
     )
 
@@ -384,6 +434,9 @@ object Tutorial {
                 "plots/sell", Material.GREEN_BANNER, "tutorial.plots.sell", "tutorial.plots.sell-body",
                 always { player, back -> PlotMenu(player, back) }),
             Lesson(
+                "plots/area", Material.MAP, "tutorial.plots.area", "tutorial.plots.area-body",
+                always { player, back -> PlotAreaMenu(player, back) }),
+            Lesson(
                 "plots/types", Material.OAK_SIGN, "tutorial.plots.types", "tutorial.plots.types-body",
                 always { player, back -> PlotMenu(player, back) }),
             Lesson(
@@ -391,6 +444,9 @@ object Tutorial {
                 always { player, back -> PlotMenu(player, back) }),
             Lesson(
                 "plots/trust", Material.TRIPWIRE_HOOK, "tutorial.plots.trust", "tutorial.plots.trust-body",
+                always { player, back -> PlotMenu(player, back) }),
+            Lesson(
+                "plots/join-days", Material.CLOCK, "tutorial.plots.join-days", "tutorial.plots.join-days-body",
                 always { player, back -> PlotMenu(player, back) }),
             Lesson(
                 "plots/groups", Material.CHEST, "tutorial.plots.groups", "tutorial.plots.groups-body",
@@ -433,6 +489,12 @@ object Tutorial {
                 "tutorial.protection.trust-body",
                 withTown { player, town, back -> TownTrustMenu(player, town, back) }),
             Lesson(
+                "protection/overrides",
+                Material.WRITABLE_BOOK,
+                "tutorial.protection.overrides",
+                "tutorial.protection.overrides-body",
+                always { player, back -> PlotMenu(player, back) }),
+            Lesson(
                 "protection/flags",
                 Material.FLINT_AND_STEEL,
                 "tutorial.protection.flags",
@@ -449,6 +511,20 @@ object Tutorial {
                 "tutorial.protection.outlaws",
                 "tutorial.protection.outlaws-body",
                 withTown { player, town, back -> OutlawsMenu(player, town, back) }),
+            Lesson(
+                "protection/jailing",
+                Material.IRON_BARS,
+                "tutorial.protection.jailing",
+                "tutorial.protection.jailing-body",
+                withTown { player, town, back -> TownJailMenu(player, town, back) }) { player ->
+                buildList {
+                    if (TownySettings.isAllowingBail()) {
+                        addAll(player.money(TownySettings.getBailAmount(), "tutorial.fact.bail"))
+                        addAll(player.money(TownySettings.getBailMaxAmount(), "tutorial.fact.max-bail"))
+                    }
+                    town(player)?.let { add(player.tr("town-jail.jails-count", "count" to it.jails.orEmpty().size)) }
+                }
+            },
             Lesson(
                 "protection/jail", Material.IRON_CHAIN, "tutorial.protection.jail", "tutorial.protection.jail-body",
                 always { player, back -> ResidentMenu(player, back) }) { player ->
@@ -493,6 +569,15 @@ object Tutorial {
                 "nations/relations", Material.SHIELD, "tutorial.nations.relations", "tutorial.nations.relations-body",
                 withNation { player, nation, back -> NationRelationsMenu(player, nation, back) }),
             Lesson(
+                "nations/level", Material.EXPERIENCE_BOTTLE, "tutorial.nations.level", "tutorial.nations.level-body",
+                withNation { player, nation, back -> NationStatusMenu(player, nation, back) }),
+            Lesson(
+                "nations/sanctions",
+                Material.RED_BANNER,
+                "tutorial.nations.sanctions",
+                "tutorial.nations.sanctions-body",
+                withNation { player, nation, back -> NationSanctionsMenu(player, nation, back) }),
+            Lesson(
                 "nations/settings", Material.LEVER, "tutorial.nations.settings", "tutorial.nations.settings-body",
                 withNation { player, _, back -> NationMenu(player, back).toggles() }) { player ->
                 player.money(TownySettings.getNationNeutralityCost(), "tutorial.fact.peaceful-cost")
@@ -525,6 +610,16 @@ object Tutorial {
                         "tutorial.fact.daily-taxes",
                         "value" to TownyUtil.onOff(player, TownySettings.isTaxingDaily())
                     ),
+                )
+            },
+            Lesson(
+                "economy/prices", Material.CLOCK, "tutorial.economy.prices", "tutorial.economy.prices-body",
+                always { player, back -> PricesMenu(player, back) }) { player ->
+                listOf(
+                    player.tr(
+                        "town-status.new-day",
+                        "time" to TownyUtil.duration(player, TownyUtil.secondsUntilNewDay())
+                    )
                 )
             },
             Lesson(
@@ -626,6 +721,16 @@ object Tutorial {
                         back
                     )
                 }),
+            Lesson(
+                "profile/standing", Material.GRASS_BLOCK, "tutorial.profile.standing", "tutorial.profile.standing-body",
+                always { player, back -> ResidentMenu(player, back) }) { player ->
+                resident(player)?.let {
+                    listOf(
+                        player.tr("profile.plots-owned", "count" to it.townBlocks.size),
+                        player.tr("profile.towns-count", "count" to it.townsOutlawedIn.size),
+                    )
+                }.orEmpty()
+            },
             Lesson(
                 "profile/display", Material.GLOWSTONE_DUST, "tutorial.profile.display", "tutorial.profile.display-body",
                 always { player, back -> ResidentMenu(player, back).toggles() }),

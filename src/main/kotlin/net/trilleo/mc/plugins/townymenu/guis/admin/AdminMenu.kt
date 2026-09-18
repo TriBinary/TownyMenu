@@ -18,12 +18,12 @@ import org.bukkit.entity.Player
  * The server admin hub, opened by `/townymenu admin` or the main menu. Only players with
  * [PERMISSION] may use it; each action still checks the Towny node of the command it runs.
  */
-class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.title"), 4, back) {
+class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.title"), 5, back) {
 
     override fun build() {
         if (!player.hasPermission(PERMISSION)) {
             button(13, Icons.icon(Material.BARRIER, tr("menu.no-permission")))
-            return backButton(31)
+            return backButton(40)
         }
 
         button(10, Icons.icon(Material.COMPARATOR, tr("admin.config"), tr("admin.config-description"))) {
@@ -45,6 +45,11 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
         }
 
         val towny = TownyAPI.getInstance()
+        button(
+            18, Icons.icon(Material.GRASS_BLOCK, tr("admin-plot.open"), tr("admin-plot.open-description"))
+        ) {
+            AdminPlotMenu(player, this).open()
+        }
         button(
             20, Icons.icon(
                 Material.BELL, tr("admin.towns"), tr("admin.towns-description"),
@@ -86,7 +91,11 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
             AdminResidentListMenu(player, this).open()
         }
 
-        backButton(31)
+        button(26, Icons.icon(Material.IRON_DOOR, tr("admin-perms.open"), tr("admin-perms.open-description"))) {
+            AdminPermsMenu(player, this).open()
+        }
+
+        backButton(40)
     }
 
     private fun worlds(): Menu = ListMenu(player, tr("admin-world.list-title"), this) { list ->

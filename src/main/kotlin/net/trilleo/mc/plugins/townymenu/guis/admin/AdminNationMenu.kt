@@ -18,7 +18,7 @@ import org.bukkit.entity.Player
 
 /** Manages any nation as an admin (`/townyadmin nation`). */
 class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
-    Menu(player, player.tr("admin-nation.title", "nation" to TownyUtil.name(nation.name)), 5, back) {
+    Menu(player, player.tr("admin-nation.title", "nation" to TownyUtil.name(nation.name)), 6, back) {
 
     private val command: String
         get() = "towny:townyadmin nation ${nation.name}"
@@ -29,7 +29,7 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
     override fun build() {
         if (!exists) {
             button(22, Icons.icon(Material.BARRIER, tr("admin.gone")))
-            return backButton(40)
+            return backButton(49)
         }
 
         button(4, Icons.nation(player, nation))
@@ -140,7 +140,13 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
             run("$command delete", ::exists, returnTo = back ?: this)
         }
 
-        backButton(40)
+        grid.add(
+            Icons.icon(Material.ANVIL, tr("admin-nation-tools.open"), tr("admin-nation-tools.open-description"))
+        ) {
+            AdminNationToolsMenu(player, nation, this).open()
+        }
+
+        backButton(49)
     }
 
     /** Lists the nation's towns other than the capital. */

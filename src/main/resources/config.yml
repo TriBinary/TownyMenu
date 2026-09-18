@@ -15,3 +15,11 @@ sneak-swap-hand-shortcut: true
 # When a player without a town joins, suggest the tutorial (/townymenu tutorial) in chat.
 # The hint stops once they have read every lesson or joined a town.
 tutorial-join-hint: true
+
+# Re-render an open menu when Towny changes what it shows, such as a resident joining, land being claimed,
+# a bank transaction, or the new day. Turn this off if you would rather menus only update when they are reopened.
+live-menu-refresh: true
+
+# Announce in chat when a player is invited to a town, a town is invited to a nation, a nation is asked for an
+# alliance, or a town goes bankrupt or falls into ruin. Each message opens the menu that answers it.
+towny-alerts: true

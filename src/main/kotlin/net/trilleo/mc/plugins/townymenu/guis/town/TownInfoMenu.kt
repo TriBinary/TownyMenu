@@ -12,12 +12,12 @@ import org.bukkit.entity.Player
 
 /** Public view of any town: visit, join, donate, buy, or invite it to the viewer's nation. */
 class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
-    Menu(player, TownyUtil.name(town.name), 4, back) {
+    Menu(player, TownyUtil.name(town.name), 5, back) {
 
     override fun build() {
         if (!town.exists()) {
             button(13, Icons.icon(Material.BARRIER, tr("town-info.gone")))
-            return backButton(31)
+            return backButton(40)
         }
         button(4, Icons.town(player, town, tr("common.founded", "date" to TownyUtil.date(town.registered))))
 
@@ -32,10 +32,12 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("town-info.visit-description"),
-                if (TownyUtil.economy && town.spawnCost > 0) tr(
-                    "common.cost",
-                    "cost" to TownyUtil.money(town.spawnCost)
-                ) else ""
+                *listOfNotNull(
+                    if (TownyUtil.economy && town.spawnCost > 0) tr(
+                        "common.cost",
+                        "cost" to TownyUtil.money(town.spawnCost)
+                    ) else null
+                ).toTypedArray()
             )
         ) {
             runAndClose("towny:town spawn ${town.name}")
@@ -92,6 +94,22 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                 )
             ) { run("towny:town buytown ${town.name}", { town.mayor }, returnTo = MainMenu(player)) }
         }
+        val viewerTown = viewer?.townOrNull
+        if (viewerTown != null && viewerTown != town && viewer.isMayor) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_MERGE,
+                Icons.icon(
+                    Material.STRUCTURE_VOID, tr("town-info.merge"),
+                    tr(
+                        "town-info.merge-description",
+                        "town" to TownyUtil.name(town.name),
+                        "own" to TownyUtil.name(viewerTown.name)
+                    )
+                )
+            ) {
+                run("towny:town merge ${town.name}")
+            }
+        }
         val nation = viewer?.nationOrNull
         if (nation != null && !town.hasNation() && viewer.isKing) {
             grid.add(
@@ -106,6 +124,6 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
             }
         }
 
-        backButton(31)
+        backButton(40)
     }
 }
