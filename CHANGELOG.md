@@ -4,6 +4,15 @@
 
 ### New Features
 
+#### Misc
+
++ Open menus now update themselves when Towny changes what they show: residents joining or leaving, land being claimed,
+  ranks, bank transactions, plot settings, deletions, and the new day. Turn this off with `live-menu-refresh`.
++ TownyMenu now announces in chat when you are invited to a town, your town is invited to a nation, your nation is
+  asked for an alliance, or your town goes bankrupt or falls into ruin. Each message opens the menu that answers it.
+  Turn this off with `towny-alerts`.
++ Added `/townymenu invites`, which opens the invites menu.
+
 #### Main Menu
 
 + Added Leaderboards: towns and nations ranked by residents, land, and bank balance, players ranked by the plots they

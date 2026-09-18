@@ -31,9 +31,8 @@
   jail cells, outposts, plot groups and districts, clearing the plot, the plot HUD, and buying, selling, or giving up
   every plot in an area at once. On a plot in a group, these settings change the whole group.
 - **Profile menu** — Friends, your plots, daily tax, the towns that outlaw or trust you, personal plot permissions, a
-  bio, bail, spawn, every personal toggle (border titles,
-  auto map, auto claim, plot borders, info tool, chat spy, admin bypass, and more), and clearing or resetting all
-  modes at once.
+  bio, bail, spawn, every personal toggle (border titles, auto map, auto claim, plot borders, info tool, chat spy,
+  admin bypass, and more), and clearing or resetting all modes at once.
 - **Map** — A 9×5 chunk map around you, coloured by your town, your plots, your nation, allies, and enemies, with plots
   for sale highlighted; right-click one to buy it.
 - **Status pages** — Click your town or nation to see its level, what the next level needs, its limits, the daily
@@ -42,7 +41,10 @@
   the server with a countdown to the next Towny day.
 - **Directories** — Browse and rank every town and nation by residents, claims, bank balance, distance, and more;
   visit, join, donate, buy a town that is for sale, or propose alliances.
-- **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place.
+- **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place, or
+  open them from the chat alert TownyMenu sends when one arrives.
+- **Live menus** — An open menu updates itself when Towny changes what it shows: a resident joins, land is claimed,
+  the bank moves, or the new day passes.
 - **Admin menus** — Server admins can edit every setting in Towny's `config.yml` (grouped by section, searchable,
   applied instantly), change per-world settings, run new days, backups, and reloads, manage any town, nation, or
   resident, and change TownyMenu's own settings. Open them with `/tm admin` or from the main menu.
@@ -84,6 +86,7 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `/tm`          | Open the main menu                                  |
 | `/tm help`     | List all available commands                         |
 | `/tm tutorial` | Open the tutorial                                   |
+| `/tm invites`  | Answer town, nation, and alliance invitations       |
 | `/tm reload`   | Reload the configuration and translations (OP only) |
 | `/tm admin`    | Open the admin menu (OP only)                       |
 
@@ -95,6 +98,8 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `language`                 | `auto`  | `auto` follows each player's client language; `en_US` or `zh_CN` forces one |
 | `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking                 |
 | `tutorial-join-hint`       | `true`  | Suggest the tutorial to players without a town when they join               |
+| `live-menu-refresh`        | `true`  | Update open menus when Towny changes what they show                        |
+| `towny-alerts`             | `true`  | Announce invites, bankruptcy, and ruin in chat, linked to the right menu    |
 
 ## Translations
 

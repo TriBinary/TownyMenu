@@ -17,9 +17,10 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
         get() = Main.instance.pluginConfig
 
     override fun build() {
+        val row = layout(10, 11, 12, 13, 14, 15, 16)
         val language = config.language
-        button(
-            10, Icons.icon(
+        row.add(
+            Icons.icon(
                 Material.BOOK, tr("admin-plugin.language"), tr("admin-plugin.language-description"),
                 tr(
                     "common.current",
@@ -39,8 +40,8 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
                 apply()
             }.open()
         }
-        button(
-            12, Icons.icon(
+        row.add(
+            Icons.icon(
                 Material.NAME_TAG, tr("admin-plugin.prefix"), tr("admin-plugin.prefix-description"),
                 tr("common.current", "value" to config.messagePrefix), tr("common.click-change")
             )
@@ -55,8 +56,8 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
                 apply()
             }
         }
-        button(
-            14, Icons.toggle(
+        row.add(
+            Icons.toggle(
                 player, Material.SHIELD, tr("admin-plugin.shortcut"), config.sneakSwapHandShortcut,
                 tr("admin-plugin.shortcut-description")
             )
@@ -64,13 +65,31 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
             config.sneakSwapHandShortcut = !config.sneakSwapHandShortcut
             apply()
         }
-        button(
-            16, Icons.toggle(
+        row.add(
+            Icons.toggle(
                 player, Material.KNOWLEDGE_BOOK, tr("admin-plugin.join-hint"), config.tutorialJoinHint,
                 tr("admin-plugin.join-hint-description")
             )
         ) {
             config.tutorialJoinHint = !config.tutorialJoinHint
+            apply()
+        }
+        row.add(
+            Icons.toggle(
+                player, Material.CLOCK, tr("admin-plugin.live-refresh"), config.liveMenuRefresh,
+                tr("admin-plugin.live-refresh-description")
+            )
+        ) {
+            config.liveMenuRefresh = !config.liveMenuRefresh
+            apply()
+        }
+        row.add(
+            Icons.toggle(
+                player, Material.PAPER, tr("admin-plugin.alerts"), config.townyAlerts,
+                tr("admin-plugin.alerts-description")
+            )
+        ) {
+            config.townyAlerts = !config.townyAlerts
             apply()
         }
         backButton(31)

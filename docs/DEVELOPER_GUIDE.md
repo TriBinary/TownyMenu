@@ -387,6 +387,16 @@ When a change adds a Towny feature to a menu, add or update its lesson in `Tutor
 (`tutorial.<chapter>.<topic>` and `tutorial.<chapter>.<topic>-body`). New feature menus should place a
 `tutorialButton` in a free bottom-row slot (the bottom-right corner, or slot 52 in a `PagedMenu`).
 
+### Reacting to Towny (`listeners`)
+
+Menus are views, so when Towny changes their data from outside — another player, a command, or the new day —
+`MenuRefreshListener` calls `OpenMenus.refreshSoon()`, which re-renders every open menu once on the next tick
+(skipping players whose own command is still settling). Add the Towny event to that listener when a change should show
+up live, and keep the handler a one-liner. Players can turn this off with `live-menu-refresh`.
+
+`TownyAlertListener` sends the chat alerts for invitations, bankruptcy, and ruin, each linking to the menu that
+answers it (`towny-alerts`).
+
 ### Admin Menus (`guis/admin`)
 
 `AdminMenu` is the server admin hub, opened by `/townymenu admin` or a main-menu button. Both entry points require

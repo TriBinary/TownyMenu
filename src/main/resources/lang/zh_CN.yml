@@ -23,6 +23,9 @@ command:
   tutorial:
     description: "了解城镇、地块和国家的玩法"
     players-only: "<red>只有玩家可以打开教程。"
+  invites:
+    description: "处理城镇、国家与结盟邀请"
+    players-only: "<red>只有玩家可以打开邀请菜单。"
   category:
     general: "通用"
     info: "信息"
@@ -142,6 +145,14 @@ main:
   prices-description: "本服务器各项费用，以及下一个 Towny 日何时开始。"
   leaderboards: "<yellow>排行榜"
   leaderboards-description: "规模最大、最富有的城镇、国家和玩家。"
+
+alert:
+  town-invite: "<yellow>{town} 邀请你加入。<click:run_command:'/townymenu invites'><hover:show_text:'<gray>/townymenu invites'><green><u>打开邀请菜单</u></green></hover></click>"
+  nation-invite: "<yellow>{nation} 邀请你的城镇加入。<click:run_command:'/townymenu invites'><hover:show_text:'<gray>/townymenu invites'><green><u>打开邀请菜单</u></green></hover></click>"
+  ally-request: "<yellow>{nation} 请求与你的国家结盟。<click:run_command:'/townymenu invites'><hover:show_text:'<gray>/townymenu invites'><green><u>打开邀请菜单</u></green></hover></click>"
+  bankrupt: "<red>{town} 已破产并开始负债。请存入资金还清债务。<click:run_command:'/townymenu'><hover:show_text:'<gray>/townymenu'><green><u>打开 TownyMenu</u></green></hover></click>"
+  ruined: "<red>{town} 已沦为废墟。"
+  ruined-reclaim: "<red>{town} 已沦为废墟。你可以在 {hours} 小时内花费 {cost} 收复它。<click:run_command:'/townymenu'><hover:show_text:'<gray>/townymenu'><green><u>打开 TownyMenu</u></green></hover></click>"
 
 map:
   title: "地图"
@@ -1141,6 +1152,10 @@ admin-plugin:
   shortcut-description: "潜行时按副手切换键（默认 F）打开主菜单。"
   join-hint: "<light_purple>加入时提示教程"
   join-hint-description: "没有城镇的玩家加入时向其推荐教程，直到对方读完所有课程。"
+  live-refresh: "<aqua>菜单实时刷新"
+  live-refresh-description: "当 Towny 改变菜单显示的内容时（例如居民加入或新的一天）刷新已打开的菜单。"
+  alerts: "<yellow>聊天提醒"
+  alerts-description: "在聊天中提醒邀请、破产和废墟，并附上可打开对应菜单的链接。"
 
 admin-town:
   title: "管理: {town}"
@@ -1305,7 +1320,7 @@ tutorial:
     map: "地图"
     map-body: "地图显示你周围的区块，并按归属着色：你的城镇、你的地块、你的国家、盟友、敌人以及其他城镇。发光的格子正在出售。点击已占领的格子可查看所属城镇，右键出售中的格子即可购买。"
     invites: "邀请"
-    invites-body: "城镇邀请玩家，国家邀请城镇，国家之间还会发送结盟请求。所有待处理的邀请都在邀请菜单中，你可以在那里接受或拒绝。"
+    invites-body: "城镇邀请玩家，国家邀请城镇，国家之间还会发送结盟请求。所有待处理的邀请都在邀请菜单中，你可以在那里接受或拒绝。收到邀请时 TownyMenu 还会在聊天中提醒你，点击消息即可打开该菜单。"
     leaderboards: "排行榜"
     leaderboards-body: "排行榜菜单按居民数、领地和银行余额为城镇与国家排名，也按拥有的地块数为玩家排名。点击任意条目即可打开。"
 
@@ -1453,7 +1468,7 @@ tutorial:
     nation-tax: "国家税"
     nation-tax-body: "国家每天从每个成员城镇的银行收取税款。无法缴税的城镇可能会被移出国家。"
     bankruptcy: "债务与破产"
-    bankruptcy-body: "启用破产时，无法支付维护费的城镇会负债，而不会直接失去。破产的城镇在还清债务前无法占领土地或招募居民。未启用时，城镇会沦为废墟或被删除。"
+    bankruptcy-body: "启用破产时，无法支付维护费的城镇会负债，而不会直接失去。破产的城镇在还清债务前无法占领土地或招募居民。未启用时，城镇会沦为废墟或被删除。无论哪种情况，TownyMenu 都会在聊天中提醒镇长。"
     prices: "价格与下一天"
     prices-body: "主菜单中的“价格与新的一天”会倒计时下一个 Towny 日，并列出本服务器在建立、占领、维护、地块和税款方面的收费。"
 

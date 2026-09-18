@@ -23,6 +23,9 @@ command:
   tutorial:
     description: "Learn how towns, plots, and nations work"
     players-only: "<red>Only players can open the tutorial."
+  invites:
+    description: "Answer town, nation, and alliance invitations"
+    players-only: "<red>Only players can open the invites menu."
   category:
     general: "General"
     info: "Info"
@@ -142,6 +145,14 @@ main:
   prices-description: "What everything costs on this server, and when the next Towny day starts."
   leaderboards: "<yellow>Leaderboards"
   leaderboards-description: "The biggest and richest towns, nations, and players."
+
+alert:
+  town-invite: "<yellow>{town} has invited you to join. <click:run_command:'/townymenu invites'><hover:show_text:'<gray>/townymenu invites'><green><u>Open your invites</u></green></hover></click>"
+  nation-invite: "<yellow>{nation} has invited your town to join. <click:run_command:'/townymenu invites'><hover:show_text:'<gray>/townymenu invites'><green><u>Open your invites</u></green></hover></click>"
+  ally-request: "<yellow>{nation} has asked your nation for an alliance. <click:run_command:'/townymenu invites'><hover:show_text:'<gray>/townymenu invites'><green><u>Open your invites</u></green></hover></click>"
+  bankrupt: "<red>{town} has gone bankrupt and is now in debt. Deposit money to pay it off. <click:run_command:'/townymenu'><hover:show_text:'<gray>/townymenu'><green><u>Open TownyMenu</u></green></hover></click>"
+  ruined: "<red>{town} has fallen into ruins."
+  ruined-reclaim: "<red>{town} has fallen into ruins. You can reclaim it for {cost} within {hours} hours. <click:run_command:'/townymenu'><hover:show_text:'<gray>/townymenu'><green><u>Open TownyMenu</u></green></hover></click>"
 
 map:
   title: "Map"
@@ -1141,6 +1152,10 @@ admin-plugin:
   shortcut-description: "Open the main menu by pressing swap-hand (F) while sneaking."
   join-hint: "<light_purple>Tutorial Hint on Join"
   join-hint-description: "Suggest the tutorial to players without a town when they join, until they have read every lesson."
+  live-refresh: "<aqua>Live Menu Refresh"
+  live-refresh-description: "Update open menus when Towny changes what they show, such as a resident joining or the new day."
+  alerts: "<yellow>Chat Alerts"
+  alerts-description: "Announce invitations, bankruptcy, and ruin in chat, with a link to the menu that answers them."
 
 admin-town:
   title: "Admin: {town}"
@@ -1305,7 +1320,7 @@ tutorial:
     map: "The Map"
     map-body: "The map shows the chunks around you, coloured by who owns them: your town, your plots, your nation, allies, enemies, and other towns. Glowing tiles are for sale. Click a claimed tile to view its town, or right-click a tile for sale to buy it."
     invites: "Invites"
-    invites-body: "Towns invite players, nations invite towns, and nations send each other alliance requests. Every pending invitation waits in the Invites menu, where you can accept or decline it."
+    invites-body: "Towns invite players, nations invite towns, and nations send each other alliance requests. Every pending invitation waits in the Invites menu, where you can accept or decline it. TownyMenu also tells you in chat when one arrives, and that message opens the menu."
     leaderboards: "Leaderboards"
     leaderboards-body: "The Leaderboards menu ranks towns and nations by residents, land, and bank balance, and players by the plots they own. Click any entry to open it."
 
@@ -1453,7 +1468,7 @@ tutorial:
     nation-tax: "Nation Taxes"
     nation-tax-body: "Nations charge each member town a daily tax from its bank. A town that can't pay may be removed from the nation."
     bankruptcy: "Debt and Bankruptcy"
-    bankruptcy-body: "When bankruptcy is on, a town that can't pay its upkeep goes into debt instead of being lost. A bankrupt town can't claim land or recruit until the debt is paid. Otherwise the town falls into ruin or is deleted."
+    bankruptcy-body: "When bankruptcy is on, a town that can't pay its upkeep goes into debt instead of being lost. A bankrupt town can't claim land or recruit until the debt is paid. Otherwise the town falls into ruin or is deleted. Either way TownyMenu warns the mayor in chat."
     prices: "Prices and the Next Day"
     prices-body: "Prices & New Day, on the main menu, counts down to the next Towny day and lists what this server charges for founding, claiming, upkeep, plots, and taxes."
 
