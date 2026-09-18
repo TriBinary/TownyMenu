@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+## Version 1.0.2
+
+### New Features
+
+#### Bank Menu
+
++ Deposit and Withdraw now open a menu of amounts instead of going straight to a typing dialog: the preset amounts the
+  server offers, an Everything button, and Custom Amount for typing your own figure.
++ Each amount shows whether it will actually work. An amount you cannot afford, or one outside the minimum and maximum
+  Towny allows, says so instead of offering a click, so a button that would only earn an error is never offered.
++ The amount menu shows the bank balance, your own balance, and Towny's deposit or withdrawal limits when the server
+  sets any.
+
+### Improvements
+
+#### Bank Menu
+
++ The Deposit, Withdraw, and Bank History buttons now have a blank row above and below them instead of being wedged
+  between the bank icon and the bottom row, so the bank details, the actions, and the navigation read as three
+  separate blocks. The menu is one row taller for it, and the amount menu is laid out the same way.
+
+#### Admin Menus
+
++ TownyMenu Settings can edit the bank menu's preset amounts.
+
+### Technical Details
+
+#### Misc
+
++ New `bank-amounts` setting in `config.yml` lists the preset amounts the deposit and withdraw menus offer. Amounts
+  that are zero or negative are dropped, duplicates removed, and the rest sorted; up to nine fit in the menu row. An
+  empty list leaves players with only Everything and Custom Amount.
+
 ## Version 1.0.1
 
 ### Improvements

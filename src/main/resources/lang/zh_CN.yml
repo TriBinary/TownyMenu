@@ -207,6 +207,23 @@ bank:
   prompt-balance: "<gray>银行余额: {balance}"
   history: "<yellow>银行记录"
   history-description: "打开记录近期交易的书。"
+  click-choose: "<yellow>点击选择金额"
+  deposit-menu-title: "存款: {name}"
+  withdraw-menu-title: "取款: {name}"
+  your-balance: "<gray>你的余额: <white>{balance}"
+  minimum: "<gray>最低: <white>{amount}"
+  maximum: "<gray>最高: <white>{amount}"
+  amount: "<yellow>{amount}"
+  amount-line: "<gray>金额: <white>{amount}"
+  all: "<gold>全部"
+  custom: "<aqua>自定义金额"
+  custom-description: "自行输入任意金额。"
+  click-deposit: "<yellow>点击存入"
+  click-withdraw: "<yellow>点击取出"
+  not-enough: "<red>金钱不足"
+  nothing-to-move: "<red>没有可转移的金额"
+  below-minimum: "<red>低于最低限额 {amount}"
+  above-maximum: "<red>高于最高限额 {amount}"
 
 perm:
   gone: "<red>这片土地已不存在"
@@ -1171,6 +1188,9 @@ admin-plugin:
   live-refresh-description: "当 Towny 改变菜单显示的内容时（例如居民加入或新的一天）刷新已打开的菜单。"
   alerts: "<yellow>聊天提醒"
   alerts-description: "在聊天中提醒邀请、破产和废墟，并附上可打开对应菜单的链接。"
+  bank-amounts: "<gold>银行预设金额"
+  bank-amounts-description: "存款和取款菜单提供的预设金额。玩家始终还能使用“全部”按钮和自定义金额。"
+  bank-amounts-label: "金额，用逗号分隔"
 
 admin-town:
   title: "管理: {town}"

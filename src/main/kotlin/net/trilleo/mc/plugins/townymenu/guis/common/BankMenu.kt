@@ -17,7 +17,7 @@ class BankMenu(
     player: Player,
     private val government: Government,
     back: Menu,
-) : Menu(player, player.tr("bank.title", "name" to TownyUtil.name(government.name)), 4, back) {
+) : Menu(player, player.tr("bank.title", "name" to TownyUtil.name(government.name)), 5, back) {
 
     private val isNation = government is Nation
     private val command = if (isNation) "towny:nation" else "towny:town"
@@ -32,43 +32,38 @@ class BankMenu(
         )
 
         guarded(
-            11,
+            20,
             if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_DEPOSIT else PermissionNodes.TOWNY_COMMAND_TOWN_DEPOSIT,
-            Icons.icon(Material.EMERALD, tr("bank.deposit"), tr("bank.deposit-description"))
+            Icons.icon(
+                Material.EMERALD, tr("bank.deposit"), tr("bank.deposit-description"),
+                actions = listOf(tr("bank.click-choose"))
+            )
         ) {
-            prompt(
-                tr("bank.deposit-title"),
-                tr("common.amount"),
-                tr("bank.prompt-balance", "balance" to TownyUtil.balance(government))
-            ) { amount ->
-                run("$command deposit ${TownyUtil.argument(amount)}", ::balance)
-            }
+            BankAmountMenu(player, government, withdraw = false, bank = this).open()
         }
         guarded(
-            13,
+            22,
             if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_WITHDRAW else PermissionNodes.TOWNY_COMMAND_TOWN_WITHDRAW,
-            Icons.icon(Material.REDSTONE, tr("bank.withdraw"), tr("bank.withdraw-description"))
+            Icons.icon(
+                Material.REDSTONE, tr("bank.withdraw"), tr("bank.withdraw-description"),
+                actions = listOf(tr("bank.click-choose"))
+            )
         ) {
-            prompt(
-                tr("bank.withdraw-title"),
-                tr("common.amount"),
-                tr("bank.prompt-balance", "balance" to TownyUtil.balance(government))
-            ) { amount ->
-                run("$command withdraw ${TownyUtil.argument(amount)}", ::balance)
-            }
+            BankAmountMenu(player, government, withdraw = true, bank = this).open()
         }
         guarded(
-            15,
+            24,
             if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_BANKHISTORY else PermissionNodes.TOWNY_COMMAND_TOWN_BANKHISTORY,
-            Icons.icon(Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"))
+            Icons.icon(
+                Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"),
+                actions = listOf(tr("common.click-view"))
+            )
         ) {
             runAndClose("$command bankhistory")
         }
-        tutorialButton(35, Tutorial.ECONOMY)
-        backButton(31)
+        tutorialButton(44, Tutorial.ECONOMY)
+        backButton(40)
     }
-
-    private fun balance(): Double = government.account.holdingBalance
 
     private fun taxLabel(): String {
         val town = government as Town

@@ -362,6 +362,7 @@ override fun entries(): List<MenuEntry> =
 | `ToggleMenu`     | Pages of `Toggle`s, 21 per page (material, name, description, node, command, value reader). A `null` node leaves the toggle unguarded, for modes Towny checks no node for. |
 | `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command. Pass `overrides` to add a Player Overrides button (used for plots).                                     |
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                                                                                                  |
+| `BankAmountMenu` | Picks how much to deposit or withdraw: the `bank-amounts` presets, everything, or a typed figure. Amounts Towny would refuse say why instead of offering a click.          |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                                                                                             |
 | `Pickers`        | Selection menus for online residents, towns, nations, and fixed options. `option` takes a `lines` lambda for per-option lore, such as what picking that option costs.       |
 
@@ -1156,11 +1157,15 @@ sneak-swap-hand-shortcut: true
 
 ### Properties
 
-| Property                | Key                        | Description                                    |
-|:------------------------|:---------------------------|:-----------------------------------------------|
-| `messagePrefix`         | `message-prefix`           | MiniMessage prefix used by `MessageUtil`       |
-| `language`              | `language`                 | `auto` or the language id given to `Lang.load` |
-| `sneakSwapHandShortcut` | `sneak-swap-hand-shortcut` | Whether sneak + swap-hand opens the main menu  |
+| Property                | Key                        | Description                                                        |
+|:------------------------|:---------------------------|:-------------------------------------------------------------------|
+| `messagePrefix`         | `message-prefix`           | MiniMessage prefix used by `MessageUtil`                           |
+| `language`              | `language`                 | `auto` or the language id given to `Lang.load`                     |
+| `sneakSwapHandShortcut` | `sneak-swap-hand-shortcut` | Whether sneak + swap-hand opens the main menu                      |
+| `tutorialJoinHint`      | `tutorial-join-hint`       | Whether players without a town are pointed to the tutorial on join |
+| `liveMenuRefresh`       | `live-menu-refresh`        | Whether open menus re-render when Towny changes what they show     |
+| `townyAlerts`           | `towny-alerts`             | Whether invitations, bankruptcy, and ruin are announced in chat    |
+| `bankAmounts`           | `bank-amounts`             | Preset amounts `BankAmountMenu` offers, cleaned and capped at nine |
 
 To add a setting, add the key to `config.yml` and a matching property to `PluginConfig`:
 
