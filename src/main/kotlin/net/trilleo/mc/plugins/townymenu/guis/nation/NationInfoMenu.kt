@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.`object`.Nation
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -37,12 +38,7 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("nation-info.visit-description"),
-                *listOfNotNull(
-                    if (TownyUtil.economy && nation.spawnCost > 0) tr(
-                        "common.cost",
-                        "cost" to TownyUtil.money(nation.spawnCost)
-                    ) else null
-                ).toTypedArray()
+                *listOfNotNull(costLine(Prices.nationSpawn(player, nation))).toTypedArray()
             )
         ) {
             runAndClose("towny:nation spawn ${nation.name}")

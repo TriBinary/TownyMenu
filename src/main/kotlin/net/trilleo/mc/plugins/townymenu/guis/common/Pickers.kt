@@ -72,13 +72,17 @@ object Pickers {
                 }
         }
 
-    /** Picks one of [options] (id to MiniMessage label), marking [current] as selected. */
+    /**
+     * Picks one of [options] (id to MiniMessage label), marking [current] as selected.
+     * [lines] adds lore to a single option, for per-option detail such as what picking it costs.
+     */
     fun option(
         back: Menu,
         title: String,
         options: List<Pair<String, String>>,
         current: String?,
         material: Material,
+        lines: (String) -> List<String> = { emptyList() },
         onPick: (String) -> Unit
     ): Menu =
         ListMenu(back.player, title, back) {
@@ -87,6 +91,7 @@ object Pickers {
                 val icon = {
                     itemStack(material) {
                         name(label)
+                        lore(lines(id))
                         lore(back.tr(if (selected) "picker.current" else "picker.select"))
                         glow(selected)
                     }

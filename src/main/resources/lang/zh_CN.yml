@@ -385,6 +385,7 @@ claims:
   buy-bonus-title: "购买额外领地"
   buy-bonus-description: "购买额外的领地名额。"
   price-each: "<gray>单价: <white>{price}"
+  refund-each: "<gray>每块返还: <white>{refund}"
   bonus-amount: "领地数量"
   auto-claim: "<green>自动占领"
   auto-claim-description: "自动占领你走进的每个区块。"
@@ -1576,7 +1577,7 @@ tutorial:
     bankruptcy: "债务与破产"
     bankruptcy-body: "启用破产时，无法支付维护费的城镇会负债，而不会直接失去。破产的城镇在还清债务前无法占领土地或招募居民。未启用时，城镇会沦为废墟或被删除。无论哪种情况，TownyMenu 都会在聊天中提醒镇长。"
     prices: "价格与下一天"
-    prices-body: "主菜单中的“价格与新的一天”会倒计时下一个 Towny 日，并列出本服务器在建立、占领、维护、地块和税款方面的收费。"
+    prices-body: "主菜单中的“价格与新的一天”会倒计时下一个 Towny 日，并列出本服务器在建立、占领、维护、地块和税款方面的收费。需要花钱的按钮也会显示各自的价格，因此你在点击前就能看到占领、传送或购买地块要花多少。"
 
   profile:
     title: "<green>个人资料"

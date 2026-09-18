@@ -16,10 +16,7 @@ import org.bukkit.entity.Player
 class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nation.title"), 4, back) {
 
     override fun build() {
-        val price = if (TownyUtil.economy) tr(
-            "common.cost",
-            "cost" to TownyUtil.money(TownySettings.getNewNationPrice())
-        ) else null
+        val price = costLine(TownySettings.getNewNationPrice())
         guarded(
             11, PermissionNodes.TOWNY_COMMAND_NATION_NEW,
             Icons.icon(

@@ -7,6 +7,7 @@ This guide covers the utility helpers provided in `net.trilleo.mc.plugins.townym
 | `itemStack`   | DSL builder for menu icons                                                    |
 | `Lang`        | Translations: per-player language files and the `tr()` helper                 |
 | `TownyUtil`   | Safe formatting of Towny data, money and dates, permission checks, input args |
+| `Prices`      | What Towny charges for a menu action: claims, outposts, spawn travel, merges  |
 | `TownyConfig` | Towny's `config.yml` as a browsable, editable tree of sections and settings   |
 | `DialogUtil`  | Native text-input and confirmation dialogs (Paper Dialog API)                 |
 | `MessageUtil` | Prefix-decorated message sender for players                                   |
@@ -102,6 +103,43 @@ putting them into a MiniMessage string — otherwise a town named `<click:run_co
 ```kotlin
 prompt(tr("bank.deposit-title"), tr("common.amount")) { amount ->
     run("towny:town deposit ${TownyUtil.argument(amount)}", { town.account.holdingBalance })
+}
+```
+
+---
+
+## Prices
+
+`Prices` answers "what will this button cost?" so an icon can say so before the player clicks. Every amount is read
+from Towny's config and from the town or nation involved — never a fixed default — so it matches what the command
+would actually take, and everything returns `0` without an economy.
+
+| Method                                | Description                                                                          |
+|:--------------------------------------|:--------------------------------------------------------------------------------------|
+| `claim(Town, count)`                  | What claiming `count` chunks costs the town, at its current rising claim price       |
+| `outpost()`                           | What claiming an outpost costs                                                       |
+| `unclaimRefund()`                     | What a town gets back per unclaimed chunk; negative when unclaiming costs instead     |
+| `plotType(String, count)`             | What setting `count` plots to a plot type costs (`reset` prices the default type)    |
+| `merge(remaining, succumbing)`        | What merging the second town into the first costs, before any debt it takes on       |
+| `townSpawn(Player, Town, outpost)`    | What travelling to a town's spawn or outpost costs this player                       |
+| `nationSpawn(Player, Nation)`         | What travelling to a nation's spawn costs this player                                |
+| `residentSpawn(Player)`               | What `/resident spawn` costs — Towny prices it as a trip home                        |
+
+Spawn travel is not a single config value: Towny prices it by the traveller's relationship to the destination (own
+town, nation member, ally, outsider) and caps it at the server's price for that relationship, so a visitor and a
+resident see different numbers. `Prices` mirrors that, including the free-spawn admin permissions.
+
+Turn an amount into lore with `Menu.costLine` / `Menu.priceLine` rather than formatting it by hand:
+
+```kotlin
+grid.add(
+    PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
+    Icons.icon(
+        Material.GRASS_BLOCK, tr("claims.claim"), tr("claims.claim-description"),
+        *listOfNotNull(costLine(Prices.claim(town))).toTypedArray()
+    )
+) {
+    run("towny:town claim", claims, delayTicks = CLAIM_DELAY)
 }
 ```
 

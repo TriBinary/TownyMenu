@@ -385,6 +385,7 @@ claims:
   buy-bonus-title: "Buy Bonus Claims"
   buy-bonus-description: "Buy extra claim slots."
   price-each: "<gray>Price each: <white>{price}"
+  refund-each: "<gray>Refund each: <white>{refund}"
   bonus-amount: "Number of claims"
   auto-claim: "<green>Auto Claim"
   auto-claim-description: "Claim every chunk you walk into."
@@ -1576,7 +1577,7 @@ tutorial:
     bankruptcy: "Debt and Bankruptcy"
     bankruptcy-body: "When bankruptcy is on, a town that can't pay its upkeep goes into debt instead of being lost. A bankrupt town can't claim land or recruit until the debt is paid. Otherwise the town falls into ruin or is deleted. Either way TownyMenu warns the mayor in chat."
     prices: "Prices and the Next Day"
-    prices-body: "Prices & New Day, on the main menu, counts down to the next Towny day and lists what this server charges for founding, claiming, upkeep, plots, and taxes."
+    prices-body: "Prices & New Day, on the main menu, counts down to the next Towny day and lists what this server charges for founding, claiming, upkeep, plots, and taxes. Buttons that cost money also show their own price, so you can see what a claim, a teleport, or a plot takes before you click it."
 
   profile:
     title: "<green>Your Profile"

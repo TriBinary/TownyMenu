@@ -16,6 +16,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -67,14 +68,18 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 Icons.icon(
                     Material.GRASS_BLOCK,
                     tr("plot.claim", "town" to TownyUtil.name(town.name)),
-                    tr("plot.claim-description")
+                    tr("plot.claim-description"),
+                    *listOfNotNull(costLine(Prices.claim(town))).toTypedArray()
                 )
             ) {
                 run("towny:town claim", { town.numTownBlocks }, delayTicks = 20)
             }
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_OUTPOST,
-                Icons.icon(Material.COMPASS, tr("plot.claim-outpost"), tr("plot.claim-outpost-description"))
+                Icons.icon(
+                    Material.COMPASS, tr("plot.claim-outpost"), tr("plot.claim-outpost-description"),
+                    *outpostCost().toTypedArray()
+                )
             ) {
                 run("towny:town claim outpost", { town.numTownBlocks }, delayTicks = 20)
             }
@@ -145,7 +150,7 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_CLAIM, Icons.icon(
                     Material.EMERALD, tr("plot.buy"), tr("plot.buy-description"),
-                    tr("common.price", "price" to TownyUtil.money(price)),
+                    *listOfNotNull(priceLine(price)).toTypedArray()
                 )
             ) { run("towny:plot claim", ownerProbe) }
         }
@@ -214,12 +219,14 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                         .filter { it != "default" && (group == null || it != "jail") }
                         .sorted()
                         .map { it to "<white>${TownyUtil.plotType(player, it)}" }
+            val plots = group?.townBlocks?.size ?: 1
             Pickers.option(
                 this,
                 tr("plot.type-title"),
                 types,
                 plot.type.name.takeIf { it != "default" } ?: "reset",
-                Material.OAK_SIGN) { type ->
+                Material.OAK_SIGN,
+                { type -> listOfNotNull(costLine(Prices.plotType(type, plots))) }) { type ->
                 run("$scope set $type", { plot.type.name }, returnTo = this)
             }.open()
         }
@@ -332,10 +339,7 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         }
     }
 
-    private fun outpostCost(): List<String> =
-        if (TownyUtil.economy && TownySettings.getOutpostCost() > 0) {
-            listOf(tr("common.cost", "cost" to TownyUtil.money(TownySettings.getOutpostCost())))
-        } else emptyList()
+    private fun outpostCost(): List<String> = listOfNotNull(costLine(Prices.outpost()))
 
     /** The join-day limits Towny places on buying [plot], or on every plot of its [group]. */
     private fun joinDayLines(plot: TownBlock, group: PlotGroup?): List<String> {

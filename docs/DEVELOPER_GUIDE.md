@@ -281,6 +281,9 @@ permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/
   can't intercept the command.
 - **Grey out what the player can't do.** Use `guarded(slot, PermissionNodes.X, item) { … }` (or `Layout.add(node, …)`)
   with the same node Towny's command checks.
+- **Say what a button costs.** A button that spends money shows its price in its lore: take the amount from
+  [`Prices`](UTILITY_GUIDE.md#prices) and turn it into a line with `costLine` / `priceLine`, so the figure is the
+  server's own and not a guess.
 - **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom row;
   leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such as the
   chunk map and the 4×4 permission grid, skip it.
@@ -305,6 +308,8 @@ open inventory's holder — there is no registry and nothing to clean up when a 
 | `layout(vararg slots)`                   | Fills slots in order, for optional buttons; extra buttons are logged, skipped.   |
 | `backButton(slot)`                       | Back arrow to `back`, or a close button when `back` is `null`.                   |
 | `tutorialButton(slot, chapter)`          | Help button opening the tutorial `Chapter` that explains this menu.              |
+| `costLine(amount)`                       | A `Cost: …` lore line, or `null` without an economy or when the action is free.  |
+| `priceLine(amount)`                      | A `Price: …` lore line for something on sale; a price of zero is still shown.    |
 | `run(command, probe?, returnTo?, delay)` | Runs a Towny command as the player (see below).                                  |
 | `runAndClose(command)`                   | Closes the menu, then runs the command (teleports, books, chat output).          |
 | `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel or empty input reopens the menu.               |
@@ -355,7 +360,7 @@ override fun entries(): List<MenuEntry> =
 | `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command. Pass `overrides` to add a Player Overrides button (used for plots).                                     |
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                                                                                                  |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                                                                                             |
-| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                                                                                                   |
+| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options. `option` takes a `lines` lambda for per-option lore, such as what picking that option costs.       |
 
 ### Tutorial (`guis/tutorial`)
 
@@ -1066,7 +1071,8 @@ player.sendPlayerListHeaderAndFooter(Component.empty(), Component.empty())
 ## Utilities
 
 The `utils` package (`net.trilleo.mc.plugins.townymenu.utils`) contains the `itemStack` DSL, `LoreUtil`, `MessageUtil`,
-`TownyUtil`, `TownyConfig`, and `DialogUtil`. See the [Utility Guide](UTILITY_GUIDE.md) for full documentation.
+`TownyUtil`, `Prices`, `TownyConfig`, and `DialogUtil`. See the [Utility Guide](UTILITY_GUIDE.md) for full
+documentation.
 
 ---
 

@@ -6,6 +6,7 @@ import net.trilleo.mc.plugins.townymenu.guis.MainMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NationInfoMenu
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -32,12 +33,7 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("town-info.visit-description"),
-                *listOfNotNull(
-                    if (TownyUtil.economy && town.spawnCost > 0) tr(
-                        "common.cost",
-                        "cost" to TownyUtil.money(town.spawnCost)
-                    ) else null
-                ).toTypedArray()
+                *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray()
             )
         ) {
             runAndClose("towny:town spawn ${town.name}")
@@ -90,7 +86,7 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_BUYTOWN, Icons.icon(
                     Material.GOLD_BLOCK, tr("town-info.buy"), tr("town-info.buy-description"),
-                    tr("common.price", "price" to TownyUtil.money(town.forSalePrice)),
+                    *listOfNotNull(priceLine(town.forSalePrice)).toTypedArray()
                 )
             ) { run("towny:town buytown ${town.name}", { town.mayor }, returnTo = MainMenu(player)) }
         }
@@ -104,7 +100,8 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                         "town-info.merge-description",
                         "town" to TownyUtil.name(town.name),
                         "own" to TownyUtil.name(viewerTown.name)
-                    )
+                    ),
+                    *listOfNotNull(costLine(Prices.merge(viewerTown, town))).toTypedArray()
                 )
             ) {
                 run("towny:town merge ${town.name}")

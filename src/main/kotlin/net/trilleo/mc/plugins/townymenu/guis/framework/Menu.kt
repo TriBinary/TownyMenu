@@ -128,6 +128,21 @@ abstract class Menu(
         }
     }
 
+    /**
+     * A `Cost: …` lore line for a button that charges [amount], or `null` when the server has no
+     * economy or the action is free. Splat it into an icon with
+     * `*listOfNotNull(costLine(x)).toTypedArray()`; see [net.trilleo.mc.plugins.townymenu.utils.Prices].
+     */
+    fun costLine(amount: Double): String? =
+        if (TownyUtil.economy && amount > 0) tr("common.cost", "cost" to TownyUtil.money(amount)) else null
+
+    /**
+     * A `Price: …` lore line for something on sale at [amount], or `null` without an economy.
+     * Unlike [costLine] a price of zero is still shown, because a free plot is an offer, not a missing fee.
+     */
+    fun priceLine(amount: Double): String? =
+        if (TownyUtil.economy) tr("common.price", "price" to TownyUtil.money(amount)) else null
+
     /** Places a help button opening the tutorial [chapter] that explains this menu. */
     protected fun tutorialButton(slot: Int, chapter: Chapter) {
         button(

@@ -77,7 +77,7 @@ src/main/kotlin/net/trilleo/mc/plugins/townymenu/
 │   └── MainMenu.kt, MapMenu.kt, InvitesMenu.kt
 ├── listeners/               # Event listeners (auto-registered)
 ├── registration/            # Auto-registration engine (do not modify lightly)
-└── utils/                   # itemStack DSL, Lang, TownyUtil, TownyConfig, DialogUtil, MessageUtil, LoreUtil
+└── utils/                   # itemStack DSL, Lang, TownyUtil, Prices, TownyConfig, DialogUtil, MessageUtil, LoreUtil
 src/main/resources/
 ├── config.yml  plugin.yml
 └── lang/                    # en_US.yml, zh_CN.yml — every player-facing string
@@ -115,6 +115,8 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
 - **Keep the tutorial in sync** — a new or changed Towny feature updates its lesson in `guis/tutorial/Tutorial.kt`, and
   a new feature menu gets a `tutorialButton` for its chapter.
 - **Keep `PagedMenu` entries lazy** — pass the icon as a lambda to `MenuEntry` so off-page icons are never built.
+- **Show what a button costs** — a button that spends money takes its amount from `Prices` and turns it into lore with
+  `costLine(...)` / `priceLine(...)`, so the figure is this server's and not a guess.
 
 ## Translations
 

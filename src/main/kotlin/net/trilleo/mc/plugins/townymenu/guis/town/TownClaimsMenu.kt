@@ -8,6 +8,7 @@ import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -40,13 +41,19 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
 
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
-            Icons.icon(Material.GRASS_BLOCK, tr("claims.claim"), tr("claims.claim-description"))
+            Icons.icon(
+                Material.GRASS_BLOCK, tr("claims.claim"), tr("claims.claim-description"),
+                *listOfNotNull(costLine(Prices.claim(town))).toTypedArray()
+            )
         ) {
             run("towny:town claim", claims, delayTicks = CLAIM_DELAY)
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN_MULTIPLE,
-            Icons.icon(Material.MOSS_BLOCK, tr("claims.claim-area"), tr("claims.claim-area-description"))
+            Icons.icon(
+                Material.MOSS_BLOCK, tr("claims.claim-area"), tr("claims.claim-area-description"),
+                *perClaim(town)
+            )
         ) {
             prompt(
                 tr("claims.claim-area-title"),
@@ -60,27 +67,30 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_FILL,
-            Icons.icon(Material.BONE_MEAL, tr("claims.fill"), tr("claims.fill-description"))
+            Icons.icon(Material.BONE_MEAL, tr("claims.fill"), tr("claims.fill-description"), *perClaim(town))
         ) {
             run("towny:town claim fill", claims, delayTicks = CLAIM_DELAY)
         }
         if (TownySettings.isAllowingOutposts()) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_OUTPOST,
-                Icons.icon(Material.COMPASS, tr("claims.outpost"), tr("claims.outpost-description"))
+                Icons.icon(
+                    Material.COMPASS, tr("claims.outpost"), tr("claims.outpost-description"),
+                    *listOfNotNull(costLine(Prices.outpost())).toTypedArray()
+                )
             ) {
                 run("towny:town claim outpost", claims, delayTicks = CLAIM_DELAY)
             }
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
-            Icons.icon(Material.COARSE_DIRT, tr("claims.unclaim"), tr("claims.unclaim-description"))
+            Icons.icon(Material.COARSE_DIRT, tr("claims.unclaim"), tr("claims.unclaim-description"), *perUnclaim())
         ) {
             run("towny:town unclaim", claims, delayTicks = CLAIM_DELAY)
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
-            Icons.icon(Material.DIRT, tr("claims.unclaim-area"), tr("claims.unclaim-area-description"))
+            Icons.icon(Material.DIRT, tr("claims.unclaim-area"), tr("claims.unclaim-area-description"), *perUnclaim())
         ) {
             prompt(tr("claims.unclaim-area-title"), tr("claims.radius"), initial = "1", maxLength = 3) { radius ->
                 run("towny:town unclaim rect ${TownyUtil.argument(radius)}", claims, delayTicks = CLAIM_DELAY)
@@ -88,7 +98,9 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM_ALL,
-            Icons.icon(Material.LAVA_BUCKET, tr("claims.unclaim-all"), tr("claims.unclaim-all-description"))
+            Icons.icon(
+                Material.LAVA_BUCKET, tr("claims.unclaim-all"), tr("claims.unclaim-all-description"), *perUnclaim()
+            )
         ) {
             run("towny:town unclaim all", claims, delayTicks = CLAIM_DELAY)
         }
@@ -121,7 +133,10 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         if (TownySettings.isOverClaimingAllowingStolenLand()) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_TAKEOVERCLAIM,
-                Icons.icon(Material.IRON_SWORD, tr("claims.takeover"), tr("claims.takeover-description"))
+                Icons.icon(
+                    Material.IRON_SWORD, tr("claims.takeover"), tr("claims.takeover-description"),
+                    *listOfNotNull(costLine(TownySettings.getTakeoverClaimPrice())).toTypedArray()
+                )
             ) {
                 run("towny:town takeoverclaim", claims, delayTicks = CLAIM_DELAY)
             }
@@ -145,6 +160,22 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
 
         tutorialButton(53, Tutorial.CLAIMS)
         backButton(49)
+    }
+
+    /** What each chunk of a multi-chunk claim costs [town], for buttons whose size the player picks. */
+    private fun perClaim(town: Town): Array<String> {
+        val price = Prices.claim(town)
+        if (!TownyUtil.economy || price <= 0) return emptyArray()
+        return arrayOf(tr("claims.price-each", "price" to TownyUtil.money(price)))
+    }
+
+    /** What the town gets back per unclaimed chunk, or pays when the server charges for unclaiming. */
+    private fun perUnclaim(): Array<String> {
+        val refund = Prices.unclaimRefund()
+        if (!TownyUtil.economy || refund == 0.0) return emptyArray()
+        val line = if (refund > 0) tr("claims.refund-each", "refund" to TownyUtil.money(refund))
+        else tr("claims.price-each", "price" to TownyUtil.money(-refund))
+        return arrayOf(line)
     }
 
     private companion object {

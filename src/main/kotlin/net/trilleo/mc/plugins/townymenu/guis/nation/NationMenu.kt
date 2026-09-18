@@ -13,6 +13,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.resident.ResidentProfileMenu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -89,7 +90,12 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
         grid.add(Icons.icon(Material.WRITABLE_BOOK, tr("nation.details"), tr("nation.details-description"))) {
             NationSettingsMenu(player, this).open()
         }
-        grid.add(Icons.icon(Material.ENDER_PEARL, tr("nation.spawn"), tr("nation.spawn-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.ENDER_PEARL, tr("nation.spawn"), tr("nation.spawn-description"),
+                *listOfNotNull(costLine(Prices.nationSpawn(player, nation))).toTypedArray()
+            )
+        ) {
             runAndClose("towny:nation spawn")
         }
         grid.add(

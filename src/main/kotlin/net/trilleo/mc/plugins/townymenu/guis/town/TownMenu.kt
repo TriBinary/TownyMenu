@@ -15,6 +15,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NationMenu
 import net.trilleo.mc.plugins.townymenu.guis.nation.NoNationMenu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -153,7 +154,12 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                 TownJailMenu(player, town, this).open()
             }
         }
-        grid.add(Icons.icon(Material.ENDER_PEARL, tr("town.spawn"), tr("town.spawn-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.ENDER_PEARL, tr("town.spawn"), tr("town.spawn-description"),
+                *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray()
+            )
+        ) {
             runAndClose("towny:town spawn")
         }
         if (town.hasOutpostSpawn()) {
@@ -161,7 +167,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                 Icons.icon(
                     Material.COMPASS,
                     tr("town.outpost-teleport"),
-                    tr("town.outpost-teleport-description")
+                    tr("town.outpost-teleport-description"),
+                    *listOfNotNull(costLine(Prices.townSpawn(player, town, outpost = true))).toTypedArray()
                 )
             ) {
                 OutpostsMenu(player, town, this).open()
@@ -201,11 +208,10 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
     }
 
     /** The cost and waiting time Towny applies before a ruined town can be reclaimed. */
-    private fun reclaimLines(): List<String> = buildList {
-        if (TownyUtil.economy) add(tr("common.cost", "cost" to TownyUtil.money(TownySettings.getEcoPriceReclaimTown())))
-        TownySettings.getTownRuinsMinDurationHours().takeIf { it > 0 }
-            ?.let { add(tr("town.reclaim-wait", "hours" to it)) }
-    }
+    private fun reclaimLines(): List<String> = listOfNotNull(
+        costLine(TownySettings.getEcoPriceReclaimTown()),
+        TownySettings.getTownRuinsMinDurationHours().takeIf { it > 0 }?.let { tr("town.reclaim-wait", "hours" to it) },
+    )
 
     fun permissions(): Menu =
         PermissionMenu(
