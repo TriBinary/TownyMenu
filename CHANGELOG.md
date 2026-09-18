@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.0.2
+
 ### New Features
 
 #### Bank Menu
