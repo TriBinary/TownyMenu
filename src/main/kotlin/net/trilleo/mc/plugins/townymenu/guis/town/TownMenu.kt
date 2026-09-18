@@ -60,7 +60,16 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                     "explosions" to TownyUtil.onOff(player, town.isExplosion)
                 )
             )
-        }.toTypedArray()))
+            val warnings = TownStatusMenu.warnings(this@TownMenu, town)
+            if (warnings.isNotEmpty()) {
+                add("")
+                warnings.forEach { add(it.line) }
+            }
+            add("")
+            add(tr("town.click-status"))
+        }.toTypedArray())) {
+            TownStatusMenu(player, town, this).open()
+        }
 
         val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
 

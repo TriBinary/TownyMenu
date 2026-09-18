@@ -42,7 +42,11 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                     )
                 )
             }
-        }.toTypedArray()))
+            add("")
+            add(tr("nation.click-status"))
+        }.toTypedArray())) {
+            NationStatusMenu(player, nation, this).open()
+        }
 
         val grid = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
 

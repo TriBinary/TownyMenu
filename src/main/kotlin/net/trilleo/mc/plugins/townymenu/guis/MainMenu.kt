@@ -67,6 +67,14 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
             PlotMenu(player, this).open()
         }
 
+        button(
+            28, Icons.icon(
+                Material.CLOCK, tr("main.prices"), tr("main.prices-description"),
+                tr("town-status.new-day", "time" to TownyUtil.duration(player, TownyUtil.secondsUntilNewDay()))
+            )
+        ) {
+            PricesMenu(player, this).open()
+        }
         button(29, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("main.map-description"))) {
             MapMenu(
                 player,
@@ -87,6 +95,10 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
                 player,
                 this
             ).open()
+        }
+
+        button(34, Icons.icon(Material.LECTERN, tr("main.leaderboards"), tr("main.leaderboards-description"))) {
+            LeaderboardMenu(player, this).open()
         }
 
         val invites = resident.receivedInvites.size +

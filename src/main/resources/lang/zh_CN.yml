@@ -66,6 +66,7 @@ common:
   trust-online: "<green>信任在线玩家"
   trust-name: "<green>按名称信任"
   trust-name-description: "信任 Towny 记录中的任意玩家。"
+  duration: "{hours} 小时 {minutes} 分钟"
 
 menu:
   close: "<red>关闭"
@@ -137,6 +138,10 @@ main:
   admin-description: "配置 Towny，并管理所有城镇、国家和居民。"
   tutorial: "<light_purple>教程"
   tutorial-description: "了解城镇、地块、国家以及这些菜单的用法。"
+  prices: "<gold>价格与新的一天"
+  prices-description: "本服务器各项费用，以及下一个 Towny 日何时开始。"
+  leaderboards: "<yellow>排行榜"
+  leaderboards-description: "规模最大、最富有的城镇、国家和玩家。"
 
 map:
   title: "地图"
@@ -271,6 +276,7 @@ town:
   reclaim: "<green>收复城镇"
   reclaim-description: "付费恢复已成为废墟的城镇，并成为其镇长。"
   reclaim-wait: "<gray>成为废墟 <white>{hours}</white> 小时后可收复"
+  click-status: "<yellow>点击查看等级、上限与维护费"
 
 no-town:
   title: "寻找城镇"
@@ -399,6 +405,7 @@ town-info:
 
 town-list:
   title: "城镇列表"
+  distance: "<gray>距离：<white>{blocks} 格"
 
 town-members:
   title: "居民: {town}"
@@ -443,6 +450,46 @@ town-details:
   for-sale-title: "出售城镇"
   for-sale-description: "让其他玩家可以购买你的城镇。"
 
+town-status:
+  title: "状态：{town}"
+  level: "<aqua>城镇等级"
+  level-description: "等级决定你的城镇可拥有的土地、前哨数量以及维护费。"
+  level-number: "<gray>等级：<white>{level}/{max}"
+  level-name: "<gray>称号：<white>{name}"
+  level-manual: "<gray>管理员手动设置了该等级。"
+  level-highest: "<green>已达到最高等级。"
+  next-level-residents: "<gray>达到 <white>{needed}</white> 名居民可升级（当前 {current}）"
+  next-level-claims: "<gray>达到 <white>{needed}</white> 块领地可升级（当前 {current}）"
+  claims-description: "城镇已拥有的土地，以及还能占领多少。"
+  max-purchased: "<gray>可购买的额外领地：<white>{count}"
+  outposts: "<light_purple>前哨"
+  outposts-description: "前哨让城镇可以在边界之外占领土地。"
+  upkeep: "<gold>每日维护费"
+  upkeep-description: "下一个新的一天城镇银行需要支付的金额。"
+  upkeep-exempt: "<green>此城镇无需支付维护费。"
+  upkeep-daily: "<gray>维护费：<white>{cost}"
+  upkeep-penalty: "<gray>领地超额罚金：<white>{cost}"
+  upkeep-peaceful: "<gray>和平状态：<white>{cost}"
+  upkeep-total: "<gray>合计：<white>{cost}"
+  new-day: "<gray>距离新的一天：<white>{time}"
+  nation-zone: "<aqua>国家区域"
+  nation-zone-description: "由国家赋予的、城镇周围受保护的荒野。"
+  nation-zone-size: "<gray>范围：<white>{size} 个区块"
+  all-good: "<green>一切正常"
+  all-good-description: "你的城镇没有任何警告。"
+  ruined: "<red>已成废墟"
+  ruined-hours: "<gray>将在 <white>{hours}</white> 小时后彻底消失"
+  bankrupt: "<red>已破产"
+  bankrupt-description: "<gray>还清债务后才能重新占领土地和招募居民。"
+  debt-cap: "<gray>债务上限：<white>{cap}"
+  conquered: "<red>已被征服"
+  conquered-days: "<gray>剩余被征服天数：<white>{days}"
+  overclaimed: "<red>领地超额"
+  overclaimed-description: "<gray>放弃部分土地或扩大城镇，以免继续支付超额罚金。"
+  overclaimed-stealable: "<gray>领地超额期间，其他城镇可以夺取你的土地。"
+  upkeep-short: "<red>维护费不足"
+  upkeep-short-description: "<gray>请在新的一天到来前存入资金，否则城镇将负债或化为废墟。"
+
 town-trust:
   resident: "<gray>受信任的居民"
   town: "<gray>受信任的城镇"
@@ -460,6 +507,7 @@ sort:
   online: "在线玩家"
   open: "开放加入"
   name: "名称"
+  nearby: "距离最近"
 
 nation:
   title: "我的国家"
@@ -488,6 +536,7 @@ nation:
   announce: "<gold>向国家公告"
   announce-title: "国家公告"
   announce-description: "向国家所有在线居民发送消息。"
+  click-status: "<yellow>点击查看等级、加成与维护费"
 
 no-nation:
   title: "寻找国家"
@@ -545,6 +594,64 @@ nation-sanctions:
   add-title: "制裁城镇"
   add-description: "禁止国家外的某个城镇使用你们的国家传送点。"
 
+leaderboard:
+  title: "排行榜"
+  info: "<gold>排行榜"
+  info-description: "与 Towny 排行榜相同的排名。点击任意条目可查看详情。"
+  rank: "<yellow>第 {rank} 名"
+  town-residents: "<gold>城镇居民数排行"
+  town-residents-description: "居民最多的城镇。"
+  nation-residents: "<aqua>国家居民数排行"
+  nation-residents-description: "居民最多的国家。"
+  town-land: "<green>城镇领地排行"
+  town-land-description: "占领土地最多的城镇。"
+  resident-land: "<green>玩家地块排行"
+  resident-land-description: "拥有地块最多的玩家。"
+  town-balance: "<gold>城镇银行排行"
+  town-balance-description: "最富有的城镇银行。"
+  nation-balance: "<gold>国家银行排行"
+  nation-balance-description: "最富有的国家银行。"
+  town-baltop: "<gold>城镇最富居民"
+  town-baltop-description: "{town} 中最富有的居民。"
+  nation-baltop: "<gold>国家最富居民"
+  nation-baltop-description: "{nation} 中最富有的居民。"
+
+prices:
+  title: "价格与新的一天"
+  new-day: "<gold>Towny 日"
+  new-day-description: "税款和维护费每天结算一次。"
+  no-economy: "<gray>本服务器未启用经济系统，因此一切都不需要花钱。"
+  founding: "<gold>建立"
+  new-town: "<gray>建立城镇：<white>{cost}"
+  new-nation: "<gray>建立国家：<white>{cost}"
+  reclaim: "<gray>收复废墟：<white>{cost}"
+  merge: "<gray>合并城镇：<white>{cost}"
+  claims: "<green>土地"
+  claim: "<gray>每块领地：<white>{cost}"
+  claim-refund: "<gray>放弃每块领地退还：<white>{cost}"
+  bonus-claim: "<gray>每块额外领地：<white>{cost}"
+  outpost: "<gray>每个前哨：<white>{cost}"
+  outpost-upkeep: "<gray>每个前哨每日维护费：<white>{cost}"
+  upkeep: "<gold>每日维护费"
+  upkeep-description: "每个新的一天从城镇和国家银行中扣除。"
+  town-upkeep: "<gray>城镇维护费：<white>{cost}"
+  nation-upkeep: "<gray>国家维护费：<white>{cost}"
+  overclaimed-upkeep: "<gray>领地超额罚金：<white>{cost}"
+  town-peaceful: "<gray>和平城镇：<white>{cost}"
+  nation-peaceful: "<gray>和平国家：<white>{cost}"
+  plot-prices: "<gold>地块价格：{town}"
+  plot: "<gray>普通地块：<white>{cost}"
+  shop: "<gray>商店地块：<white>{cost}"
+  embassy: "<gray>使馆地块：<white>{cost}"
+  taxes: "<gold>税款：{town}"
+  resident-tax: "<gray>居民税：<white>{cost}"
+  plot-tax: "<gray>地块税：<white>{cost}"
+  shop-tax: "<gray>商店税：<white>{cost}"
+  embassy-tax: "<gray>使馆税：<white>{cost}"
+  plot-types: "<yellow>地块类型"
+  plot-types-description: "镇长把地块设为各类型所需的费用。"
+  plot-type: "<gray>{type}：<white>{cost}"
+
 nation-details:
   title: "国家详情"
   rename: "<aqua>重命名国家"
@@ -566,6 +673,19 @@ nation-details:
   set-spawn-description: "将国家出生点移动到你所在的位置。"
   taxes: "每日城镇税"
   conquered-tax: "被征服城镇税"
+
+nation-status:
+  title: "状态：{nation}"
+  level: "<aqua>国家等级"
+  level-description: "等级决定成员城镇获得的加成以及国家的维护费。"
+  next-level-towns: "<gray>达到 <white>{needed}</white> 个城镇可升级（当前 {current}）"
+  bonuses: "<gold>城镇加成"
+  bonuses-description: "每个成员城镇从国家获得的加成。"
+  bonus-claims: "<gray>每个城镇的额外领地：<white>{count}"
+  bonus-outposts: "<gray>每个城镇的额外前哨：<white>{count}"
+  bonus-capital-outposts: "<gray>首都的额外前哨：<white>{count}"
+  upkeep-description: "下一个新的一天国家银行需要支付的金额。"
+  upkeep-short: "<red>国家银行余额不足以支付。"
 
 plot:
   title: "地块"
@@ -742,6 +862,25 @@ profile:
   modes: "<aqua>显示模式"
   modes-description: "左键关闭所有模式，例如自动地图、边界和自动圈地。右键恢复服务器默认模式。"
   modes-active: "<gray>已开启：<white>{modes}"
+  plots: "<green>我的地块"
+  plots-description: "你拥有的所有地块、位置以及每日花费。"
+  tax: "<gold>每日税款"
+  tax-description: "下一个新的一天你需要向城镇及为地块支付的金额。"
+  tax-exempt: "<green>你免缴税款。"
+  tax-town: "<gray>城镇税：<white>{tax}"
+  tax-plots: "<gray>地块税：<white>{tax}"
+  tax-total: "<gray>合计：<white>{tax}"
+  outlawed-in: "<red>被通缉的城镇"
+  outlawed-in-description: "已将你列为通缉犯的城镇。"
+  outlawed-in-title: "被通缉的城镇"
+  trusted-in: "<green>受信任的城镇"
+  trusted-in-description: "信任你、允许你在其中任意建造的城镇。"
+  trusted-in-title: "受信任的城镇"
+  towns-count: "<gray>城镇数：<white>{count}"
+
+resident-plots:
+  title: "我的地块"
+  location: "<gray>位置：<white>{world} 的 {x}, {z}"
 
 friends:
   title: "好友"
@@ -1154,7 +1293,7 @@ tutorial:
 
   start:
     title: "<aqua>入门"
-    description: "Towny 是什么、如何打开和看懂这些菜单、荒野、地图以及邀请。"
+    description: "Towny 是什么、如何打开和看懂这些菜单、荒野、地图、邀请以及排行榜。"
     towny: "Towny 是什么？"
     towny-body: "Towny 让玩家通过建立城镇来保护土地。城镇占领的区块不会被外人破坏，城镇可以收税，还能与其他城镇组成国家。无人占领的土地就是荒野。"
     menus: "打开菜单"
@@ -1167,6 +1306,8 @@ tutorial:
     map-body: "地图显示你周围的区块，并按归属着色：你的城镇、你的地块、你的国家、盟友、敌人以及其他城镇。发光的格子正在出售。点击已占领的格子可查看所属城镇，右键出售中的格子即可购买。"
     invites: "邀请"
     invites-body: "城镇邀请玩家，国家邀请城镇，国家之间还会发送结盟请求。所有待处理的邀请都在邀请菜单中，你可以在那里接受或拒绝。"
+    leaderboards: "排行榜"
+    leaderboards-body: "排行榜菜单按居民数、领地和银行余额为城镇与国家排名，也按拥有的地块数为玩家排名。点击任意条目即可打开。"
 
   join:
     title: "<gold>寻找城镇"
@@ -1174,7 +1315,7 @@ tutorial:
     why: "为什么要加入城镇？"
     why-body: "城镇居民共享受保护的土地，可以拥有地块、传送到城镇出生点，并参与所在城镇的国家。荒野中的建筑没有这些保护。"
     browse: "加入城镇"
-    browse-body: "浏览城镇目录，可按居民数、领地或是否开放排序。开放的城镇一键即可加入，其他城镇需要镇长或助理邀请你。"
+    browse-body: "浏览城镇目录，可按居民数、领地、是否开放或与你的距离排序。开放的城镇一键即可加入，其他城镇需要镇长或助理邀请你。"
     invites: "接受邀请"
     invites-body: "城镇邀请你后，在邀请菜单中接受即可。你同一时间只能属于一个城镇。如果不想收到邀请，可以在个人设置中开启忽略邀请。"
     found: "建立城镇"
@@ -1184,7 +1325,7 @@ tutorial:
 
   town:
     title: "<gold>经营城镇"
-    description: "职位、招募、出生点、设置、详情、公告、合并、出售以及废墟。"
+    description: "等级、职位、招募、出生点、设置、详情、公告、合并、出售以及废墟。"
     ranks: "镇长与职位"
     ranks-body: "镇长拥有全部权力。助理、警长、建筑师等职位分担其中一部分，每个职位的具体权限由服务器决定。在居民菜单中打开居民资料即可授予职位。"
     grow: "壮大城镇"
@@ -1203,6 +1344,8 @@ tutorial:
     announce-body: "在居民菜单中使用“向城镇公告”，向所有在线居民发送消息。国家领袖也可以在国家菜单中向整个国家发布公告。"
     merge: "合并城镇"
     merge-body: "镇长可以在城镇目录中打开另一个城镇的页面，请求它并入自己的城镇。对方镇长必须在线并接受，之后对方的居民、土地和银行都会并入你的城镇。"
+    status: "城镇等级与警告"
+    status-body: "在城镇菜单中点击顶部的城镇图标，即可查看等级、升级所需的居民或领地数量、土地与前哨上限，以及下一个新的一天需要支付的维护费。负债、领地超额、被征服等需要注意的情况会显示在这里和城镇图标上。"
 
   claims:
     title: "<green>占领土地"
@@ -1274,7 +1417,7 @@ tutorial:
 
   nations:
     title: "<aqua>国家"
-    description: "国家是什么、加入与建立国家、成员城镇、外交、制裁、设置以及出生点。"
+    description: "国家是什么、加入与建立国家、成员城镇、外交、制裁、等级、设置以及出生点。"
     what: "什么是国家？"
     what-body: "国家由多个城镇组成，首都城镇的镇长就是国王。国家共享银行、出生点、盟友和敌人，成员城镇还可能获得额外领地。"
     join: "加入国家"
@@ -1291,10 +1434,12 @@ tutorial:
     spawn-body: "成员可以传送到国家出生点，国家设置允许时盟友和访客也可以。国王可以在国家详情中移动出生点。"
     sanctions: "制裁"
     sanctions-body: "国家可以制裁国家外的城镇，受制裁城镇的居民无法传送到国家传送点。可在国家的城镇菜单中管理受制裁城镇。"
+    level: "国家等级"
+    level-body: "在国家菜单中点击顶部的国家图标，即可查看等级、升级条件、每个成员城镇获得的额外领地、前哨和国家区域，以及国家的每日维护费。"
 
   economy:
     title: "<gold>金钱与税收"
-    description: "Towny 日、银行、税收、维护费以及破产。"
+    description: "Towny 日、价格、银行、税收、维护费以及破产。"
     day: "Towny 日"
     day-body: "Towny 每天收取一次税款和维护费。无法支付欠款的城镇和居民将承担下面几节课中说明的后果。"
     bank: "城镇与国家银行"
@@ -1309,10 +1454,12 @@ tutorial:
     nation-tax-body: "国家每天从每个成员城镇的银行收取税款。无法缴税的城镇可能会被移出国家。"
     bankruptcy: "债务与破产"
     bankruptcy-body: "启用破产时，无法支付维护费的城镇会负债，而不会直接失去。破产的城镇在还清债务前无法占领土地或招募居民。未启用时，城镇会沦为废墟或被删除。"
+    prices: "价格与下一天"
+    prices-body: "主菜单中的“价格与新的一天”会倒计时下一个 Towny 日，并列出本服务器在建立、占领、维护、地块和税款方面的收费。"
 
   profile:
     title: "<green>个人资料"
-    description: "你的资料、其他玩家、探索时能看到的信息以及出生点。"
+    description: "你的资料、其他玩家、你的地块与税款、探索时能看到的信息以及出生点。"
     menu: "你的资料"
     menu-body: "个人资料显示你的城镇、职位、好友、地块和余额。写一段简短的介绍，其他玩家查看你的资料时就能看到。"
     others: "其他玩家"
@@ -1321,3 +1468,5 @@ tutorial:
     display-body: "个人设置会改变你探索时看到的内容：进入城镇时的标题、地块和城镇周围的粒子边界、进入新区块时的聊天地图，以及显示方块归属的信息工具。个人资料中的“显示模式”可以一次关闭所有模式，或恢复服务器默认设置。"
     spawn: "出生点"
     spawn-body: "前往出生点会把你传送到城镇出生点；开启床出生点时则传送到你的床。视服务器设置而定，传送可能需要费用并有冷却时间。"
+    standing: "地块、税款与处境"
+    standing-body: "个人资料底部列出你拥有的所有地块、下一个新的一天需缴纳的税款、将你列为通缉犯的城镇，以及信任你在其中建造的城镇。"

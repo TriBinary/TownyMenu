@@ -30,13 +30,18 @@
   PvP/fire/explosion/mob/tax settings, build permissions and per-player overrides, trusted players, join-day limits,
   jail cells, outposts, plot groups and districts, clearing the plot, the plot HUD, and buying, selling, or giving up
   every plot in an area at once. On a plot in a group, these settings change the whole group.
-- **Profile menu** — Friends, personal plot permissions, a bio, bail, spawn, every personal toggle (border titles,
+- **Profile menu** — Friends, your plots, daily tax, the towns that outlaw or trust you, personal plot permissions, a
+  bio, bail, spawn, every personal toggle (border titles,
   auto map, auto claim, plot borders, info tool, chat spy, admin bypass, and more), and clearing or resetting all
   modes at once.
 - **Map** — A 9×5 chunk map around you, coloured by your town, your plots, your nation, allies, and enemies, with plots
   for sale highlighted; right-click one to buy it.
-- **Directories** — Browse and rank every town and nation by residents, claims, bank balance, and more; visit, join,
-  donate, buy a town that is for sale, or propose alliances.
+- **Status pages** — Click your town or nation to see its level, what the next level needs, its limits, the daily
+  upkeep, and warnings for debt, ruins, conquest, and overclaiming.
+- **Leaderboards and prices** — Rank towns, nations, and players by residents, land, and money, and see every price on
+  the server with a countdown to the next Towny day.
+- **Directories** — Browse and rank every town and nation by residents, claims, bank balance, distance, and more;
+  visit, join, donate, buy a town that is for sale, or propose alliances.
 - **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place.
 - **Admin menus** — Server admins can edit every setting in Towny's `config.yml` (grouped by section, searchable,
   applied instantly), change per-world settings, run new days, backups, and reloads, manage any town, nation, or

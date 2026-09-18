@@ -2,17 +2,22 @@ package net.trilleo.mc.plugins.townymenu.guis.resident
 
 import com.palmergames.bukkit.towny.TownyAPI
 import com.palmergames.bukkit.towny.`object`.Resident
+import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.common.PermissionMenu
 import net.trilleo.mc.plugins.townymenu.guis.common.Toggle
 import net.trilleo.mc.plugins.townymenu.guis.common.ToggleMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
+import net.trilleo.mc.plugins.townymenu.guis.framework.ListMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
+import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 /** The viewer's own resident profile: friends, personal toggles, plot permissions, and more. */
 class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profile.title"), 5, back) {
@@ -105,8 +110,78 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             }
         }
 
+        standing(resident)
         tutorialButton(44, Tutorial.PROFILE)
         backButton(40)
+    }
+
+    /** The bottom-row lists of where the viewer stands: their plots, daily tax, and the towns that outlaw or trust them. */
+    private fun standing(resident: Resident) {
+        guarded(
+            37, PermissionNodes.TOWNY_COMMAND_RESIDENT_PLOTLIST,
+            Icons.icon(
+                Material.GRASS_BLOCK, tr("profile.plots"), tr("profile.plots-description"),
+                tr("profile.plots-owned", "count" to resident.townBlocks.size)
+            )
+        ) {
+            ResidentPlotsMenu(player, resident, this).open()
+        }
+        if (TownyUtil.economy && TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_RESIDENT_TAX)) {
+            button(38, taxIcon(resident))
+        }
+        guarded(
+            42, PermissionNodes.TOWNY_COMMAND_RESIDENT_OUTLAWLIST,
+            Icons.icon(
+                Material.IRON_BARS, tr("profile.outlawed-in"), tr("profile.outlawed-in-description"),
+                tr("profile.towns-count", "count" to resident.townsOutlawedIn.size)
+            )
+        ) {
+            towns(tr("profile.outlawed-in-title")) { it.townsOutlawedIn }.open()
+        }
+        guarded(
+            43, PermissionNodes.TOWNY_COMMAND_RESIDENT_TRUSTLIST,
+            Icons.icon(
+                Material.TRIPWIRE_HOOK, tr("profile.trusted-in"), tr("profile.trusted-in-description"),
+                tr("profile.towns-count", "count" to resident.townsTrustedIn.size)
+            )
+        ) {
+            towns(tr("profile.trusted-in-title")) { it.townsTrustedIn }.open()
+        }
+    }
+
+    /** The same daily tax breakdown as Towny's `/resident tax`. */
+    private fun taxIcon(resident: Resident): ItemStack {
+        val exempt = resident.hasPermissionNode("towny.tax_exempt")
+        val town = resident.townOrNull
+        val townTax = when {
+            town == null || exempt -> 0.0
+            town.isTaxPercentage -> minOf(
+                (resident.accountOrNull?.cachedBalance ?: 0.0) * town.taxes / 100,
+                town.maxPercentTaxAmount
+            )
+            else -> town.taxes
+        }
+        val plotTax = resident.townBlocks.sumOf { plot ->
+            val plotTown = plot.townOrNull
+            if (plotTown == null || (exempt && plotTown.hasResident(resident))) 0.0 else plot.type.getTax(plotTown)
+        }
+        return Icons.icon(Material.GOLD_NUGGET, tr("profile.tax"), tr("profile.tax-description"), *buildList {
+            if (exempt) add(tr("profile.tax-exempt"))
+            if (town != null && !exempt) add(tr("profile.tax-town", "tax" to TownyUtil.money(townTax)))
+            if (resident.townBlocks.isNotEmpty()) add(tr("profile.tax-plots", "tax" to TownyUtil.money(plotTax)))
+            add(tr("profile.tax-total", "tax" to TownyUtil.money(townTax + plotTax)))
+            add(tr("town-status.new-day", "time" to TownyUtil.duration(player, TownyUtil.secondsUntilNewDay())))
+        }.toTypedArray())
+    }
+
+    private fun towns(title: String, source: (Resident) -> List<Town>): Menu = ListMenu(player, title, this) { menu ->
+        TownyAPI.getInstance().getResident(player)?.let(source).orEmpty()
+            .sortedBy { it.name.lowercase() }
+            .map { town ->
+                MenuEntry({ Icons.town(player, town, "", tr("common.click-details")) }) {
+                    TownInfoMenu(player, town, menu).open()
+                }
+            }
     }
 
     fun permissions(): Menu =

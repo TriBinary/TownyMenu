@@ -8,6 +8,7 @@ import com.palmergames.bukkit.towny.`object`.Nation
 import com.palmergames.bukkit.towny.`object`.Resident
 import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
+import com.palmergames.util.TimeMgmt
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import java.time.Instant
@@ -60,6 +61,13 @@ object TownyUtil {
     /** Formats an epoch-millisecond timestamp as a date, or `-` when unset. */
     fun date(epochMillis: Long): String =
         if (epochMillis <= 0) "-" else dateFormat.format(Instant.ofEpochMilli(epochMillis))
+
+    /** Seconds until Towny's next new day, when taxes and upkeep are collected. */
+    fun secondsUntilNewDay(): Long = TimeMgmt.townyTime(true)
+
+    /** A duration of [seconds] as hours and minutes in [player]'s language. */
+    fun duration(player: Player, seconds: Long): String =
+        player.tr("common.duration", "hours" to seconds / 3600, "minutes" to seconds % 3600 / 60)
 
     /** A coloured On/Off label in [player]'s language. */
     fun onOff(player: Player, value: Boolean): String = player.tr(if (value) "common.on" else "common.off")

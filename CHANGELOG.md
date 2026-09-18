@@ -4,7 +4,19 @@
 
 ### New Features
 
+#### Main Menu
+
++ Added Leaderboards: towns and nations ranked by residents, land, and bank balance, players ranked by the plots they
+  own, and the richest residents of your town and nation.
++ Added Prices & New Day: a countdown to the next Towny day and what the server charges for founding, claiming,
+  upkeep, plots, and taxes.
+
 #### Town Menu
+
++ Clicking your town at the top of the town menu opens its status: level and what the next level needs, claim and
+  outpost limits, the nation zone, and the upkeep due on the next new day.
+    + Warnings for ruins, bankruptcy, conquest, overclaiming, and upkeep the bank cannot cover are shown there and on
+      the town icon.
 
 + Added a town jail menu: see prisoners and release them, jail online residents with a chosen sentence, bail, jail,
   and cell, and list the town's jails.
@@ -18,6 +30,8 @@
 
 #### Nation Menu
 
++ Clicking your nation at the top of the nation menu opens its status: level, what the next level needs, the bonuses
+  member towns receive, and the nation's daily upkeep.
 + Added sanctioned towns, under the nation's Towns menu: sanction towns outside the nation and lift sanctions.
 + Added Announce to Nation to the nation menu.
 
@@ -41,18 +55,24 @@
 
 #### Resident Menu
 
++ Added My Plots, Daily Tax, Outlawed In, and Trusted In to the profile.
 + Added Display Modes to the profile, turning every mode off or restoring the server's defaults.
 + Added Chat Spy and Disable Admin Powers to personal settings for players allowed to use them.
 
 #### Tutorial
 
 + Added lessons on announcements, merging towns, ceding land, taking over claims, many plots at once, join-day limits,
-  player overrides, jailing players, and nation sanctions.
+  player overrides, jailing players, nation sanctions, town and nation levels, your plots and taxes, leaderboards, and
+  prices.
     + The ruins, plot selling, plot groups, and display lessons now cover reclaiming, evicting for resale, group-wide
       settings, and display modes.
     + The map, plot, buying, and outpost lessons now cover buying from the map, the Plot HUD, and making outposts.
 
 ### Improvements
+
+#### Town Menu
+
++ The town directory can be sorted by distance from you, and then shows how far away each town's spawn is.
 
 #### Misc
 
@@ -86,6 +106,7 @@
 #### Misc
 
 + `PermissionMenu` takes an optional `overrides` menu, and a `Toggle` with a `null` node is shown unguarded.
++ `TownyUtil` gained `duration` and `secondsUntilNewDay` for Towny's new-day countdown.
 + `ToggleMenu` splits more than 21 toggles into pages instead of asking for an inventory taller than six rows.
 + `Layout.add` logs and skips buttons beyond its slots instead of throwing, so an overfull grid no longer breaks a menu.
 

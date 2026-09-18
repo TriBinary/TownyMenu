@@ -82,6 +82,8 @@ putting them into a MiniMessage string — otherwise a town named `<click:run_co
 | `money(Double)`            | Formats with the economy's currency, or `-` without an economy        |
 | `balance(Government)`      | A town's or nation's cached bank balance, formatted                   |
 | `date(Long)`               | Formats an epoch-millisecond timestamp as `yyyy-MM-dd`                |
+| `duration(Player, Long)`   | Seconds as hours and minutes in the player's language                 |
+| `secondsUntilNewDay()`     | Seconds until Towny's next new day, when taxes and upkeep are taken   |
 | `onOff(Player, Boolean)`   | A coloured On / Off label in the player's language                    |
 | `yesNo(Player, Boolean)`   | A coloured Yes / No label in the player's language                    |
 | `plotType(Player, String)` | A plot type in the player's language (`plot-type.*`), or the raw name |

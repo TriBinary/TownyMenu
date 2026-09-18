@@ -8,8 +8,10 @@ import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.`object`.TownyPermission
 import net.trilleo.mc.plugins.townymenu.Main
 import net.trilleo.mc.plugins.townymenu.guis.InvitesMenu
+import net.trilleo.mc.plugins.townymenu.guis.LeaderboardMenu
 import net.trilleo.mc.plugins.townymenu.guis.MainMenu
 import net.trilleo.mc.plugins.townymenu.guis.MapMenu
+import net.trilleo.mc.plugins.townymenu.guis.PricesMenu
 import net.trilleo.mc.plugins.townymenu.guis.common.BankMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.*
@@ -201,6 +203,10 @@ object Tutorial {
             Lesson(
                 "start/invites", Material.PAPER, "tutorial.start.invites", "tutorial.start.invites-body",
                 always { player, back -> InvitesMenu(player, back) }),
+            Lesson(
+                "start/leaderboards", Material.LECTERN, "tutorial.start.leaderboards",
+                "tutorial.start.leaderboards-body",
+                always { player, back -> LeaderboardMenu(player, back) }),
         ),
     )
 
@@ -268,6 +274,19 @@ object Tutorial {
             Lesson(
                 "town/details", Material.WRITABLE_BOOK, "tutorial.town.details", "tutorial.town.details-body",
                 withTown { player, _, back -> TownSettingsMenu(player, back) }),
+            Lesson(
+                "town/status", Material.EXPERIENCE_BOTTLE, "tutorial.town.status", "tutorial.town.status-body",
+                withTown { player, town, back -> TownStatusMenu(player, town, back) }) { player ->
+                town(player)?.let {
+                    listOf(
+                        player.tr(
+                            "town-status.level-number",
+                            "level" to TownySettings.getTownLevelNumber(it),
+                            "max" to TownySettings.getTownLevelMax()
+                        )
+                    )
+                }.orEmpty()
+            },
             Lesson(
                 "town/announce", Material.GOAT_HORN, "tutorial.town.announce", "tutorial.town.announce-body",
                 withTown { player, town, back -> TownMembersMenu(player, town, back) }),
@@ -550,6 +569,9 @@ object Tutorial {
                 "nations/relations", Material.SHIELD, "tutorial.nations.relations", "tutorial.nations.relations-body",
                 withNation { player, nation, back -> NationRelationsMenu(player, nation, back) }),
             Lesson(
+                "nations/level", Material.EXPERIENCE_BOTTLE, "tutorial.nations.level", "tutorial.nations.level-body",
+                withNation { player, nation, back -> NationStatusMenu(player, nation, back) }),
+            Lesson(
                 "nations/sanctions", Material.RED_BANNER, "tutorial.nations.sanctions", "tutorial.nations.sanctions-body",
                 withNation { player, nation, back -> NationSanctionsMenu(player, nation, back) }),
             Lesson(
@@ -585,6 +607,16 @@ object Tutorial {
                         "tutorial.fact.daily-taxes",
                         "value" to TownyUtil.onOff(player, TownySettings.isTaxingDaily())
                     ),
+                )
+            },
+            Lesson(
+                "economy/prices", Material.CLOCK, "tutorial.economy.prices", "tutorial.economy.prices-body",
+                always { player, back -> PricesMenu(player, back) }) { player ->
+                listOf(
+                    player.tr(
+                        "town-status.new-day",
+                        "time" to TownyUtil.duration(player, TownyUtil.secondsUntilNewDay())
+                    )
                 )
             },
             Lesson(
@@ -686,6 +718,16 @@ object Tutorial {
                         back
                     )
                 }),
+            Lesson(
+                "profile/standing", Material.GRASS_BLOCK, "tutorial.profile.standing", "tutorial.profile.standing-body",
+                always { player, back -> ResidentMenu(player, back) }) { player ->
+                resident(player)?.let {
+                    listOf(
+                        player.tr("profile.plots-owned", "count" to it.townBlocks.size),
+                        player.tr("profile.towns-count", "count" to it.townsOutlawedIn.size),
+                    )
+                }.orEmpty()
+            },
             Lesson(
                 "profile/display", Material.GLOWSTONE_DUST, "tutorial.profile.display", "tutorial.profile.display-body",
                 always { player, back -> ResidentMenu(player, back).toggles() }),
