@@ -183,6 +183,12 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             run("$command delete", ::exists, returnTo = back ?: this)
         }
 
+        grid.add(
+            Icons.icon(Material.ANVIL, tr("admin-town-tools.open"), tr("admin-town-tools.open-description"))
+        ) {
+            AdminTownToolsMenu(player, town, this).open()
+        }
+
         backButton(49)
     }
 

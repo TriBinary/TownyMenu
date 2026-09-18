@@ -46,8 +46,9 @@
 - **Live menus** — An open menu updates itself when Towny changes what it shows: a resident joins, land is claimed,
   the bank moves, or the new day passes.
 - **Admin menus** — Server admins can edit every setting in Towny's `config.yml` (grouped by section, searchable,
-  applied instantly), change per-world settings, run new days, backups, and reloads, manage any town, nation, or
-  resident, and change TownyMenu's own settings. Open them with `/tm admin` or from the main menu.
+  applied instantly) and `townyperms.yml` (groups, nodes, and the ranks mayors hand out), change per-world settings,
+  run new days, backups, reloads, and purges, manage any town, nation, resident, or plot — including levels, merges,
+  sales, sanctions, and ranks — and change TownyMenu's own settings. Open them with `/tm admin` or from the main menu.
 - **English and Chinese** — Every menu, dialog, and message follows each player's Minecraft language (English or
   Simplified Chinese). Server owners can edit the translations or add new languages.
 - **Respects Towny** — Every action runs the matching Towny command, so Towny's permissions, costs, cooldowns, and

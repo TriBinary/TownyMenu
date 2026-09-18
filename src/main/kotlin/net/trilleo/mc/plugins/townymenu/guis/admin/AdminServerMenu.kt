@@ -5,7 +5,9 @@ import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
+import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
 import net.trilleo.mc.plugins.townymenu.utils.DialogUtil
+import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -59,6 +61,30 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
             runAndClose("towny:townyadmin checkoutposts")
         }
 
+        guarded(
+            15, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_PURGE,
+            Icons.icon(Material.BONE, tr("admin-server.purge"), tr("admin-server.purge-description"))
+        ) {
+            prompt(
+                tr("admin-server.purge"),
+                tr("admin-server.purge-label"),
+                tr("admin-server.purge-hint"),
+                initial = "90",
+                maxLength = 5
+            ) { days ->
+                runAndClose("towny:townyadmin purge ${TownyUtil.argument(days)}")
+            }
+        }
+        guarded(
+            16, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_CHECKPERM,
+            Icons.icon(Material.SPYGLASS, tr("admin-server.check-perm"), tr("admin-server.check-perm-description"))
+        ) {
+            Pickers.resident(this, tr("admin-server.check-perm"), { it.isOnline }) { target ->
+                prompt(tr("admin-server.check-perm"), tr("admin-perms.node-label"), maxLength = 128) { node ->
+                    runAndClose("towny:townyadmin checkperm ${target.name} ${TownyUtil.argument(node)}")
+                }
+            }.open()
+        }
         reload(
             19,
             Material.COMPARATOR,
@@ -89,6 +115,16 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
             tr("admin-server.reload-all-description")
         )
 
+        if (TownyUtil.economy) {
+            guarded(
+                24, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_ECO_DEPOSITALL,
+                Icons.icon(Material.GOLD_BLOCK, tr("admin-server.deposit-all"), tr("admin-server.deposit-all-description"))
+            ) {
+                prompt(tr("admin-server.deposit-all"), tr("common.amount"), tr("admin-server.deposit-all-hint")) { amount ->
+                    runAndClose("towny:townyadmin eco depositall ${TownyUtil.argument(amount)}")
+                }
+            }
+        }
         toggle(
             28,
             Material.GOLD_INGOT,

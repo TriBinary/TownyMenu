@@ -410,6 +410,11 @@ of the `/townyadmin` or `/townyworld` command it runs.
 | `AdminServerMenu`       | New day and hour, backup, database save, reloads, and global `/townyadmin toggle`s.        |
 | `AdminTownMenu`         | Any town through `/townyadmin town`: mayor, residents, claims, bank, overrides, deletion.  |
 | `AdminNationMenu`       | Any nation through `/townyadmin nation`: leader, capital, towns, bank, toggles, deletion.  |
+| `AdminTownToolsMenu`    | The rest of `/townyadmin town`: level, merging, sale, outlaws, trust, and ranks.           |
+| `AdminNationToolsMenu`  | The rest of `/townyadmin nation`: level, merging, transfers, sanctions, ranks, recheck.    |
+| `AdminPlotMenu`         | `/townyadmin plot` for the plot the admin stands in, plus `set plot` and `unclaim`.        |
+| `AdminPermsMenu`        | `townyperms.yml`: permission groups, and the town and nation ranks mayors may hand out.    |
+| `AdminNamesMenu`        | The names an admin `add`/`remove` subcommand holds (outlaws, trust, sanctions).            |
 | `AdminResidentListMenu` | Every resident, online first, with a name filter.                                          |
 | `AdminResidentMenu`     | Any resident: town, rename, title, surname, NPC flag, unjail, deletion.                    |
 | `PluginSettingsMenu`    | Edits TownyMenu's own `config.yml` through `PluginConfig`, then calls `Main.reload()`.     |
@@ -418,6 +423,9 @@ Towny has no command that edits its config, so `TownyConfigMenu` is the one plac
 `TownyConfig.write` saves the value, then the menu runs `/townyadmin reload config` as the player. Editing is therefore
 gated by `towny.command.townyadmin.reload`, and the probe is `TownySettings.getConfig()`, which a successful reload
 replaces.
+
+`RankMenu.create` takes an optional `admin` town or nation name. With it the menu runs
+`/townyadmin town|nation <name> rank` and checks the admin node, so staff can hand out ranks in towns they are not in.
 
 ### Icons
 

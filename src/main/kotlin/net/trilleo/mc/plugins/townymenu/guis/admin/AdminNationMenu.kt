@@ -140,6 +140,12 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
             run("$command delete", ::exists, returnTo = back ?: this)
         }
 
+        grid.add(
+            Icons.icon(Material.ANVIL, tr("admin-nation-tools.open"), tr("admin-nation-tools.open-description"))
+        ) {
+            AdminNationToolsMenu(player, nation, this).open()
+        }
+
         backButton(49)
     }
 

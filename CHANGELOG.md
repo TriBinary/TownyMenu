@@ -68,6 +68,19 @@
 + Added Display Modes to the profile, turning every mode off or restoring the server's defaults.
 + Added Chat Spy and Disable Admin Powers to personal settings for players allowed to use them.
 
+#### Admin Menus
+
++ Added More Town Tools: town level, merging another town in, putting a town up for sale, removing conquered status,
+  checking outposts, resident ranks, outlaws, trusted residents, and trusted towns.
++ Added More Nation Tools: nation level, merging, moving a town in, rechecking town distances, sanctioned towns, and
+  resident ranks.
++ Added a plot menu for the chunk you stand in: claim it for a player, move it to another town, trust players, and
+  unclaim.
++ Added a Towny Permissions editor for `townyperms.yml`: permission groups and their nodes, and the town and nation
+  ranks mayors and leaders can hand out, including adding, removing, and renaming ranks.
++ Added purging inactive residents, checking a player's permission node, and depositing into every bank to the server
+  menu.
+
 #### Tutorial
 
 + Added lessons on announcements, merging towns, ceding land, taking over claims, many plots at once, join-day limits,

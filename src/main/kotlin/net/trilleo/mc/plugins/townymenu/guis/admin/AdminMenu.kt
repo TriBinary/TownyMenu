@@ -46,6 +46,11 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
 
         val towny = TownyAPI.getInstance()
         button(
+            18, Icons.icon(Material.GRASS_BLOCK, tr("admin-plot.open"), tr("admin-plot.open-description"))
+        ) {
+            AdminPlotMenu(player, this).open()
+        }
+        button(
             20, Icons.icon(
                 Material.BELL, tr("admin.towns"), tr("admin.towns-description"),
                 tr("admin.count", "count" to towny.towns.size)
@@ -84,6 +89,10 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
             )
         ) {
             AdminResidentListMenu(player, this).open()
+        }
+
+        button(26, Icons.icon(Material.IRON_DOOR, tr("admin-perms.open"), tr("admin-perms.open-description"))) {
+            AdminPermsMenu(player, this).open()
         }
 
         backButton(40)
