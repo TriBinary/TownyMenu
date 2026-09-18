@@ -93,6 +93,22 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
             config.townyAlerts = !config.townyAlerts
             apply()
         }
+        row.add(
+            Icons.icon(
+                Material.GOLD_NUGGET, tr("admin-plugin.bank-amounts"), tr("admin-plugin.bank-amounts-description"),
+                tr("common.current", "value" to config.bankAmounts.joinToString(", ").ifEmpty { tr("common.none") }),
+                actions = listOf(tr("common.click-change"))
+            )
+        ) {
+            prompt(
+                tr("admin-plugin.bank-amounts"),
+                tr("admin-plugin.bank-amounts-label"),
+                initial = config.bankAmounts.joinToString(", ")
+            ) { input ->
+                config.bankAmounts = input.split(',', ' ').mapNotNull { it.trim().toIntOrNull() }
+                apply()
+            }
+        }
         backButton(31)
     }
 

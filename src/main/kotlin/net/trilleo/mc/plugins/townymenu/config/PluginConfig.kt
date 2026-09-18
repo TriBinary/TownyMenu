@@ -56,8 +56,27 @@ class PluginConfig(private val plugin: JavaPlugin) {
         get() = plugin.config.getBoolean("towny-alerts", true)
         set(value) = save("towny-alerts", value)
 
+    /**
+     * The preset amounts the deposit and withdraw menus offer (`bank-amounts`).
+     *
+     * Towny's bank commands take whole numbers, and only nine buttons fit in the menu row,
+     * so the list is cleaned up on the way in and out: non-positive amounts are dropped,
+     * duplicates removed, and the rest sorted and capped at nine. An empty list is a choice —
+     * the menus then offer only "All" and a custom amount — so only a missing key falls back.
+     */
+    var bankAmounts: List<Int>
+        get() = if (plugin.config.isSet("bank-amounts")) clean(plugin.config.getIntegerList("bank-amounts"))
+        else DEFAULT_BANK_AMOUNTS
+        set(value) = save("bank-amounts", clean(value))
+
     private fun save(path: String, value: Any) {
         plugin.config.set(path, value)
         plugin.saveConfig()
+    }
+
+    private fun clean(amounts: List<Int>): List<Int> = amounts.filter { it > 0 }.distinct().sorted().take(9)
+
+    companion object {
+        private val DEFAULT_BANK_AMOUNTS = listOf(10, 100, 1000, 10000)
     }
 }

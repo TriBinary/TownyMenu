@@ -207,6 +207,23 @@ bank:
   prompt-balance: "<gray>Bank balance: {balance}"
   history: "<yellow>Bank History"
   history-description: "Open a book with recent transactions."
+  click-choose: "<yellow>Click to choose an amount"
+  deposit-menu-title: "Deposit: {name}"
+  withdraw-menu-title: "Withdraw: {name}"
+  your-balance: "<gray>Your balance: <white>{balance}"
+  minimum: "<gray>Minimum: <white>{amount}"
+  maximum: "<gray>Maximum: <white>{amount}"
+  amount: "<yellow>{amount}"
+  amount-line: "<gray>Amount: <white>{amount}"
+  all: "<gold>Everything"
+  custom: "<aqua>Custom Amount"
+  custom-description: "Type any amount yourself."
+  click-deposit: "<yellow>Click to deposit"
+  click-withdraw: "<yellow>Click to withdraw"
+  not-enough: "<red>Not enough money"
+  nothing-to-move: "<red>Nothing to move"
+  below-minimum: "<red>Below the {amount} minimum"
+  above-maximum: "<red>Above the {amount} maximum"
 
 perm:
   gone: "<red>This land no longer exists"
@@ -1171,6 +1188,9 @@ admin-plugin:
   live-refresh-description: "Update open menus when Towny changes what they show, such as a resident joining or the new day."
   alerts: "<yellow>Chat Alerts"
   alerts-description: "Announce invitations, bankruptcy, and ruin in chat, with a link to the menu that answers them."
+  bank-amounts: "<gold>Bank Amounts"
+  bank-amounts-description: "The preset amounts the deposit and withdraw menus offer. Players always get an Everything button and a custom amount too."
+  bank-amounts-label: "Amounts, separated by commas"
 
 admin-town:
   title: "Admin: {town}"

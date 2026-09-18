@@ -102,6 +102,7 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `tutorial-join-hint`       | `true`  | Suggest the tutorial to players without a town when they join               |
 | `live-menu-refresh`        | `true`  | Update open menus when Towny changes what they show                         |
 | `towny-alerts`             | `true`  | Announce invites, bankruptcy, and ruin in chat, linked to the right menu    |
+| `bank-amounts`             | `10, 100, 1000, 10000` | Preset amounts the deposit and withdraw menus offer, alongside Everything and a custom amount |
 
 ## Translations
 

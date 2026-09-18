@@ -23,3 +23,12 @@ live-menu-refresh: true
 # Announce in chat when a player is invited to a town, a town is invited to a nation, a nation is asked for an
 # alliance, or a town goes bankrupt or falls into ruin. Each message opens the menu that answers it.
 towny-alerts: true
+
+# The preset amounts offered by the deposit and withdraw menus, in the server's currency.
+# Every player also gets an "All" button and a custom-amount dialog, so this list is only a shortcut.
+# Towny takes whole numbers only; up to nine amounts fit in the menu row.
+bank-amounts:
+  - 10
+  - 100
+  - 1000
+  - 10000
