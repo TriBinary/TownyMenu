@@ -22,8 +22,9 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
         button(4, itemStack(chapter.material) {
             name(tr(chapter.title))
             loreWrapped("<gray>${tr(chapter.description)}")
-            lore("", tr("tutorial.progress", "read" to read, "total" to lessons.size))
-            chapter.link?.let { lore(linkLine(it)) }
+            loreBreak()
+            lore(tr("tutorial.progress", "read" to read, "total" to lessons.size))
+            chapter.link?.let { loreActions(listOf(linkLine(it))) }
             glow(read == lessons.size)
         }) { if (chapter.link?.open(player, this) != true) render() }
 
@@ -88,14 +89,24 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
         name(tr(if (read) "tutorial.lesson-read" else "tutorial.lesson-unread", "lesson" to tr(lesson.title)))
         loreWrapped("<gray>${tr(lesson.body)}")
         val facts = lesson.facts(player)
-        if (facts.isNotEmpty()) lore(listOf("") + facts)
-        lore("", tr(if (read) "tutorial.status-read" else "tutorial.status-unread"))
+        if (facts.isNotEmpty()) {
+            loreBreak()
+            lore(facts)
+        }
+        loreBreak()
+        lore(tr(if (read) "tutorial.status-read" else "tutorial.status-unread"))
         val link = lesson.link
         if (link != null && link.available(player)) {
-            lore(tr("tutorial.left-open"), tr(if (read) "tutorial.right-unread" else "tutorial.right-read"))
+            loreActions(
+                listOf(tr("tutorial.left-open"), tr(if (read) "tutorial.right-unread" else "tutorial.right-read"))
+            )
         } else {
-            if (link != null) lore(linkLine(link))
-            lore(tr(if (read) "tutorial.click-unread" else "tutorial.click-read"))
+            loreActions(
+                listOfNotNull(
+                    link?.let { linkLine(it) },
+                    tr(if (read) "tutorial.click-unread" else "tutorial.click-read"),
+                )
+            )
         }
     }
 

@@ -135,8 +135,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                         )
                     )
                     add(tr("plot.claimed", "date" to TownyUtil.date(plot.claimedAt)))
-                    if (canInfo) add(tr("plot.click-info"))
-                }.toTypedArray()
+                }.toTypedArray(),
+                actions = listOfNotNull(if (canInfo) tr("plot.click-info") else null)
             )
         ) {
             if (canInfo) runAndClose("towny:plot info")

@@ -30,12 +30,14 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
         val town = resident.townOrNull
         val nation = resident.nationOrNull
 
-        button(4, Icons.resident(player, resident, "", tr("main.profile-click"))) {
+        button(4, Icons.resident(player, resident, actions = listOf(tr("main.profile-click")))) {
             ResidentMenu(player, this).open()
         }
 
         if (town != null) {
-            button(20, Icons.town(player, town, "", tr("main.town-click"))) { TownMenu(player, this).open() }
+            button(20, Icons.town(player, town, actions = listOf(tr("main.town-click")))) {
+                TownMenu(player, this).open()
+            }
         } else {
             button(20, Icons.icon(Material.BELL, tr("main.town"), tr("main.town-none"))) {
                 NoTownMenu(player, this).open()
@@ -43,7 +45,7 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
         }
 
         when {
-            nation != null -> button(22, Icons.nation(player, nation, "", tr("main.nation-click"))) {
+            nation != null -> button(22, Icons.nation(player, nation, actions = listOf(tr("main.nation-click")))) {
                 NationMenu(
                     player,
                     this

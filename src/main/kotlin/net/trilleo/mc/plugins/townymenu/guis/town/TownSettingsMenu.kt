@@ -228,7 +228,7 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                 "<gold>$label",
                 null,
                 tr("common.current", "value" to current),
-                tr("common.click-change")
+                actions = listOf(tr("common.click-change"))
             )
         ) {
             prompt(label, tr("common.amount"), initial = read().toString()) { amount ->

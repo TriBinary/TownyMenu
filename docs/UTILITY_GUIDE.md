@@ -12,6 +12,7 @@ This guide covers the utility helpers provided in `net.trilleo.mc.plugins.townym
 | `DialogUtil`  | Native text-input and confirmation dialogs (Paper Dialog API)                 |
 | `MessageUtil` | Prefix-decorated message sender for players                                   |
 | `LoreUtil`    | Word-aware text wrapping for item lore with style carry-over                  |
+| `LoreBlocks`  | Lays an icon's lore out in blocks: separators, the action divider, spacing    |
 
 ---
 
@@ -27,7 +28,9 @@ import net.trilleo.mc.plugins.townymenu.utils.itemStack
 val icon = itemStack(Material.EMERALD) {
     name("<green>Deposit")
     loreWrapped("<gray>Move money from your balance into the town bank.")
-    lore("", "<yellow>Click to deposit")
+    loreBreak()
+    lore("<gray>Balance: <white>$120")
+    loreActions(listOf("<yellow>Click to deposit"))
     glow(true)
 }
 ```
@@ -39,10 +42,38 @@ val icon = itemStack(Material.EMERALD) {
 | `name`        | `name(String)`                                   | Set the display name (MiniMessage)                            |
 | `lore`        | `lore(vararg String)` / `lore(Iterable<String>)` | Append lore lines (each parsed with MiniMessage)              |
 | `loreWrapped` | `loreWrapped(String, maxWidth = 40)`             | Append text word-wrapped by `LoreUtil`                        |
+| `loreBreak`   | `loreBreak()`                                    | Start a new lore block, separated by a blank line             |
+| `loreActions` | `loreActions(Iterable<String>)`                  | Append the closing hints block, set off by a divider rule     |
 | `glow`        | `glow(Boolean)`                                  | Force the enchantment glint on or off                         |
 | `hideTooltip` | `hideTooltip(Boolean)`                           | Hide the whole tooltip (decorative filler)                    |
 | `head`        | `head(OfflinePlayer)`                            | Show a player's skin on a `PLAYER_HEAD`                       |
 | `meta`        | `meta(ItemMeta.() -> Unit)`                      | Escape hatch for direct `ItemMeta` manipulation, applied last |
+
+### Lore Blocks
+
+Lore reads as blocks rather than one dense wall of text, and `LoreBlocks` lays them out so every icon in the plugin
+spaces the same way:
+
+- A blank line always follows the display name, giving the title room to breathe.
+- `loreBreak()` separates blocks with a blank line. A line with no visible text counts as a break too, so `lore("")`
+  between blocks still works, and repeated breaks collapse into one.
+- `loreActions(lines)` closes the tooltip with what a click does, set off by a divider rule as wide as the longest lore
+  line. Passing no lines adds nothing.
+- A break or divider left dangling at either end is dropped, so a block that turns out to be empty never leaves a hole.
+
+`LoreBlocks` is never used directly: menus build icons through [`Icons`](DEVELOPER_GUIDE.md#icons), or with the DSL
+methods above, and those decide what goes in each block. Read
+[The shape of an icon](DEVELOPER_GUIDE.md#the-shape-of-an-icon) before adding one.
+
+```text
+Town Spawn
+                                      <- blank line under the title
+Teleport to your town's spawn point.
+                                      <- loreBreak()
+Cost: $25
+------------------------------        <- loreActions(...)
+Click to teleport
+```
 
 ---
 
@@ -303,7 +334,7 @@ import net.trilleo.mc.plugins.townymenu.utils.itemStack
 val item = itemStack(Material.BELL) {
     name("<gold>Town Settings")
     loreWrapped("<gray>PvP, mobs, fire, explosions, and whether the town is open to new residents.")
-    lore("", "<yellow>Click to open")
+    loreActions(listOf("<yellow>Click to open"))
 }
 ```
 
@@ -313,6 +344,8 @@ val item = itemStack(Material.BELL) {
 |:-----------|:---------|:--------|:-----------------------------------|
 | `text`     | `String` | —       | MiniMessage-formatted input string |
 | `maxWidth` | `Int`    | `40`    | Maximum columns per line           |
+
+`LoreUtil.columns(text)` measures a string in the same columns, which is how `LoreBlocks` sizes its divider rule.
 
 ### Behavior Details
 

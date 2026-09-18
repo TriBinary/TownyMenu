@@ -43,9 +43,7 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                     )
                 )
             }
-            add("")
-            add(tr("nation.click-status"))
-        }.toTypedArray())) {
+        }.toTypedArray(), actions = listOf(tr("nation.click-status")))) {
             NationStatusMenu(player, nation, this).open()
         }
 
@@ -134,12 +132,7 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                     .thenBy { it.name.lowercase() })
                 .map { member ->
                     MenuEntry({
-                        Icons.resident(
-                            player,
-                            member,
-                            "",
-                            tr("common.click-view")
-                        )
+                        Icons.resident(player, member, actions = listOf(tr("common.click-view")))
                     }) { ResidentProfileMenu(player, member, menu).open() }
                 }
         }

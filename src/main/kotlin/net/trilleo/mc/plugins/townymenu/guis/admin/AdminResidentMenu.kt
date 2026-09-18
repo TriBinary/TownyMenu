@@ -34,7 +34,7 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
         val town = target.townOrNull
 
         if (town != null) {
-            grid.add(Icons.town(player, town, "", tr("common.click-view"))) {
+            grid.add(Icons.town(player, town, actions = listOf(tr("common.click-view")))) {
                 AdminTownMenu(player, town, this).open()
             }
             if (!target.isMayor) {

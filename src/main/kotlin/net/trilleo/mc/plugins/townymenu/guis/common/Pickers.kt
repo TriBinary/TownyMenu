@@ -26,12 +26,7 @@ object Pickers {
                 .filter(filter)
                 .map { resident ->
                     MenuEntry({
-                        Icons.resident(
-                            back.player,
-                            resident,
-                            "",
-                            back.tr("picker.select")
-                        )
+                        Icons.resident(back.player, resident, actions = listOf(back.tr("picker.select")))
                     }) { onPick(resident) }
                 }
         }
@@ -44,12 +39,7 @@ object Pickers {
                 .sortedBy { it.name.lowercase() }
                 .map { town ->
                     MenuEntry({
-                        Icons.town(
-                            back.player,
-                            town,
-                            "",
-                            back.tr("picker.select")
-                        )
+                        Icons.town(back.player, town, actions = listOf(back.tr("picker.select")))
                     }) { onPick(town) }
                 }
         }
@@ -62,12 +52,7 @@ object Pickers {
                 .sortedBy { it.name.lowercase() }
                 .map { nation ->
                     MenuEntry({
-                        Icons.nation(
-                            back.player,
-                            nation,
-                            "",
-                            back.tr("picker.select")
-                        )
+                        Icons.nation(back.player, nation, actions = listOf(back.tr("picker.select")))
                     }) { onPick(nation) }
                 }
         }
@@ -92,7 +77,12 @@ object Pickers {
                     itemStack(material) {
                         name(label)
                         lore(lines(id))
-                        lore(back.tr(if (selected) "picker.current" else "picker.select"))
+                        if (selected) {
+                            loreBreak()
+                            lore(back.tr("picker.current"))
+                        } else {
+                            loreActions(listOf(back.tr("picker.select")))
+                        }
                         glow(selected)
                     }
                 }

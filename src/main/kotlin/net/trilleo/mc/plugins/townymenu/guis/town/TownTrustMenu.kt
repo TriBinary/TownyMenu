@@ -25,10 +25,8 @@ class TownTrustMenu(player: Player, private val town: Town, back: Menu) :
         val residents = town.trustedResidents.sortedBy { it.name.lowercase() }.map { trusted ->
             MenuEntry({
                 Icons.resident(
-                    player,
-                    trusted,
-                    "",
-                    tr(if (canTrust) "common.click-untrust" else "town-trust.resident")
+                    player, trusted,
+                    actions = listOf(tr(if (canTrust) "common.click-untrust" else "town-trust.resident"))
                 )
             }) {
                 if (canTrust) run("towny:town trust remove ${trusted.name}", ::snapshot)
@@ -37,10 +35,8 @@ class TownTrustMenu(player: Player, private val town: Town, back: Menu) :
         val towns = town.trustedTowns.sortedBy { it.name.lowercase() }.map { trusted ->
             MenuEntry({
                 Icons.town(
-                    player,
-                    trusted,
-                    "",
-                    tr(if (canTrustTowns) "common.click-untrust" else "town-trust.town")
+                    player, trusted,
+                    actions = listOf(tr(if (canTrustTowns) "common.click-untrust" else "town-trust.town"))
                 )
             }) {
                 if (canTrustTowns) run("towny:town trusttown remove ${trusted.name}", ::snapshot)

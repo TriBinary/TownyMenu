@@ -63,7 +63,12 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
             ListMenu(player, tr("nation-details.leader-title"), this) {
                 nation.capital?.residents.orEmpty().filter { !it.isKing }.sortedBy { it.name.lowercase() }
                     .map { candidate ->
-                        MenuEntry({ Icons.resident(player, candidate, "", tr("nation-details.leader-click")) }) {
+                        MenuEntry({
+                            Icons.resident(
+                                player, candidate,
+                                actions = listOf(tr("nation-details.leader-click"))
+                            )
+                        }) {
                             run("$command set king ${candidate.name}", { nation.king }, returnTo = this)
                         }
                     }
@@ -153,7 +158,7 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
     private fun townList(title: String, hint: String, onPick: (Town) -> Unit) {
         ListMenu(player, title, this) {
             nation.towns.filter { !nation.isCapital(it) }.sortedBy { it.name.lowercase() }.map { town ->
-                MenuEntry({ Icons.town(player, town, "", hint) }) { onPick(town) }
+                MenuEntry({ Icons.town(player, town, actions = listOf(hint)) }) { onPick(town) }
             }
         }.open()
     }

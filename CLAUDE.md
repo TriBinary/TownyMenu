@@ -119,6 +119,14 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
 - **Keep `PagedMenu` entries lazy** — pass the icon as a lambda to `MenuEntry` so off-page icons are never built.
 - **Show what a button costs** — a button that spends money takes its amount from `Prices` and turns it into lore with
   `costLine(...)` / `priceLine(...)`, so the figure is this server's and not a guess.
+- **Lay every icon's lore out in the same blocks** — a tooltip reads name → description → data → actions, and a new
+  icon follows that order or it looks out of place beside the others. With an `Icons` builder the description is the
+  `description` argument, the data and cost lines are the `extra` varargs, and everything about clicking is
+  `actions = listOf(...)`; with `itemStack { }` directly, use `loreWrapped(...)`, `loreBreak()` between data blocks,
+  and `loreActions(...)` to close. Never hand-roll the spacing: no `""` lore line to separate blocks, no divider drawn
+  by hand, no blank line under the name — `LoreBlocks` adds all three, collapses repeats, and trims a block that turns
+  out empty. The mistake to watch for is a click hint left among the data lines; it belongs in `actions`, which is what
+  puts it below the divider. See [The shape of an icon](docs/DEVELOPER_GUIDE.md#the-shape-of-an-icon).
 
 ## Translations
 

@@ -29,12 +29,7 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
                 .thenBy { it.name.lowercase() })
             .map { member ->
                 MenuEntry({
-                    Icons.resident(
-                        player,
-                        member,
-                        "",
-                        tr("common.click-view")
-                    )
+                    Icons.resident(player, member, actions = listOf(tr("common.click-view")))
                 }) { ResidentProfileMenu(player, member, this).open() }
             }
 
@@ -75,8 +70,8 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
         guarded(
             51, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD, Icons.icon(
                 Material.PAPER, tr("common.sent-invites"), tr("common.sent-invites-description"),
-                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
-                tr("common.pending", "count" to pending.size),
+                tr("common.pending", "count" to pending.size), "",
+                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray()
             )
         ) { click -> if (click.isRightClick) run("towny:town invite sent removeall", sent) }
     }

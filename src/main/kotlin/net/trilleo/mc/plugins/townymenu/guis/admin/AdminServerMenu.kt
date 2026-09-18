@@ -217,7 +217,10 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
         guarded(
             slot,
             node,
-            Icons.icon(material, name, description, "", tr("admin-server.left-on"), tr("admin-server.right-off"))
+            Icons.icon(
+                material, name, description,
+                actions = listOf(tr("admin-server.left-on"), tr("admin-server.right-off"))
+            )
         ) { click ->
             runAndClose("towny:townyadmin toggle $key ${if (click.isRightClick) "off" else "on"}")
         }

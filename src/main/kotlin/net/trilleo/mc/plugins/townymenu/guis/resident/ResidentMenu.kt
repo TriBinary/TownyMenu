@@ -183,7 +183,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         TownyAPI.getInstance().getResident(player)?.let(source).orEmpty()
             .sortedBy { it.name.lowercase() }
             .map { town ->
-                MenuEntry({ Icons.town(player, town, "", tr("common.click-details")) }) {
+                MenuEntry({ Icons.town(player, town, actions = listOf(tr("common.click-details"))) }) {
                     TownInfoMenu(player, town, menu).open()
                 }
             }

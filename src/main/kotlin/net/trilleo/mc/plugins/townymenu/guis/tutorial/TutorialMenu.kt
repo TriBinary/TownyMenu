@@ -19,7 +19,7 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
 
         button(
             4, Icons.icon(
-                Material.KNOWLEDGE_BOOK, tr("tutorial.hub"), tr("tutorial.hub-description"), "",
+                Material.KNOWLEDGE_BOOK, tr("tutorial.hub"), tr("tutorial.hub-description"),
                 tr("tutorial.progress", "read" to read, "total" to total),
                 *listOfNotNull(if (read == total) tr("tutorial.all-read") else null).toTypedArray()
             )
@@ -61,9 +61,10 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
         val total = chapter.lessons.size
         name(tr(chapter.title))
         loreWrapped("<gray>${tr(chapter.description)}")
-        lore("", tr("tutorial.progress", "read" to read, "total" to total))
+        loreBreak()
+        lore(tr("tutorial.progress", "read" to read, "total" to total))
         if (read == total) lore(tr("tutorial.chapter-complete"))
-        lore(tr("tutorial.click-chapter"))
+        loreActions(listOf(tr("tutorial.click-chapter")))
         glow(read == total)
     }
 }

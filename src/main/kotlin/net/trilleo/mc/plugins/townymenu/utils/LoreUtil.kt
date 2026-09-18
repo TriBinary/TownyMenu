@@ -83,6 +83,12 @@ object LoreUtil {
     }
 
     /**
+     * The display width of [text] in columns, the same measure [wrapLore] wraps on:
+     * Chinese, Japanese, and Korean characters count as two.
+     */
+    fun columns(text: String): Int = text.sumOf { width(it) }
+
+    /**
      * Represents a single visible character paired with its resolved style.
      */
     private data class StyledChar(val char: Char, val style: Style)

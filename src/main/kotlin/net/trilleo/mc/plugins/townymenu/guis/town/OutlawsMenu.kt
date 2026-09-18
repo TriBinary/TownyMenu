@@ -24,10 +24,8 @@ class OutlawsMenu(player: Player, private val town: Town, back: Menu) :
         return town.outlaws.sortedBy { it.name.lowercase() }.map { outlaw ->
             MenuEntry({
                 Icons.resident(
-                    player,
-                    outlaw,
-                    "",
-                    tr(if (canEdit) "outlaws.click-pardon" else "outlaws.outlaw")
+                    player, outlaw,
+                    actions = listOf(tr(if (canEdit) "outlaws.click-pardon" else "outlaws.outlaw"))
                 )
             }) {
                 if (canEdit) run("towny:town outlaw remove ${outlaw.name}", ::count)

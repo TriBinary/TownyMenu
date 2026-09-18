@@ -90,7 +90,7 @@ icon:
   currently: "<gray>当前: {value}"
   click-toggle: "<yellow>点击切换"
   bank: "<gray>银行: <white>{balance}"
-  open-public: "<gray>开放: {open}  <gray>公开: {public}"
+  open-public: "<gray>开放: {open} <dark_gray>· <gray>公开: {public}"
   resident:
     town: "<gray>城镇: <white>{town}"
     mayor: "镇长"
@@ -107,9 +107,9 @@ icon:
   nation:
     leader: "<gray>国王: <white>{leader}"
     capital: "<gray>首都: <white>{capital}"
-    size: "<gray>城镇: <white>{towns}  <gray>居民: <white>{residents}"
-    relations: "<gray>盟友: <white>{allies}  <gray>敌人: <white>{enemies}"
-    flags: "<gray>开放: {open}  <gray>公开: {public}  <gray>和平: {peaceful}"
+    size: "<gray>城镇: <white>{towns} <dark_gray>· <gray>居民: <white>{residents}"
+    relations: "<gray>盟友: <white>{allies} <dark_gray>· <gray>敌人: <white>{enemies}"
+    flags: "<gray>开放: {open} <dark_gray>· <gray>公开: {public} <dark_gray>· <gray>和平: {peaceful}"
 
 main:
   title: "Towny"
@@ -253,8 +253,8 @@ town:
   not-in-town: "<red>你不在任何城镇中"
   plot-tax: "<gray>地块税: <white>{tax}"
   outposts: "<gray>前哨: <white>{count}"
-  pvp-mobs: "<gray>PvP: {pvp}  <gray>怪物: {mobs}"
-  fire-explosions: "<gray>火焰: {fire}  <gray>爆炸: {explosions}"
+  pvp-mobs: "<gray>PvP: {pvp} <dark_gray>· <gray>怪物: {mobs}"
+  fire-explosions: "<gray>火焰: {fire} <dark_gray>· <gray>爆炸: {explosions}"
   residents: "<green>居民"
   residents-description: "查看居民、管理职位和邀请玩家。"
   bank: "<gold>城镇银行"
@@ -360,7 +360,7 @@ claims:
   claimed: "<gray>已占领: <white>{claims}/{max}"
   available: "<gray>可用: <white>{available}"
   unlimited: "无限"
-  bonus: "<gray>额外领地: <white>{bonus}  <gray>已购买: <white>{purchased}"
+  bonus: "<gray>额外领地: <white>{bonus} <dark_gray>· <gray>已购买: <white>{purchased}"
   outposts: "<gray>前哨: <white>{outposts}/{limit}"
   price: "<gray>占领价格: <white>{price}"
   claim: "<green>占领此区块"

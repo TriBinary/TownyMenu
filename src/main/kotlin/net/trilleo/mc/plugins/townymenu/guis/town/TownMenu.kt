@@ -66,9 +66,7 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                 add("")
                 warnings.forEach { add(it.line) }
             }
-            add("")
-            add(tr("town.click-status"))
-        }.toTypedArray())) {
+        }.toTypedArray(), actions = listOf(tr("town.click-status")))) {
             TownStatusMenu(player, town, this).open()
         }
 

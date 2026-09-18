@@ -35,11 +35,8 @@ class AdminRanksMenu(player: Player, private val nation: Boolean, back: Menu) : 
         MenuEntry({
             itemStack(Material.NAME_TAG) {
                 name("<gold>${TownyUtil.name(rank)}")
-                lore(
-                    tr("admin-perms.node-count", "count" to nodes.size),
-                    tr("common.left-details"),
-                    tr("admin-perms.right-remove"),
-                )
+                lore(tr("admin-perms.node-count", "count" to nodes.size))
+                loreActions(listOf(tr("common.left-details"), tr("admin-perms.right-remove")))
             }
         }) { click ->
             if (click.isRightClick) {

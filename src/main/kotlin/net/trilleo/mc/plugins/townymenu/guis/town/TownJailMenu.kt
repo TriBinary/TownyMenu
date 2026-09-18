@@ -23,7 +23,6 @@ class TownJailMenu(player: Player, private val town: Town, back: Menu) :
         val canUnjail = TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_TOWN_UNJAIL)
         return town.jailedResidents.sortedBy { it.name.lowercase() }.map { prisoner ->
             val lines = buildList {
-                add("")
                 add(tr("town-jail.hours-left", "hours" to prisoner.jailHours))
                 if (TownyUtil.economy && prisoner.jailBailCost > 0) {
                     add(tr("town-jail.bail", "bail" to TownyUtil.money(prisoner.jailBailCost)))
@@ -37,9 +36,9 @@ class TownJailMenu(player: Player, private val town: Town, back: Menu) :
                         )
                     )
                 }
-                if (canUnjail) add(tr("town-jail.click-unjail"))
             }
-            MenuEntry({ Icons.resident(player, prisoner, *lines.toTypedArray()) }) {
+            val actions = listOfNotNull(if (canUnjail) tr("town-jail.click-unjail") else null)
+            MenuEntry({ Icons.resident(player, prisoner, *lines.toTypedArray(), actions = actions) }) {
                 if (canUnjail) run("towny:town unjail ${prisoner.name}", ::count)
             }
         }

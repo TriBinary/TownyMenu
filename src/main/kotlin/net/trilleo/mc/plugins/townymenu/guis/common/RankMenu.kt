@@ -37,9 +37,14 @@ object RankMenu {
                 val icon = {
                     itemStack(if (held) Material.NAME_TAG else Material.PAPER) {
                         name("${if (held) "<green>" else "<gray>"}${TownyUtil.name(rank)}")
-                        lore(
-                            menu.tr(if (held) "rank.assigned" else "rank.not-assigned"),
-                            menu.tr(if (!allowed) "rank.not-allowed" else if (held) "rank.click-remove" else "rank.click-assign"),
+                        lore(menu.tr(if (held) "rank.assigned" else "rank.not-assigned"))
+                        loreActions(
+                            listOf(
+                                menu.tr(
+                                    if (!allowed) "rank.not-allowed"
+                                    else if (held) "rank.click-remove" else "rank.click-assign"
+                                )
+                            )
                         )
                         glow(held)
                     }

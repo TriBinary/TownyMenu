@@ -20,11 +20,8 @@ class FriendsMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("fri
         resident?.friends.orEmpty().sortedBy { it.name.lowercase() }.map { friend ->
             MenuEntry({
                 Icons.resident(
-                    player,
-                    friend,
-                    "",
-                    tr("friends.left-view"),
-                    tr("friends.right-remove")
+                    player, friend,
+                    actions = listOf(tr("friends.left-view"), tr("friends.right-remove"))
                 )
             }) { click ->
                 if (click.isRightClick) {

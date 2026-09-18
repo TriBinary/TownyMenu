@@ -98,7 +98,7 @@ class AdminNationToolsMenu(player: Player, private val nation: Nation, back: Men
             lateinit var list: Menu
             list = ListMenu(player, tr("admin-town-tools.ranks-title"), this) { menu ->
                 nation.residents.sortedBy { it.name.lowercase() }.map { resident ->
-                    MenuEntry({ Icons.resident(player, resident, "", tr("picker.select")) }) {
+                    MenuEntry({ Icons.resident(player, resident, actions = listOf(tr("picker.select"))) }) {
                         RankMenu.create(player, resident, nation = true, back = menu, admin = nation.name).open()
                     }
                 }
