@@ -76,7 +76,7 @@ to copy them and start the server. Before the
 first start, download a Paper 26.2 jar from [papermc.io](https://papermc.io/downloads/paper) into `run/`, then accept
 the EULA in `run/eula.txt` after the first launch.
 
-Prebuilt jars are attached to every [GitHub release](https://github.com/Trilleo/TownyMenu/releases); see the
+Prebuilt jars are attached to every [GitHub release](https://github.com/TriBinary/TownyMenu/releases); see the
 [change log](CHANGELOG.md) for what changed in each one.
 
 ## Commands
