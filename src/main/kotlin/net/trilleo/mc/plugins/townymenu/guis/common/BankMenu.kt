@@ -17,7 +17,7 @@ class BankMenu(
     player: Player,
     private val government: Government,
     back: Menu,
-) : Menu(player, player.tr("bank.title", "name" to TownyUtil.name(government.name)), 4, back) {
+) : Menu(player, player.tr("bank.title", "name" to TownyUtil.name(government.name)), 5, back) {
 
     private val isNation = government is Nation
     private val command = if (isNation) "towny:nation" else "towny:town"
@@ -61,8 +61,8 @@ class BankMenu(
         ) {
             runAndClose("$command bankhistory")
         }
-        tutorialButton(35, Tutorial.ECONOMY)
-        backButton(31)
+        tutorialButton(44, Tutorial.ECONOMY)
+        backButton(40)
     }
 
     private fun taxLabel(): String {

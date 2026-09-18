@@ -17,8 +17,9 @@
 
 #### Bank Menu
 
-+ The Deposit, Withdraw, and Bank History buttons now sit a row below the bank icon instead of directly beneath it, so
-  the bank details and the actions read as two separate blocks.
++ The Deposit, Withdraw, and Bank History buttons now have a blank row above and below them instead of being wedged
+  between the bank icon and the bottom row, so the bank details, the actions, and the navigation read as three
+  separate blocks. The menu is one row taller for it, and the amount menu is laid out the same way.
 
 #### Admin Menus
 

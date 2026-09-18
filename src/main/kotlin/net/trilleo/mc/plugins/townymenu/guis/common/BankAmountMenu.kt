@@ -31,7 +31,7 @@ class BankAmountMenu(
         if (withdraw) "bank.withdraw-menu-title" else "bank.deposit-menu-title",
         "name" to TownyUtil.name(government.name)
     ),
-    4,
+    5,
     bank,
 ) {
 
@@ -82,7 +82,7 @@ class BankAmountMenu(
             }
         }
 
-        backButton(31)
+        backButton(40)
     }
 
     /** Adds an amount button, or, when Towny would refuse [amount], an unclickable icon saying why. */
