@@ -8,17 +8,17 @@
 
 + Open menus now update themselves when Towny changes what they show: residents joining or leaving, land being claimed,
   ranks, bank transactions, plot settings, deletions, and the new day. Turn this off with `live-menu-refresh`.
-+ TownyMenu now announces in chat when you are invited to a town, your town is invited to a nation, your nation is
-  asked for an alliance, or your town goes bankrupt or falls into ruin. Each message opens the menu that answers it.
-  Turn this off with `towny-alerts`.
++ TownyMenu now announces in chat when you are invited to a town, your town is invited to a nation, your nation is asked
+  for an alliance, or your town goes bankrupt or falls into ruin. Each message opens the menu that answers it. Turn this
+  off with `towny-alerts`.
 + Added `/townymenu invites`, which opens the invites menu.
 
 #### Main Menu
 
 + Added Leaderboards: towns and nations ranked by residents, land, and bank balance, players ranked by the plots they
   own, and the richest residents of your town and nation.
-+ Added Prices & New Day: a countdown to the next Towny day and what the server charges for founding, claiming,
-  upkeep, plots, and taxes.
++ Added Prices & New Day: a countdown to the next Towny day and what the server charges for founding, claiming, upkeep,
+  plots, and taxes.
 
 #### Town Menu
 
@@ -27,15 +27,15 @@
     + Warnings for ruins, bankruptcy, conquest, overclaiming, and upkeep the bank cannot cover are shown there and on
       the town icon.
 
-+ Added a town jail menu: see prisoners and release them, jail online residents with a chosen sentence, bail, jail,
-  and cell, and list the town's jails.
++ Added a town jail menu: see prisoners and release them, jail online residents with a chosen sentence, bail, jail, and
+  cell, and list the town's jails.
 + Added Cede This Plot and Take Over Claim to the claims menu, for giving a chunk to another town and taking land from
   an overclaimed town.
 + Added Merge into Your Town to other towns' pages, for mayors asking another town to merge into theirs.
 + Added Announce to Town to the residents menu.
 + Added a Nation Zone switch to town settings for towns that have a nation zone.
-+ Residents of a ruined town can reclaim it from the town menu, and players without a town can reclaim ruins from Find
-  a Town when the server allows it.
++ Residents of a ruined town can reclaim it from the town menu, and players without a town can reclaim ruins from Find a
+  Town when the server allows it.
 
 #### Nation Menu
 
@@ -105,8 +105,8 @@
 
 #### Plot Menu
 
-+ Fixed selling, plot type, settings, permissions, and trust failing on plots in a plot group; on grouped plots they
-  now change the whole group, and their buttons say so.
++ Fixed selling, plot type, settings, permissions, and trust failing on plots in a plot group; on grouped plots they now
+  change the whole group, and their buttons say so.
 
 #### Town Menu
 

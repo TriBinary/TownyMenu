@@ -3,8 +3,8 @@
 This guide covers how to maintain [CHANGELOG.md](../CHANGELOG.md) during development and how to publish a release on
 GitHub. The release itself is automated by [.github/workflows/release.yml](../.github/workflows/release.yml) — when a
 commit that changes `plugin_version` lands on `master`, the workflow builds the plugin, extracts the matching changelog
-section, and creates the `vX.Y.Z` tag and GitHub Release with the jar attached. Every push and pull request is also built
-by [.github/workflows/build.yml](../.github/workflows/build.yml).
+section, and creates the `vX.Y.Z` tag and GitHub Release with the jar attached. Every push and pull request is also
+built by [.github/workflows/build.yml](../.github/workflows/build.yml).
 
 Releases are created in the repository the commit is merged into. Development happens on a fork, and the release
 workflow skips forks entirely, so merging a version-bump pull request into the organization repository publishes the

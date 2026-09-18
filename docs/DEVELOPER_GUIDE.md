@@ -281,9 +281,9 @@ permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/
   can't intercept the command.
 - **Grey out what the player can't do.** Use `guarded(slot, PermissionNodes.X, item) { … }` (or `Layout.add(node, …)`)
   with the same node Towny's command checks.
-- **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom
-  row; leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such
-  as the chunk map and the 4×4 permission grid, skip it.
+- **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom row;
+  leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such as the
+  chunk map and the 4×4 permission grid, skip it.
 - **Escape player-written text.** Pass names, boards, titles, and tags through `TownyUtil.name()` / `TownyUtil.text()`
   before embedding them in MiniMessage.
 - **Translate every string.** Icon names, lore, titles, and prompts come from `tr("key")`, never from Kotlin literals.
@@ -333,7 +333,8 @@ town, joining a town).
 
 `PagedMenu(player, title, back)` is a six-row menu. Override `entries()` to return `MenuEntry` objects; the top four
 rows show one page, the fifth row stays empty, slot 45/53 page back and forth, 49 is the back button, and `controls()`
-may place extra buttons in 46–48 and 50–52. `MenuEntry` takes a **lambda** that builds the icon, so only entries on the visible page are built:
+may place extra buttons in 46–48 and 50–52. `MenuEntry` takes a **lambda** that builds the icon, so only entries on the
+visible page are built:
 
 ```kotlin
 override fun entries(): List<MenuEntry> =
@@ -348,13 +349,13 @@ override fun entries(): List<MenuEntry> =
 
 ### Shared Menus (`guis/common`)
 
-| Class            | Purpose                                                                                       |
-|:-----------------|:----------------------------------------------------------------------------------------------|
+| Class            | Purpose                                                                                                                                                                    |
+|:-----------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `ToggleMenu`     | Pages of `Toggle`s, 21 per page (material, name, description, node, command, value reader). A `null` node leaves the toggle unguarded, for modes Towny checks no node for. |
-| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command. Pass `overrides` to add a Player Overrides button (used for plots). |
-| `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                     |
-| `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                |
-| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                      |
+| `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command. Pass `overrides` to add a Player Overrides button (used for plots).                                     |
+| `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                                                                                                  |
+| `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                                                                                             |
+| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                                                                                                   |
 
 ### Tutorial (`guis/tutorial`)
 
@@ -390,12 +391,12 @@ When a change adds a Towny feature to a menu, add or update its lesson in `Tutor
 ### Reacting to Towny (`listeners`)
 
 Menus are views, so when Towny changes their data from outside — another player, a command, or the new day —
-`MenuRefreshListener` calls `OpenMenus.refreshSoon()`, which re-renders every open menu once on the next tick
-(skipping players whose own command is still settling). Add the Towny event to that listener when a change should show
-up live, and keep the handler a one-liner. Players can turn this off with `live-menu-refresh`.
+`MenuRefreshListener` calls `OpenMenus.refreshSoon()`, which re-renders every open menu once on the next tick (skipping
+players whose own command is still settling). Add the Towny event to that listener when a change should show up live,
+and keep the handler a one-liner. Players can turn this off with `live-menu-refresh`.
 
-`TownyAlertListener` sends the chat alerts for invitations, bankruptcy, and ruin, each linking to the menu that
-answers it (`towny-alerts`).
+`TownyAlertListener` sends the chat alerts for invitations, bankruptcy, and ruin, each linking to the menu that answers
+it (`towny-alerts`).
 
 ### Admin Menus (`guis/admin`)
 
@@ -449,8 +450,10 @@ class TownPvpMenu(player: Player, back: Menu) : Menu(player, player.tr("town-pvp
 
     override fun build() {
         val town = resident?.townOrNull ?: return backButton(22)
-        guarded(13, PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP,
-            Icons.toggle(player, Material.IRON_SWORD, tr("toggle.pvp"), town.isPVP, tr("toggle.town-pvp-description"))) {
+        guarded(
+            13, PermissionNodes.TOWNY_COMMAND_TOWN_TOGGLE_PVP,
+            Icons.toggle(player, Material.IRON_SWORD, tr("toggle.pvp"), town.isPVP, tr("toggle.town-pvp-description"))
+        ) {
             run("towny:town toggle pvp", { town.isPVP })
         }
         backButton(22)
@@ -1109,8 +1112,8 @@ To add a setting, add the key to `config.yml` and a matching property to `Plugin
 
 ```kotlin
 var menuSounds: Boolean
-    get() = plugin.config.getBoolean("menu-sounds", true)
-    set(value) = save("menu-sounds", value)
+get() = plugin.config.getBoolean("menu-sounds", true)
+set(value) = save("menu-sounds", value)
 ```
 
 ### Reloading
