@@ -6,7 +6,6 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
-import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 

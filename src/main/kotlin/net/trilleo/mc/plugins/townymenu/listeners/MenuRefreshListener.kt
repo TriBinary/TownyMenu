@@ -1,16 +1,6 @@
 package net.trilleo.mc.plugins.townymenu.listeners
 
-import com.palmergames.bukkit.towny.event.DeleteNationEvent
-import com.palmergames.bukkit.towny.event.DeleteTownEvent
-import com.palmergames.bukkit.towny.event.NationAddTownEvent
-import com.palmergames.bukkit.towny.event.NationRemoveTownEvent
-import com.palmergames.bukkit.towny.event.NewDayEvent
-import com.palmergames.bukkit.towny.event.TownAddResidentEvent
-import com.palmergames.bukkit.towny.event.TownAddResidentRankEvent
-import com.palmergames.bukkit.towny.event.TownBlockSettingsChangedEvent
-import com.palmergames.bukkit.towny.event.TownClaimEvent
-import com.palmergames.bukkit.towny.event.TownRemoveResidentEvent
-import com.palmergames.bukkit.towny.event.TownRemoveResidentRankEvent
+import com.palmergames.bukkit.towny.event.*
 import com.palmergames.bukkit.towny.event.economy.BankTransactionEvent
 import com.palmergames.bukkit.towny.event.town.TownUnclaimEvent
 import net.trilleo.mc.plugins.townymenu.guis.framework.OpenMenus

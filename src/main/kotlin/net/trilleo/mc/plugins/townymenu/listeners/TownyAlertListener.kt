@@ -1,12 +1,12 @@
 package net.trilleo.mc.plugins.townymenu.listeners
 
 import com.palmergames.bukkit.towny.TownySettings
-import com.palmergames.bukkit.towny.`object`.Resident
 import com.palmergames.bukkit.towny.event.NationInviteTownEvent
 import com.palmergames.bukkit.towny.event.NationRequestAllyNationEvent
 import com.palmergames.bukkit.towny.event.TownInvitePlayerEvent
 import com.palmergames.bukkit.towny.event.economy.TownEntersBankruptcyEvent
 import com.palmergames.bukkit.towny.event.town.TownRuinedEvent
+import com.palmergames.bukkit.towny.`object`.Resident
 import net.trilleo.mc.plugins.townymenu.Main
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.sendPrefixed

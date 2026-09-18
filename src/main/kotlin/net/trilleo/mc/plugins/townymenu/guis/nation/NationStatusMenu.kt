@@ -70,7 +70,12 @@ class NationStatusMenu(player: Player, private val nation: Nation, back: Menu) :
         val total = upkeep + peaceful
         return Icons.icon(
             Material.HOPPER, tr("town-status.upkeep"), tr("nation-status.upkeep-description"), *buildList {
-                if (!TownySettings.isTaxingDaily()) add(tr("tutorial.fact.daily-taxes", "value" to TownyUtil.onOff(player, false)))
+                if (!TownySettings.isTaxingDaily()) add(
+                    tr(
+                        "tutorial.fact.daily-taxes",
+                        "value" to TownyUtil.onOff(player, false)
+                    )
+                )
                 add(tr("town-status.upkeep-daily", "cost" to TownyUtil.money(upkeep)))
                 if (peaceful > 0) add(tr("town-status.upkeep-peaceful", "cost" to TownyUtil.money(peaceful)))
                 add(tr("town-status.upkeep-total", "cost" to TownyUtil.money(total)))

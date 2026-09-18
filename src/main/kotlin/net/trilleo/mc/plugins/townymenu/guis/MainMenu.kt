@@ -60,10 +60,10 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
         val plot = TownyAPI.getInstance().getTownBlock(player)
         button(
             24, Icons.icon(
-            Material.GRASS_BLOCK, tr("main.plot"), tr("main.plot-description"),
-            tr(
-                "main.plot-here",
-                "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))))) {
+                Material.GRASS_BLOCK, tr("main.plot"), tr("main.plot-description"),
+                tr(
+                    "main.plot-here",
+                    "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))))) {
             PlotMenu(player, this).open()
         }
 

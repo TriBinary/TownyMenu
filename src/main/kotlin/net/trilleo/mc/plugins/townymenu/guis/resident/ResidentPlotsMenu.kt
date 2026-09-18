@@ -18,7 +18,13 @@ class ResidentPlotsMenu(player: Player, private val owner: Resident, back: Menu)
 
     override fun entries(): List<MenuEntry> =
         owner.townBlocks
-            .sortedWith(compareBy({ it.townOrNull?.name?.lowercase() }, { it.worldCoord.worldName }, { it.x }, { it.z }))
+            .sortedWith(
+                compareBy(
+                    { it.townOrNull?.name?.lowercase() },
+                    { it.worldCoord.worldName },
+                    { it.x },
+                    { it.z })
+            )
             .map { plot ->
                 val town = plot.townOrNull
                 MenuEntry({
@@ -42,7 +48,12 @@ class ResidentPlotsMenu(player: Player, private val owner: Resident, back: Menu)
                             }
                             if (TownyUtil.economy && town != null) {
                                 if (plot.isForSale) add(tr("map.for-sale", "price" to TownyUtil.money(plot.plotPrice)))
-                                if (plot.isTaxed) add(tr("bank.daily-tax", "tax" to TownyUtil.money(plot.type.getTax(town))))
+                                if (plot.isTaxed) add(
+                                    tr(
+                                        "bank.daily-tax",
+                                        "tax" to TownyUtil.money(plot.type.getTax(town))
+                                    )
+                                )
                             }
                             if (town != null) {
                                 add("")

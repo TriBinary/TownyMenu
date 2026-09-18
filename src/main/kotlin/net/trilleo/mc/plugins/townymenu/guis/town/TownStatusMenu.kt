@@ -47,7 +47,10 @@ class TownStatusMenu(player: Player, private val town: Town, back: Menu) :
 
         val problems = warnings(this, town)
         if (problems.isEmpty()) {
-            button(31, Icons.icon(Material.LIME_DYE, tr("town-status.all-good"), tr("town-status.all-good-description")))
+            button(
+                31,
+                Icons.icon(Material.LIME_DYE, tr("town-status.all-good"), tr("town-status.all-good-description"))
+            )
         } else {
             val row = layout(28, 29, 30, 31, 32, 33, 34)
             problems.forEach { row.add(it.icon) }
@@ -103,7 +106,12 @@ class TownStatusMenu(player: Player, private val town: Town, back: Menu) :
         val peaceful = if (town.isNeutral) TownySettings.getTownNeutralityCost(town) else 0.0
         return Icons.icon(
             Material.HOPPER, tr("town-status.upkeep"), tr("town-status.upkeep-description"), *buildList {
-                if (!TownySettings.isTaxingDaily()) add(tr("tutorial.fact.daily-taxes", "value" to TownyUtil.onOff(player, false)))
+                if (!TownySettings.isTaxingDaily()) add(
+                    tr(
+                        "tutorial.fact.daily-taxes",
+                        "value" to TownyUtil.onOff(player, false)
+                    )
+                )
                 if (!town.hasUpkeep()) add(tr("town-status.upkeep-exempt"))
                 add(tr("town-status.upkeep-daily", "cost" to TownyUtil.money(upkeep)))
                 if (penalty > 0) add(tr("town-status.upkeep-penalty", "cost" to TownyUtil.money(penalty)))

@@ -3,9 +3,9 @@ package net.trilleo.mc.plugins.townymenu.guis.admin
 import com.palmergames.bukkit.towny.TownySettings
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
-import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
 import net.trilleo.mc.plugins.townymenu.utils.DialogUtil
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
@@ -118,9 +118,17 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
         if (TownyUtil.economy) {
             guarded(
                 24, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_ECO_DEPOSITALL,
-                Icons.icon(Material.GOLD_BLOCK, tr("admin-server.deposit-all"), tr("admin-server.deposit-all-description"))
+                Icons.icon(
+                    Material.GOLD_BLOCK,
+                    tr("admin-server.deposit-all"),
+                    tr("admin-server.deposit-all-description")
+                )
             ) {
-                prompt(tr("admin-server.deposit-all"), tr("common.amount"), tr("admin-server.deposit-all-hint")) { amount ->
+                prompt(
+                    tr("admin-server.deposit-all"),
+                    tr("common.amount"),
+                    tr("admin-server.deposit-all-hint")
+                ) { amount ->
                     runAndClose("towny:townyadmin eco depositall ${TownyUtil.argument(amount)}")
                 }
             }

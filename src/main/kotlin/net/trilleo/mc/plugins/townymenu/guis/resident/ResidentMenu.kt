@@ -159,6 +159,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
                 (resident.accountOrNull?.cachedBalance ?: 0.0) * town.taxes / 100,
                 town.maxPercentTaxAmount
             )
+
             else -> town.taxes
         }
         val plotTax = resident.townBlocks.sumOf { plot ->

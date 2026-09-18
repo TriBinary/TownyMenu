@@ -63,13 +63,26 @@ class PricesMenu(player: Player, back: Menu) : Menu(player, player.tr("prices.ti
             }
         }.toTypedArray()))
         row.add(Icons.icon(Material.HOPPER, tr("prices.upkeep"), tr("prices.upkeep-description"), *buildList {
-            add(cost("prices.town-upkeep", town?.let { TownySettings.getTownUpkeepCost(it) } ?: TownySettings.getTownUpkeep()))
-            add(cost("prices.nation-upkeep", nation?.let { TownySettings.getNationUpkeepCost(it) } ?: TownySettings.getNationUpkeep()))
+            add(
+                cost(
+                    "prices.town-upkeep",
+                    town?.let { TownySettings.getTownUpkeepCost(it) } ?: TownySettings.getTownUpkeep()))
+            add(
+                cost(
+                    "prices.nation-upkeep",
+                    nation?.let { TownySettings.getNationUpkeepCost(it) } ?: TownySettings.getNationUpkeep()))
             if (town != null && town.isOverClaimed) {
                 add(cost("prices.overclaimed-upkeep", TownySettings.getTownPenaltyUpkeepCost(town)))
             }
-            add(cost("prices.town-peaceful", town?.let { TownySettings.getTownNeutralityCost(it) } ?: TownySettings.getTownNeutralityCost()))
-            add(cost("prices.nation-peaceful", nation?.let { TownySettings.getNationNeutralityCost(it) } ?: TownySettings.getNationNeutralityCost()))
+            add(
+                cost(
+                    "prices.town-peaceful",
+                    town?.let { TownySettings.getTownNeutralityCost(it) } ?: TownySettings.getTownNeutralityCost()))
+            add(
+                cost(
+                    "prices.nation-peaceful",
+                    nation?.let { TownySettings.getNationNeutralityCost(it) }
+                        ?: TownySettings.getNationNeutralityCost()))
         }.toTypedArray()))
         if (town != null) {
             row.add(
@@ -97,7 +110,11 @@ class PricesMenu(player: Player, back: Menu) : Menu(player, player.tr("prices.ti
             Icons.icon(
                 Material.OAK_SIGN, tr("prices.plot-types"), tr("prices.plot-types-description"),
                 *TownBlockTypeHandler.getTypes().values.sortedBy { it.name }.map {
-                    tr("prices.plot-type", "type" to TownyUtil.plotType(player, it.name), "cost" to TownyUtil.money(it.cost))
+                    tr(
+                        "prices.plot-type",
+                        "type" to TownyUtil.plotType(player, it.name),
+                        "cost" to TownyUtil.money(it.cost)
+                    )
                 }.toTypedArray()
             )
         )

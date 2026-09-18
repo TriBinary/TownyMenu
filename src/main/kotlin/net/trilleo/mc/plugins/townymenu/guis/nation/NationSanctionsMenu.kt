@@ -19,7 +19,10 @@ class NationSanctionsMenu(player: Player, private val nation: Nation, back: Menu
     PagedMenu(player, player.tr("nation-sanctions.title", "nation" to TownyUtil.name(nation.name)), back) {
 
     private val canEdit: Boolean
-        get() = resident?.nationOrNull == nation && TownyUtil.can(player, PermissionNodes.TOWNY_COMMAND_NATION_SANCTIONTOWN)
+        get() = resident?.nationOrNull == nation && TownyUtil.can(
+            player,
+            PermissionNodes.TOWNY_COMMAND_NATION_SANCTIONTOWN
+        )
 
     private fun count() = nation.sanctionedTowns.size
 

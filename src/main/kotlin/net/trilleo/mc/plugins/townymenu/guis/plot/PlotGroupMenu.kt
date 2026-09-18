@@ -31,8 +31,8 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
         button(
             4, Icons.icon(
                 Material.CHEST, tr("main.plot"), null,
-            tr("plot.group", "group" to (group?.let { TownyUtil.name(it.name) } ?: tr("common.none"))),
-            tr("plot.district", "district" to (district?.let { TownyUtil.name(it.name) } ?: tr("common.none")))))
+                tr("plot.group", "group" to (group?.let { TownyUtil.name(it.name) } ?: tr("common.none"))),
+                tr("plot.district", "district" to (district?.let { TownyUtil.name(it.name) } ?: tr("common.none")))))
 
         val groups = layout(19, 20, 21, 22, 23, 24, 25)
         groups.add(

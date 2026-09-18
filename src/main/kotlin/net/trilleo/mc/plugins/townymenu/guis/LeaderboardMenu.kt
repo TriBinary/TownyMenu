@@ -42,20 +42,38 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
             PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_RESIDENTS,
             Icons.icon(Material.BELL, tr("leaderboard.town-residents"), tr("leaderboard.town-residents-description"))
         ) {
-            townList(tr("leaderboard.town-residents")) { it.numResidents to tr("icon.town.residents", "count" to it.numResidents) }
+            townList(tr("leaderboard.town-residents")) {
+                it.numResidents to tr(
+                    "icon.town.residents",
+                    "count" to it.numResidents
+                )
+            }
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_RESIDENTS,
-            Icons.icon(Material.BEACON, tr("leaderboard.nation-residents"), tr("leaderboard.nation-residents-description"))
+            Icons.icon(
+                Material.BEACON,
+                tr("leaderboard.nation-residents"),
+                tr("leaderboard.nation-residents-description")
+            )
         ) {
-            nationList(tr("leaderboard.nation-residents")) { it.numResidents to tr("icon.town.residents", "count" to it.numResidents) }
+            nationList(tr("leaderboard.nation-residents")) {
+                it.numResidents to tr(
+                    "icon.town.residents",
+                    "count" to it.numResidents
+                )
+            }
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_LAND,
             Icons.icon(Material.GRASS_BLOCK, tr("leaderboard.town-land"), tr("leaderboard.town-land-description"))
         ) {
             townList(tr("leaderboard.town-land")) {
-                it.numTownBlocks to tr("claims.claimed", "claims" to it.numTownBlocks, "max" to it.maxTownBlocksAsAString)
+                it.numTownBlocks to tr(
+                    "claims.claimed",
+                    "claims" to it.numTownBlocks,
+                    "max" to it.maxTownBlocksAsAString
+                )
             }
         }
         row.add(
@@ -70,15 +88,33 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         if (TownyUtil.economy) {
             row.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_BALANCE,
-                Icons.icon(Material.GOLD_INGOT, tr("leaderboard.town-balance"), tr("leaderboard.town-balance-description"))
+                Icons.icon(
+                    Material.GOLD_INGOT,
+                    tr("leaderboard.town-balance"),
+                    tr("leaderboard.town-balance-description")
+                )
             ) {
-                townList(tr("leaderboard.town-balance")) { it.account.cachedBalance to tr("icon.bank", "balance" to TownyUtil.balance(it)) }
+                townList(tr("leaderboard.town-balance")) {
+                    it.account.cachedBalance to tr(
+                        "icon.bank",
+                        "balance" to TownyUtil.balance(it)
+                    )
+                }
             }
             row.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_BALANCE,
-                Icons.icon(Material.GOLD_BLOCK, tr("leaderboard.nation-balance"), tr("leaderboard.nation-balance-description"))
+                Icons.icon(
+                    Material.GOLD_BLOCK,
+                    tr("leaderboard.nation-balance"),
+                    tr("leaderboard.nation-balance-description")
+                )
             ) {
-                nationList(tr("leaderboard.nation-balance")) { it.account.cachedBalance to tr("icon.bank", "balance" to TownyUtil.balance(it)) }
+                nationList(tr("leaderboard.nation-balance")) {
+                    it.account.cachedBalance to tr(
+                        "icon.bank",
+                        "balance" to TownyUtil.balance(it)
+                    )
+                }
             }
             val town = resident?.townOrNull
             if (town != null) {
@@ -126,7 +162,16 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         ListMenu(player, title, this) { menu ->
             nations.map { it to score(it) }.sortedByDescending { it.second.first }.take(topSize)
                 .mapIndexed { index, (nation, value) ->
-                    MenuEntry({ Icons.nation(player, nation, "", rank(index), value.second, tr("common.click-details")) }) {
+                    MenuEntry({
+                        Icons.nation(
+                            player,
+                            nation,
+                            "",
+                            rank(index),
+                            value.second,
+                            tr("common.click-details")
+                        )
+                    }) {
                         NationInfoMenu(player, nation, menu).open()
                     }
                 }

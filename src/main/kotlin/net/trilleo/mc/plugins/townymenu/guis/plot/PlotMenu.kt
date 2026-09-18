@@ -160,7 +160,12 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         if (forSale) {
             grid.add(
                 if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_NOTFORSALE else PermissionNodes.TOWNY_COMMAND_PLOT_NOTFORSALE,
-                Icons.icon(Material.RED_BANNER, tr("plot.not-for-sale"), tr("plot.not-for-sale-description"), *groupLines)
+                Icons.icon(
+                    Material.RED_BANNER,
+                    tr("plot.not-for-sale"),
+                    tr("plot.not-for-sale-description"),
+                    *groupLines
+                )
             ) {
                 run("$scope notforsale", saleProbe)
             }
@@ -173,7 +178,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                     tr("plot.for-sale-title"),
                     tr("common.price-label"),
                     if (group == null) tr("plot.for-sale-hint") else null,
-                    initial = (town?.getPlotTypePrice(plot.type) ?: 0.0).toBigDecimal().stripTrailingZeros().toPlainString()
+                    initial = (town?.getPlotTypePrice(plot.type) ?: 0.0).toBigDecimal().stripTrailingZeros()
+                        .toPlainString()
                 ) { input ->
                     run("$scope forsale ${TownyUtil.argument(input)}", saleProbe)
                 }
@@ -190,7 +196,10 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                     *groupLines
                 )
             ) { click ->
-                run(if (click.isRightClick && group == null) "towny:plot evict forsale" else "towny:plot evict", ownerProbe)
+                run(
+                    if (click.isRightClick && group == null) "towny:plot evict forsale" else "towny:plot evict",
+                    ownerProbe
+                )
             }
         }
         grid.add(
@@ -257,8 +266,10 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             )
         ) { click ->
             val key = if (click.isRightClick) "maxjoindays" else "minjoindays"
-            val probe = { plot.plotObjectGroup?.let { it.minTownMembershipDays to it.maxTownMembershipDays }
-                ?: (plot.minTownMembershipDays to plot.maxTownMembershipDays) }
+            val probe = {
+                plot.plotObjectGroup?.let { it.minTownMembershipDays to it.maxTownMembershipDays }
+                    ?: (plot.minTownMembershipDays to plot.maxTownMembershipDays)
+            }
             prompt(
                 tr(if (click.isRightClick) "plot.max-join-days-title" else "plot.min-join-days-title"),
                 tr("plot.days"),

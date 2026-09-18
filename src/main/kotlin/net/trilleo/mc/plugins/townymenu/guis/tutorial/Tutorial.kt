@@ -7,11 +7,7 @@ import com.palmergames.bukkit.towny.`object`.Resident
 import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.`object`.TownyPermission
 import net.trilleo.mc.plugins.townymenu.Main
-import net.trilleo.mc.plugins.townymenu.guis.InvitesMenu
-import net.trilleo.mc.plugins.townymenu.guis.LeaderboardMenu
-import net.trilleo.mc.plugins.townymenu.guis.MainMenu
-import net.trilleo.mc.plugins.townymenu.guis.MapMenu
-import net.trilleo.mc.plugins.townymenu.guis.PricesMenu
+import net.trilleo.mc.plugins.townymenu.guis.*
 import net.trilleo.mc.plugins.townymenu.guis.common.BankMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.nation.*
@@ -306,7 +302,8 @@ object Tutorial {
             ),
             Lesson(
                 "town/ruins", Material.CRACKED_STONE_BRICKS, "tutorial.town.ruins", "tutorial.town.ruins-body",
-                townOrFind) { player ->
+                townOrFind
+            ) { player ->
                 buildList {
                     add(
                         player.tr(
@@ -332,7 +329,10 @@ object Tutorial {
                             add(
                                 player.tr(
                                     "tutorial.fact.reclaim-townless",
-                                    "value" to TownyUtil.yesNo(player, TownySettings.canRuinsBeReclaimedByTownlessPlayers())
+                                    "value" to TownyUtil.yesNo(
+                                        player,
+                                        TownySettings.canRuinsBeReclaimedByTownlessPlayers()
+                                    )
                                 )
                             )
                         }
@@ -572,7 +572,10 @@ object Tutorial {
                 "nations/level", Material.EXPERIENCE_BOTTLE, "tutorial.nations.level", "tutorial.nations.level-body",
                 withNation { player, nation, back -> NationStatusMenu(player, nation, back) }),
             Lesson(
-                "nations/sanctions", Material.RED_BANNER, "tutorial.nations.sanctions", "tutorial.nations.sanctions-body",
+                "nations/sanctions",
+                Material.RED_BANNER,
+                "tutorial.nations.sanctions",
+                "tutorial.nations.sanctions-body",
                 withNation { player, nation, back -> NationSanctionsMenu(player, nation, back) }),
             Lesson(
                 "nations/settings", Material.LEVER, "tutorial.nations.settings", "tutorial.nations.settings-body",

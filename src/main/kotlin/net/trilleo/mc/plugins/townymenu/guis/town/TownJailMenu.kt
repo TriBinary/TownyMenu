@@ -6,11 +6,7 @@ import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.`object`.jail.Jail
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.common.Pickers
-import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
-import net.trilleo.mc.plugins.townymenu.guis.framework.ListMenu
-import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
-import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
-import net.trilleo.mc.plugins.townymenu.guis.framework.PagedMenu
+import net.trilleo.mc.plugins.townymenu.guis.framework.*
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr

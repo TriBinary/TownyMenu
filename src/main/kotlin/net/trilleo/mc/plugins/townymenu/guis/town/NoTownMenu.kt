@@ -20,10 +20,18 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
             TownySettings.getTownRuinsReclaimEnabled() && TownySettings.canRuinsBeReclaimedByTownlessPlayers()
         val row = if (reclaimable) layout(10, 12, 14, 16) else layout(11, 13, 15)
         val price =
-            if (TownyUtil.economy) tr("common.cost", "cost" to TownyUtil.money(TownySettings.getNewTownPrice())) else null
+            if (TownyUtil.economy) tr(
+                "common.cost",
+                "cost" to TownyUtil.money(TownySettings.getNewTownPrice())
+            ) else null
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_NEW,
-            Icons.icon(Material.BELL, tr("no-town.found"), tr("no-town.found-description"), *listOfNotNull(price).toTypedArray())
+            Icons.icon(
+                Material.BELL,
+                tr("no-town.found"),
+                tr("no-town.found-description"),
+                *listOfNotNull(price).toTypedArray()
+            )
         ) {
             prompt(tr("no-town.found-title"), tr("no-town.town-name")) { name ->
                 run(
