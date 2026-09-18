@@ -34,6 +34,12 @@
 
 ### Technical Details
 
+#### Build
+
++ `copyPlugin` now deletes older `TownyMenu-*.jar` files from `run/plugins/` before copying the new build, so bumping
+  the version no longer leaves the test server with two copies of the plugin. The same cleanup for Towny's own jar now
+  runs even when Gradle considers the copy up to date.
+
 #### Misc
 
 + Added a `Prices` utility that works out what a menu action costs — claims, outposts, spawn travel, plot types, town

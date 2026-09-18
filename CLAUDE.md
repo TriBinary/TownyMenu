@@ -51,11 +51,13 @@ Before finishing any task that changes the plugin, do all of the following:
 
 ```powershell
 ./gradlew build        # Builds build/libs/TownyMenu-<version>.jar
-./gradlew copyPlugin   # Copies the jar and Towny (towny_version) into run/plugins/
+./gradlew copyPlugin   # Copies the jar and Towny (towny_version) into run/plugins/, clearing older copies
 ./gradlew startServer  # Runs copyPlugin, then launches the paper-*.jar in run/
 ```
 
-The local test server lives in `run/` (gitignored). `copyPlugin` puts the matching Towny jar in `run/plugins/`, but the
+The local test server lives in `run/` (gitignored). `copyPlugin` deletes every `TownyMenu-*.jar` and `towny-*.jar`
+already in `run/plugins/` before copying, so a version bump never leaves two copies for Bukkit to load. It puts the
+matching Towny jar there too, but the
 Paper 26.2 jar (`run/paper-*.jar`) must be downloaded by hand from https://papermc.io/downloads/paper, and `eula.txt`
 accepted, before `startServer` works. The server console reads commands from the terminal running Gradle.
 
