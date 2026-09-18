@@ -30,7 +30,7 @@ class PlotAreaMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-ar
             21, Icons.icon(
                 if (circle) Material.SNOWBALL else Material.PAINTING, tr("plot-area.shape"), null,
                 tr("common.current", "value" to tr(if (circle) "plot-area.circle" else "plot-area.square")),
-                tr("common.click-change")
+                actions = listOf(tr("common.click-change"))
             )
         ) {
             circle = !circle
@@ -40,7 +40,7 @@ class PlotAreaMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-ar
             23, Icons.icon(
                 Material.COMPASS, tr("plot-area.radius"), tr("plot-area.radius-description"),
                 tr("common.current", "value" to radius),
-                tr("common.click-change")
+                actions = listOf(tr("common.click-change"))
             )
         ) {
             prompt(tr("plot-area.radius-title"), tr("claims.radius"), initial = radius, maxLength = 3) {

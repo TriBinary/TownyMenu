@@ -62,10 +62,8 @@ class AdminPermsMenu(player: Player, back: Menu) : Menu(player, player.tr("admin
             MenuEntry({
                 itemStack(Material.BOOKSHELF) {
                     name("<gold>${TownyUtil.text(group)}")
-                    lore(
-                        tr("admin-perms.node-count", "count" to TownyPerms.getPermsOfGroup(group).size),
-                        tr("common.click-details"),
-                    )
+                    lore(tr("admin-perms.node-count", "count" to TownyPerms.getPermsOfGroup(group).size))
+                    loreActions(listOf(tr("common.click-details")))
                 }
             }) { AdminPermGroupMenu(player, group, menu).open() }
         }

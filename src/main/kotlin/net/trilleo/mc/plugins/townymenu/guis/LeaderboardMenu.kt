@@ -152,7 +152,12 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         ListMenu(player, title, this) { menu ->
             towns.map { it to score(it) }.sortedByDescending { it.second.first }.take(topSize)
                 .mapIndexed { index, (town, value) ->
-                    MenuEntry({ Icons.town(player, town, "", rank(index), value.second, tr("common.click-details")) }) {
+                    MenuEntry({
+                        Icons.town(
+                            player, town, rank(index), value.second,
+                            actions = listOf(tr("common.click-details"))
+                        )
+                    }) {
                         TownInfoMenu(player, town, menu).open()
                     }
                 }
@@ -164,12 +169,8 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                 .mapIndexed { index, (nation, value) ->
                     MenuEntry({
                         Icons.nation(
-                            player,
-                            nation,
-                            "",
-                            rank(index),
-                            value.second,
-                            tr("common.click-details")
+                            player, nation, rank(index), value.second,
+                            actions = listOf(tr("common.click-details"))
                         )
                     }) {
                         NationInfoMenu(player, nation, menu).open()
@@ -193,7 +194,12 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         residents.map { it to score(it) }.sortedByDescending { it.second.first }
             .let { if (limit) it.take(topSize) else it }
             .mapIndexed { index, (target, value) ->
-                MenuEntry({ Icons.resident(player, target, "", rank(index), value.second, tr("common.click-view")) }) {
+                MenuEntry({
+                    Icons.resident(
+                        player, target, rank(index), value.second,
+                        actions = listOf(tr("common.click-view"))
+                    )
+                }) {
                     ResidentProfileMenu(player, target, menu).open()
                 }
             }

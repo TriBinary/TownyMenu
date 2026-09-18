@@ -111,10 +111,9 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
                     name("<green>${TownyUtil.text(world.name)}")
                     lore(
                         tr("admin-world.using-towny", "value" to TownyUtil.yesNo(player, world.isUsingTowny)),
-                        tr("admin-world.towns", "count" to world.townsInWorld.size),
-                        "",
-                        tr("common.click-view"),
+                        tr("admin-world.towns", "count" to world.townsInWorld.size)
                     )
+                    loreActions(listOf(tr("common.click-view")))
                     glow(world.isUsingTowny)
                 }
             }

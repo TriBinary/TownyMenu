@@ -32,7 +32,10 @@ class AdminNamesMenu(
 
     override fun entries(): List<MenuEntry> = held().sortedBy { it.lowercase() }.map { name ->
         MenuEntry({
-            Icons.icon(material, "<white>${TownyUtil.name(name)}", null, tr("admin-tools.click-remove"))
+            Icons.icon(
+                material, "<white>${TownyUtil.name(name)}",
+                actions = listOf(tr("admin-tools.click-remove"))
+            )
         }) {
             run("$command remove $name", ::count)
         }

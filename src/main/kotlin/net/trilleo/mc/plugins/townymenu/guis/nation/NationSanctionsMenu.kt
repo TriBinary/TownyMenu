@@ -29,12 +29,11 @@ class NationSanctionsMenu(player: Player, private val nation: Nation, back: Menu
     override fun entries(): List<MenuEntry> {
         val canEdit = canEdit
         return nation.sanctionedTowns.sortedBy { it.name.lowercase() }.map { town ->
-            val lines = listOfNotNull(
-                "",
+            val actions = listOfNotNull(
                 tr("common.left-details"),
                 if (canEdit) tr("nation-sanctions.right-lift") else null
             )
-            MenuEntry({ Icons.town(player, town, *lines.toTypedArray()) }) { click ->
+            MenuEntry({ Icons.town(player, town, actions = actions) }) { click ->
                 if (click.isRightClick && canEdit) {
                     run("towny:nation sanctiontown remove ${town.name}", ::count)
                 } else {

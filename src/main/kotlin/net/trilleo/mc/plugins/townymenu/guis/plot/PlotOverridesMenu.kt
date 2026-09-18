@@ -42,12 +42,9 @@ class PlotOverridesMenu(player: Player, private val plot: TownBlock, back: Menu)
             node(PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_PERM, PermissionNodes.TOWNY_COMMAND_PLOT_PERM_REMOVE)
         )
         return overrides().entries.sortedBy { it.key.name.lowercase() }.map { (target, data) ->
-            val lines = listOfNotNull(
-                "",
-                tr("plot-overrides.changed-by", "player" to TownyUtil.name(data.lastChangedBy ?: "-")),
-                if (canRemove) tr("plot-overrides.click-remove") else null,
-            )
-            MenuEntry({ Icons.resident(player, target, *lines.toTypedArray()) }) {
+            val line = tr("plot-overrides.changed-by", "player" to TownyUtil.name(data.lastChangedBy ?: "-"))
+            val actions = listOfNotNull(if (canRemove) tr("plot-overrides.click-remove") else null)
+            MenuEntry({ Icons.resident(player, target, line, actions = actions) }) {
                 if (canRemove) run("$command remove ${target.name}", ::snapshot)
             }
         }

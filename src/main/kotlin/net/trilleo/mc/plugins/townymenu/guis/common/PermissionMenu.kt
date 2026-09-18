@@ -44,7 +44,7 @@ class PermissionMenu(
             guarded(2 + column, node, itemStack(ACTION_ICONS.getValue(action)) {
                 name("<gold>${actionName(action)}")
                 loreWrapped("<gray>${actionDescription(action)}")
-                lore("", tr(if (allOn) "perm.everyone-off" else "perm.everyone-on"))
+                loreActions(listOf(tr(if (allOn) "perm.everyone-off" else "perm.everyone-on")))
             }) { run("$command ${action.arg} ${if (allOn) "off" else "on"}", ::snapshot) }
         }
 
@@ -52,17 +52,15 @@ class PermissionMenu(
             val allOn = ACTIONS.all { perms.getPerm(level, it) }
             guarded(10 + row * 9, node, itemStack(LEVEL_ICONS.getValue(level)) {
                 name("<aqua>${levelName(level)}")
-                lore(tr(if (allOn) "perm.every-action-off" else "perm.every-action-on"))
+                loreActions(listOf(tr(if (allOn) "perm.every-action-off" else "perm.every-action-on")))
             }) { run("$command ${level.arg} ${if (allOn) "off" else "on"}", ::snapshot) }
 
             ACTIONS.forEachIndexed { column, action ->
                 val allowed = perms.getPerm(level, action)
                 val cell = itemStack(if (allowed) Material.LIME_CONCRETE else Material.RED_CONCRETE) {
                     name("${if (allowed) "<green>" else "<red>"}${levelName(level)}: ${actionName(action)}")
-                    lore(
-                        tr("icon.currently", "value" to tr(if (allowed) "perm.allowed" else "perm.denied")),
-                        tr("icon.click-toggle")
-                    )
+                    lore(tr("icon.currently", "value" to tr(if (allowed) "perm.allowed" else "perm.denied")))
+                    loreActions(listOf(tr("icon.click-toggle")))
                 }
                 guarded(11 + row * 9 + column, node, cell) {
                     run("$command ${level.arg} ${action.arg} ${if (allowed) "off" else "on"}", ::snapshot)

@@ -37,7 +37,8 @@
 - **Status pages** — Click your town or nation to see its level, what the next level needs, its limits, the daily
   upkeep, and warnings for debt, ruins, conquest, and overclaiming.
 - **Leaderboards and prices** — Rank towns, nations, and players by residents, land, and money, and see every price on
-  the server with a countdown to the next Towny day.
+  the server with a countdown to the next Towny day. Buttons that spend money show their own price too, so you know
+  what a claim, a teleport, or a plot costs before you click it.
 - **Directories** — Browse and rank every town and nation by residents, claims, bank balance, distance, and more; visit,
   join, donate, buy a town that is for sale, or propose alliances.
 - **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place, or
@@ -70,7 +71,8 @@ TownyMenu is an addon: Towny must be installed on the server, or TownyMenu will 
 ```
 
 The compiled JAR is placed in `build/libs/`. Run `./gradlew copyPlugin` to copy it, along with the matching Towny jar,
-into `run/plugins/` for the local test server, or `./gradlew startServer` to copy them and start the server. Before the
+into `run/plugins/` for the local test server — any older copy of either is deleted first — or `./gradlew startServer`
+to copy them and start the server. Before the
 first start, download a Paper 26.2 jar from [papermc.io](https://papermc.io/downloads/paper) into `run/`, then accept
 the EULA in `run/eula.txt` after the first launch.
 

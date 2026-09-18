@@ -90,7 +90,7 @@ icon:
   currently: "<gray>Currently: {value}"
   click-toggle: "<yellow>Click to toggle"
   bank: "<gray>Bank: <white>{balance}"
-  open-public: "<gray>Open: {open}  <gray>Public: {public}"
+  open-public: "<gray>Open: {open} <dark_gray>· <gray>Public: {public}"
   resident:
     town: "<gray>Town: <white>{town}"
     mayor: "Mayor"
@@ -107,9 +107,9 @@ icon:
   nation:
     leader: "<gray>Leader: <white>{leader}"
     capital: "<gray>Capital: <white>{capital}"
-    size: "<gray>Towns: <white>{towns}  <gray>Residents: <white>{residents}"
-    relations: "<gray>Allies: <white>{allies}  <gray>Enemies: <white>{enemies}"
-    flags: "<gray>Open: {open}  <gray>Public: {public}  <gray>Peaceful: {peaceful}"
+    size: "<gray>Towns: <white>{towns} <dark_gray>· <gray>Residents: <white>{residents}"
+    relations: "<gray>Allies: <white>{allies} <dark_gray>· <gray>Enemies: <white>{enemies}"
+    flags: "<gray>Open: {open} <dark_gray>· <gray>Public: {public} <dark_gray>· <gray>Peaceful: {peaceful}"
 
 main:
   title: "Towny"
@@ -253,8 +253,8 @@ town:
   not-in-town: "<red>You are not in a town"
   plot-tax: "<gray>Plot tax: <white>{tax}"
   outposts: "<gray>Outposts: <white>{count}"
-  pvp-mobs: "<gray>PvP: {pvp}  <gray>Mobs: {mobs}"
-  fire-explosions: "<gray>Fire: {fire}  <gray>Explosions: {explosions}"
+  pvp-mobs: "<gray>PvP: {pvp} <dark_gray>· <gray>Mobs: {mobs}"
+  fire-explosions: "<gray>Fire: {fire} <dark_gray>· <gray>Explosions: {explosions}"
   residents: "<green>Residents"
   residents-description: "View residents, manage ranks, and invite players."
   bank: "<gold>Town Bank"
@@ -360,7 +360,7 @@ claims:
   claimed: "<gray>Claimed: <white>{claims}/{max}"
   available: "<gray>Available: <white>{available}"
   unlimited: "Unlimited"
-  bonus: "<gray>Bonus claims: <white>{bonus}  <gray>Purchased: <white>{purchased}"
+  bonus: "<gray>Bonus claims: <white>{bonus} <dark_gray>· <gray>Purchased: <white>{purchased}"
   outposts: "<gray>Outposts: <white>{outposts}/{limit}"
   price: "<gray>Claim price: <white>{price}"
   claim: "<green>Claim This Chunk"
@@ -385,6 +385,7 @@ claims:
   buy-bonus-title: "Buy Bonus Claims"
   buy-bonus-description: "Buy extra claim slots."
   price-each: "<gray>Price each: <white>{price}"
+  refund-each: "<gray>Refund each: <white>{refund}"
   bonus-amount: "Number of claims"
   auto-claim: "<green>Auto Claim"
   auto-claim-description: "Claim every chunk you walk into."
@@ -1576,7 +1577,7 @@ tutorial:
     bankruptcy: "Debt and Bankruptcy"
     bankruptcy-body: "When bankruptcy is on, a town that can't pay its upkeep goes into debt instead of being lost. A bankrupt town can't claim land or recruit until the debt is paid. Otherwise the town falls into ruin or is deleted. Either way TownyMenu warns the mayor in chat."
     prices: "Prices and the Next Day"
-    prices-body: "Prices & New Day, on the main menu, counts down to the next Towny day and lists what this server charges for founding, claiming, upkeep, plots, and taxes."
+    prices-body: "Prices & New Day, on the main menu, counts down to the next Towny day and lists what this server charges for founding, claiming, upkeep, plots, and taxes. Buttons that cost money also show their own price, so you can see what a claim, a teleport, or a plot takes before you click it."
 
   profile:
     title: "<green>Your Profile"

@@ -37,7 +37,7 @@ class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) :
 
     override fun entries(): List<MenuEntry> =
         trusted().sortedBy { it.name.lowercase() }.map { trusted ->
-            MenuEntry({ Icons.resident(player, trusted, "", tr("common.click-untrust")) }) {
+            MenuEntry({ Icons.resident(player, trusted, actions = listOf(tr("common.click-untrust"))) }) {
                 run("$command remove ${trusted.name}", ::count)
             }
         }

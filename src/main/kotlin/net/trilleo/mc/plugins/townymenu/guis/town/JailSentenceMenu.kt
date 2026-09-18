@@ -74,7 +74,7 @@ class JailSentenceMenu(player: Player, private val town: Town, private val targe
                 Icons.icon(
                     Material.IRON_BARS, tr("jail-sentence.jail"), null,
                     tr("common.current", "value" to TownJailMenu.jailName(this, town, jail)),
-                    tr("common.click-change")
+                    actions = listOf(tr("common.click-change"))
                 )
             ) {
                 val options = jails.mapIndexed { index, option ->
@@ -92,7 +92,7 @@ class JailSentenceMenu(player: Player, private val town: Town, private val targe
                 Icons.icon(
                     Material.IRON_CHAIN, tr("jail-sentence.cell"), null,
                     tr("common.current", "value" to cell + 1),
-                    tr("common.click-change")
+                    actions = listOf(tr("common.click-change"))
                 )
             ) {
                 val options = (0 until jail.jailCellCount).map {

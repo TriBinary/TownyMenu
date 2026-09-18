@@ -108,11 +108,16 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
                     if (plot.isHomeBlock) add(tr("map.home-block"))
                     if (plot.isOutpost) add(tr("map.outpost"))
                     if (plot.isForSale) add(tr("map.for-sale", "price" to TownyUtil.money(plot.plotPrice)))
-                    add("")
-                    add(tr("map.click-town"))
-                    if (canBuy(plot, viewer)) add(tr("map.right-buy"))
                 }
             })
+            if (plot != null) {
+                loreActions(
+                    listOfNotNull(
+                        tr("map.click-town"),
+                        if (canBuy(plot, viewer)) tr("map.right-buy") else null
+                    )
+                )
+            }
             glow(plot?.isForSale == true)
         }
     }

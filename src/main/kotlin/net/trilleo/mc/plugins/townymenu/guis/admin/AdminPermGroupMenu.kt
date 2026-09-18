@@ -24,7 +24,7 @@ class AdminPermGroupMenu(player: Player, private val group: String, back: Menu) 
         MenuEntry({
             itemStack(Material.PAPER) {
                 name("<white>${TownyUtil.text(node)}")
-                lore(tr("admin-perms.click-remove"))
+                loreActions(listOf(tr("admin-perms.click-remove")))
             }
         }) {
             run("$command removeperm $node", { nodes().size })

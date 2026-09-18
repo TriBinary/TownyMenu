@@ -30,7 +30,8 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 Material.NAME_TAG,
                 tr("nation-details.rename"),
                 null,
-                tr("common.current", "value" to TownyUtil.name(nation.name))
+                tr("common.current", "value" to TownyUtil.name(nation.name)),
+                *listOfNotNull(costLine(TownySettings.getNationRenameCost())).toTypedArray()
             )
         ) {
             prompt(tr("nation-details.rename-title"), tr("common.new-name"), initial = nation.name) { name ->
@@ -73,7 +74,8 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
             Icons.icon(
                 Material.LIGHT_BLUE_DYE,
                 tr("nation-details.map-color"),
-                tr("nation-details.map-color-description")
+                tr("nation-details.map-color-description"),
+                *listOfNotNull(costLine(TownySettings.getNationSetMapColourCost())).toTypedArray()
             )
         ) {
             val colors = TownySettings.getNationColorsMap().keys.sorted().map { it to "<white>${TownyUtil.name(it)}" }
@@ -85,10 +87,13 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
             PermissionNodes.TOWNY_COMMAND_NATION_SET_CAPITAL,
             Icons.icon(
                 Material.GOLDEN_HELMET, tr("nation-details.capital"), null,
-                tr("common.current", "value" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")))) {
+                tr("common.current", "value" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")),
+                *listOfNotNull(costLine(TownySettings.getNationCapitalChangeCost())).toTypedArray()
+            )
+        ) {
             ListMenu(player, tr("nation-details.capital-title"), this) {
                 nation.towns.filter { !nation.isCapital(it) }.sortedBy { it.name.lowercase() }.map { town ->
-                    MenuEntry({ Icons.town(player, town, "", tr("nation-details.capital-click")) }) {
+                    MenuEntry({ Icons.town(player, town, actions = listOf(tr("nation-details.capital-click"))) }) {
                         run("towny:nation set capital ${town.name}", { nation.capital }, returnTo = this)
                     }
                 }
@@ -102,7 +107,12 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
             ListMenu(player, tr("nation-details.leader-title"), this) {
                 nation.capital?.residents.orEmpty().filter { !it.isKing }.sortedBy { it.name.lowercase() }
                     .map { candidate ->
-                        MenuEntry({ Icons.resident(player, candidate, "", tr("nation-details.leader-click")) }) {
+                        MenuEntry({
+                            Icons.resident(
+                                player, candidate,
+                                actions = listOf(tr("nation-details.leader-click"))
+                            )
+                        }) {
                             run("towny:nation set king ${candidate.name}", { nation.king }, returnTo = this)
                         }
                     }
@@ -161,7 +171,7 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 "<gold>$label",
                 null,
                 tr("common.current", "value" to current),
-                tr("common.click-change")
+                actions = listOf(tr("common.click-change"))
             )
         ) {
             prompt(label, tr("common.amount"), initial = read().toString()) { amount ->

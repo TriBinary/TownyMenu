@@ -27,13 +27,12 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
         return nation.towns
             .sortedWith(compareByDescending<Town> { nation.isCapital(it) }.thenBy { it.name.lowercase() })
             .map { town ->
-                val lines = buildList {
-                    add("")
-                    if (nation.isCapital(town)) add(tr("nation-towns.capital"))
-                    add(tr("common.left-details"))
-                    if (canKick && !nation.isCapital(town)) add(tr("nation-towns.right-remove"))
-                }
-                MenuEntry({ Icons.town(player, town, *lines.toTypedArray()) }) { click ->
+                val lines = listOfNotNull(if (nation.isCapital(town)) tr("nation-towns.capital") else null)
+                val actions = listOfNotNull(
+                    tr("common.left-details"),
+                    if (canKick && !nation.isCapital(town)) tr("nation-towns.right-remove") else null
+                )
+                MenuEntry({ Icons.town(player, town, *lines.toTypedArray(), actions = actions) }) { click ->
                     if (click.isRightClick && canKick && !nation.isCapital(town)) {
                         run("towny:nation kick ${town.name}", { nation.numTowns })
                     } else {
@@ -67,8 +66,8 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
         button(
             51, Icons.icon(
                 Material.PAPER, tr("common.sent-invites"), null,
-                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
-                tr("common.pending", "count" to pending.size),
+                tr("common.pending", "count" to pending.size), "",
+                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray()
             )
         )
     }

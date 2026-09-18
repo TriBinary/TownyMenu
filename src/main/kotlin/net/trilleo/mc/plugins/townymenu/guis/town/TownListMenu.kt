@@ -34,12 +34,12 @@ class TownListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("to
             .sortedWith(sort.comparator(player))
             .map { town ->
                 val lines = listOfNotNull(
-                    "",
                     distance(player, town)?.takeIf { sort == Sort.NEARBY }
                         ?.let { tr("town-list.distance", "blocks" to it.toLong()) },
-                    tr("common.click-details"),
                 )
-                MenuEntry({ Icons.town(player, town, *lines.toTypedArray()) }) {
+                MenuEntry({
+                    Icons.town(player, town, *lines.toTypedArray(), actions = listOf(tr("common.click-details")))
+                }) {
                     TownInfoMenu(player, town, this).open()
                 }
             }
@@ -53,7 +53,7 @@ class TownListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("to
         button(47, itemStack(Material.HOPPER) {
             name(tr("sort.current", "sort" to tr(sort.label)))
             lore(sorts.map { (if (it == sort) "<green>▶ " else "<gray>  ") + tr(it.label) })
-            lore("", tr("common.click-change"))
+            loreActions(listOf(tr("common.click-change")))
         }) {
             sort = sorts[(sorts.indexOf(sort) + 1) % sorts.size]
             render()

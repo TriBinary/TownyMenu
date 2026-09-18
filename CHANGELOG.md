@@ -2,6 +2,65 @@
 
 ## Unreleased
 
+## Version 1.0.1
+
+### Improvements
+
+#### Town Menu
+
++ Claiming, unclaiming, filling gaps, and taking over a claim now show what this server charges — or refunds — per
+  chunk, and Claim Outpost shows the outpost price.
++ Go to Spawn and Outposts show what the trip costs you, and each outpost in the outpost list shows it too.
++ Reclaiming ruins no longer shows a cost line on servers where reclaiming is free.
++ Renaming a town and changing its map colour show their cost.
++ Visiting another town shows what it will actually charge you, which depends on whether you are a resident, a nation
+  member, an ally, or an outsider. Merging another town into yours shows what the merge costs.
+
+#### Nation Menu
+
++ Go to Spawn and visiting another nation show what the trip costs you.
++ Renaming a nation, changing its map colour, and moving the capital show their cost.
+
+#### Plot Menu
+
++ Claiming the wilderness you stand in shows the claim price, and Claim as Outpost shows the outpost price.
++ Change Plot Type now shows what each type costs, multiplied across the group when the plot is in one.
+
+#### Resident Menu
+
++ Go to Spawn shows what the trip costs you.
+
+#### Misc
+
++ Prices are hidden on servers with no economy, and free actions no longer carry an empty cost line.
++ Icon tooltips are easier to read: a blank line now sits under every icon's name, and its description, details, and
+  costs are separated into blocks instead of running together.
++ What a click does is now set off at the bottom of every tooltip by a divider line, so an icon's actions are easy to
+  spot without reading the whole tooltip.
++ Lines that pack two or three values together — Open and Public, PvP and Mobs, Allies and Enemies — now separate them
+  with a dot instead of a gap, so the pairs no longer blur into one another.
+
+### Technical Details
+
+#### Build
+
++ `copyPlugin` now deletes older `TownyMenu-*.jar` files from `run/plugins/` before copying the new build, so bumping
+  the version no longer leaves the test server with two copies of the plugin. The same cleanup for Towny's own jar now
+  runs even when Gradle considers the copy up to date.
+
+#### Misc
+
++ Added a `Prices` utility that works out what a menu action costs — claims, outposts, spawn travel, plot types, town
+  merges — from Towny's config and the town or nation involved, and `Menu.costLine` / `Menu.priceLine` to turn an
+  amount into lore.
++ `Pickers.option` takes a `lines` lambda for per-option lore.
++ Added `LoreBlocks`, which lays an icon's lore out in blocks: a blank line under the display name, single separators
+  between blocks, a divider rule sized to the longest line above the actions, and no separator left dangling at either
+  end. The `itemStack` DSL exposes it as `loreBreak()` and `loreActions(...)`.
++ `Icons.icon`, `toggle`, `resident`, `town`, and `nation` take a named `actions` list for click hints and separate
+  their own lore blocks, so every menu spaces its icons the same way without repeating `""` separators at call sites.
++ `LoreUtil.columns` exposes the column width of a string, the measure `wrapLore` already wrapped on.
+
 ## Version 1.0.0
 
 ### New Features

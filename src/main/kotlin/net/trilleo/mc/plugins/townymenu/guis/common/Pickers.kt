@@ -26,12 +26,7 @@ object Pickers {
                 .filter(filter)
                 .map { resident ->
                     MenuEntry({
-                        Icons.resident(
-                            back.player,
-                            resident,
-                            "",
-                            back.tr("picker.select")
-                        )
+                        Icons.resident(back.player, resident, actions = listOf(back.tr("picker.select")))
                     }) { onPick(resident) }
                 }
         }
@@ -44,12 +39,7 @@ object Pickers {
                 .sortedBy { it.name.lowercase() }
                 .map { town ->
                     MenuEntry({
-                        Icons.town(
-                            back.player,
-                            town,
-                            "",
-                            back.tr("picker.select")
-                        )
+                        Icons.town(back.player, town, actions = listOf(back.tr("picker.select")))
                     }) { onPick(town) }
                 }
         }
@@ -62,23 +52,22 @@ object Pickers {
                 .sortedBy { it.name.lowercase() }
                 .map { nation ->
                     MenuEntry({
-                        Icons.nation(
-                            back.player,
-                            nation,
-                            "",
-                            back.tr("picker.select")
-                        )
+                        Icons.nation(back.player, nation, actions = listOf(back.tr("picker.select")))
                     }) { onPick(nation) }
                 }
         }
 
-    /** Picks one of [options] (id to MiniMessage label), marking [current] as selected. */
+    /**
+     * Picks one of [options] (id to MiniMessage label), marking [current] as selected.
+     * [lines] adds lore to a single option, for per-option detail such as what picking it costs.
+     */
     fun option(
         back: Menu,
         title: String,
         options: List<Pair<String, String>>,
         current: String?,
         material: Material,
+        lines: (String) -> List<String> = { emptyList() },
         onPick: (String) -> Unit
     ): Menu =
         ListMenu(back.player, title, back) {
@@ -87,7 +76,13 @@ object Pickers {
                 val icon = {
                     itemStack(material) {
                         name(label)
-                        lore(back.tr(if (selected) "picker.current" else "picker.select"))
+                        lore(lines(id))
+                        if (selected) {
+                            loreBreak()
+                            lore(back.tr("picker.current"))
+                        } else {
+                            loreActions(listOf(back.tr("picker.select")))
+                        }
                         glow(selected)
                     }
                 }

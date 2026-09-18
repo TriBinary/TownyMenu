@@ -27,11 +27,9 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                 itemStack(Material.BOOKSHELF) {
                     name("<gold>${child.name}")
                     if (child.description.isNotEmpty()) loreWrapped("<gray>${shorten(child.description)}")
-                    lore(
-                        "",
-                        tr("admin-config.settings-count", "count" to TownyConfig.count(child.path)),
-                        tr("common.click-view")
-                    )
+                    loreBreak()
+                    lore(tr("admin-config.settings-count", "count" to TownyConfig.count(child.path)))
+                    loreActions(listOf(tr("common.click-view")))
                 }
             }) { TownyConfigMenu(player, child.path, this).open() }
         } + TownyConfig.settings(section).map { settingEntry(this, it) }
@@ -81,15 +79,18 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                 ) {
                     name("<yellow>${setting.name}")
                     if (setting.description.isNotEmpty()) loreWrapped("<gray>${shorten(setting.description)}")
+                    loreBreak()
                     lore(buildList {
-                        add("")
                         add(menu.tr("admin-config.path", "path" to setting.path))
                         if (kind == Kind.READ_ONLY) {
                             add(menu.tr("admin-config.read-only"))
                         } else {
                             add(menu.tr("common.current", "value" to display(player, kind, value)))
                             add(menu.tr("admin-config.default", "value" to display(player, kind, setting.default)))
-                            add("")
+                        }
+                    })
+                    if (kind != Kind.READ_ONLY) {
+                        loreActions(buildList {
                             add(
                                 menu.tr(
                                     when {
@@ -100,8 +101,8 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                                 )
                             )
                             if (editable && value != setting.default) add(menu.tr("admin-config.right-reset"))
-                        }
-                    })
+                        })
+                    }
                     glow(on)
                 }
             }

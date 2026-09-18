@@ -20,7 +20,7 @@ class AdminResidentListMenu(player: Player, back: Menu) : PagedMenu(player, play
             .filter { it.name.contains(filter, ignoreCase = true) }
             .sortedWith(compareBy({ !it.isOnline }, { it.name.lowercase() }))
             .map { resident ->
-                MenuEntry({ Icons.resident(player, resident, "", tr("common.click-view")) }) {
+                MenuEntry({ Icons.resident(player, resident, actions = listOf(tr("common.click-view"))) }) {
                     AdminResidentMenu(player, resident, this).open()
                 }
             }

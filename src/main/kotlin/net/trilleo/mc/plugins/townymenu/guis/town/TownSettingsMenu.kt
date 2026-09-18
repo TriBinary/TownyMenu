@@ -28,7 +28,8 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                 Material.NAME_TAG,
                 tr("town-details.rename"),
                 null,
-                tr("common.current", "value" to TownyUtil.name(town.name))
+                tr("common.current", "value" to TownyUtil.name(town.name)),
+                *listOfNotNull(costLine(TownySettings.getTownRenameCost())).toTypedArray()
             )
         ) {
             prompt(tr("town-details.rename-title"), tr("common.new-name"), initial = town.name) { name ->
@@ -68,7 +69,10 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_MAPCOLOR,
-            Icons.icon(Material.LIME_DYE, tr("common.map-color"), tr("town-details.map-color-description"))
+            Icons.icon(
+                Material.LIME_DYE, tr("common.map-color"), tr("town-details.map-color-description"),
+                *listOfNotNull(costLine(TownySettings.getTownSetMapColourCost())).toTypedArray()
+            )
         ) {
             val colors = TownySettings.getTownColorsMap().keys.sorted().map { it to "<white>${TownyUtil.name(it)}" }
             Pickers.option(this, tr("town-details.map-color-title"), colors, null, Material.LIME_DYE) { color ->
@@ -183,7 +187,7 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                         Material.RED_BANNER,
                         tr("town-details.not-for-sale"),
                         null,
-                        tr("common.price", "price" to TownyUtil.money(town.forSalePrice))
+                        *listOfNotNull(priceLine(town.forSalePrice)).toTypedArray()
                     )
                 ) {
                     run("towny:town notforsale", { town.isForSale })
@@ -224,7 +228,7 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                 "<gold>$label",
                 null,
                 tr("common.current", "value" to current),
-                tr("common.click-change")
+                actions = listOf(tr("common.click-change"))
             )
         ) {
             prompt(label, tr("common.amount"), initial = read().toString()) { amount ->

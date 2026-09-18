@@ -55,11 +55,8 @@ class ResidentPlotsMenu(player: Player, private val owner: Resident, back: Menu)
                                     )
                                 )
                             }
-                            if (town != null) {
-                                add("")
-                                add(tr("common.click-details"))
-                            }
-                        }.toTypedArray()
+                        }.toTypedArray(),
+                        actions = listOfNotNull(if (town != null) tr("common.click-details") else null)
                     )
                 }) { town?.let { TownInfoMenu(player, it, this).open() } }
             }

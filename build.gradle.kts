@@ -65,18 +65,25 @@ tasks.jar {
     }
 }
 
+val serverPluginsDir = layout.projectDirectory.dir("run/plugins")
+
 // Copies Towny into the test server, replacing any other Towny version left behind by a version bump.
 tasks.register<Copy>("copyServerPlugins") {
-    val pluginsDir = layout.projectDirectory.dir("run/plugins")
-    doFirst { delete(fileTree(pluginsDir) { include("towny-*.jar") }) }
+    // The copy alone can be up to date while an old jar still sits beside it, and Bukkit would load both.
+    outputs.upToDateWhen { false }
+    doFirst { delete(fileTree(serverPluginsDir) { include("towny-*.jar") }) }
     from(serverPlugins)
-    into(pluginsDir)
+    into(serverPluginsDir)
 }
 
+// Copies the plugin into the test server, replacing any older TownyMenu build left behind by a version bump.
 tasks.register<Copy>("copyPlugin") {
     dependsOn("jar", "copyServerPlugins")
+    val stale = "${tasks.jar.get().archiveBaseName.get()}-*.jar"
+    outputs.upToDateWhen { false }
+    doFirst { delete(fileTree(serverPluginsDir) { include(stale) }) }
     from(tasks.jar.get().archiveFile)
-    into(layout.projectDirectory.dir("run/plugins"))
+    into(serverPluginsDir)
 }
 
 tasks.register<JavaExec>("startServer") {

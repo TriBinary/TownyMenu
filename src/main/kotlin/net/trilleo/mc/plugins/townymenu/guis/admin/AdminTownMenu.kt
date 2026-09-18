@@ -158,7 +158,7 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
 
         val nation = town.nationOrNull
         if (nation != null) {
-            grid.add(Icons.nation(player, nation, "", tr("common.click-view"))) {
+            grid.add(Icons.nation(player, nation, actions = listOf(tr("common.click-view")))) {
                 AdminNationMenu(player, nation, this).open()
             }
             grid.add(
@@ -195,7 +195,9 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
     private fun residentList(title: String, filter: (Resident) -> Boolean, onPick: ListMenu.(Resident) -> Unit) {
         ListMenu(player, title, this) { list ->
             town.residents.filter(filter).sortedBy { it.name.lowercase() }.map { resident ->
-                MenuEntry({ Icons.resident(player, resident, "", tr("picker.select")) }) { list.onPick(resident) }
+                MenuEntry({ Icons.resident(player, resident, actions = listOf(tr("picker.select"))) }) {
+                    list.onPick(resident)
+                }
             }
         }.open()
     }

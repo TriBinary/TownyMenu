@@ -13,6 +13,7 @@ import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.framework.MenuEntry
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -83,7 +84,10 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_RESIDENT_SPAWN,
-            Icons.icon(Material.RED_BED, tr("profile.spawn"), tr("profile.spawn-description"))
+            Icons.icon(
+                Material.RED_BED, tr("profile.spawn"), tr("profile.spawn-description"),
+                *listOfNotNull(costLine(Prices.residentSpawn(player))).toTypedArray()
+            )
         ) {
             runAndClose("towny:resident spawn")
         }
@@ -179,7 +183,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         TownyAPI.getInstance().getResident(player)?.let(source).orEmpty()
             .sortedBy { it.name.lowercase() }
             .map { town ->
-                MenuEntry({ Icons.town(player, town, "", tr("common.click-details")) }) {
+                MenuEntry({ Icons.town(player, town, actions = listOf(tr("common.click-details"))) }) {
                     TownInfoMenu(player, town, menu).open()
                 }
             }

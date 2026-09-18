@@ -281,6 +281,12 @@ permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/
   can't intercept the command.
 - **Grey out what the player can't do.** Use `guarded(slot, PermissionNodes.X, item) { … }` (or `Layout.add(node, …)`)
   with the same node Towny's command checks.
+- **Say what a button costs.** A button that spends money shows its price in its lore: take the amount from
+  [`Prices`](UTILITY_GUIDE.md#prices) and turn it into a line with `costLine` / `priceLine`, so the figure is the
+  server's own and not a guess.
+- **Lay every icon's lore out in the same blocks.** A tooltip reads name — description — data — actions. Everything
+  an icon says about clicking goes in the `actions` argument of an `Icons` builder (or `loreActions` in the `itemStack`
+  DSL), never among its data lines. Never hand-roll the spacing between blocks. See [Icons](#icons).
 - **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom row;
   leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such as the
   chunk map and the 4×4 permission grid, skip it.
@@ -305,6 +311,8 @@ open inventory's holder — there is no registry and nothing to clean up when a 
 | `layout(vararg slots)`                   | Fills slots in order, for optional buttons; extra buttons are logged, skipped.   |
 | `backButton(slot)`                       | Back arrow to `back`, or a close button when `back` is `null`.                   |
 | `tutorialButton(slot, chapter)`          | Help button opening the tutorial `Chapter` that explains this menu.              |
+| `costLine(amount)`                       | A `Cost: …` lore line, or `null` without an economy or when the action is free.  |
+| `priceLine(amount)`                      | A `Price: …` lore line for something on sale; a price of zero is still shown.    |
 | `run(command, probe?, returnTo?, delay)` | Runs a Towny command as the player (see below).                                  |
 | `runAndClose(command)`                   | Closes the menu, then runs the command (teleports, books, chat output).          |
 | `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel or empty input reopens the menu.               |
@@ -339,7 +347,7 @@ visible page are built:
 ```kotlin
 override fun entries(): List<MenuEntry> =
     town.residents.map { member ->
-        MenuEntry({ Icons.resident(player, member, "", tr("common.click-view")) }) {
+        MenuEntry({ Icons.resident(player, member, actions = listOf(tr("common.click-view"))) }) {
             ResidentProfileMenu(player, member, this).open()
         }
     }
@@ -355,7 +363,7 @@ override fun entries(): List<MenuEntry> =
 | `PermissionMenu` | 4×4 build/destroy/switch/item-use grid for any `set perm` command. Pass `overrides` to add a Player Overrides button (used for plots).                                     |
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                                                                                                  |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                                                                                             |
-| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options.                                                                                                   |
+| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options. `option` takes a `lines` lambda for per-option lore, such as what picking that option costs.       |
 
 ### Tutorial (`guis/tutorial`)
 
@@ -433,6 +441,51 @@ replaces.
 `Icons` builds the standard icons: `icon(material, name, description, extraLines…)` from already-translated text, and
 `toggle(player, …)` plus the summary icons `resident(player, …)`, `town(player, …)`, `nation(player, …)`, which add
 their own labels in `player`'s language and accept extra lore lines.
+
+#### The shape of an icon
+
+Every icon in the plugin reads top to bottom in the same order, and a new one follows it so it does not look out of
+place beside the others:
+
+| Block           | Where it goes           | What belongs there                                             |
+|:----------------|:------------------------|:---------------------------------------------------------------|
+| **Name**        | `name`                  | What the button is, one translated line.                       |
+| **Description** | `description` (wrapped) | What it does, a sentence or two; `null` when the name says it. |
+| **Data**        | the `extra` varargs     | Current values, counts, and the `costLine` / `priceLine` line. |
+| **Actions**     | `actions = listOf(...)` | What a left- or right-click does, and nothing else.            |
+
+```kotlin
+Icons.icon(
+    Material.ENDER_PEARL, tr("town.spawn"), tr("town.spawn-description"),
+    *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray(),
+    actions = listOf(tr("common.click-teleport"))
+)
+```
+
+```text
+Go to Spawn
+                                       <- added for you
+Teleport to your town's spawn point.   <- description
+                                       <- added for you
+Cost: $25                              <- extra
+------------------------------         <- added for you
+Click to teleport                      <- actions
+```
+
+`toggle`, `resident`, `town`, and `nation` follow the same order and take the same `actions` argument; they fill the
+data block themselves from Towny and put the caller's extra lines in a block of their own below it.
+
+Two rules keep new icons in line with the rest:
+
+- **A click hint goes in `actions`, never among the extra lines.** That is what sets it below the divider rule. This is
+  the easy one to get wrong, because an extra line accepts it happily.
+- **Never hand-roll the spacing.** No `""` lore line to separate blocks, no divider drawn by hand, no blank line under
+  the name. [`LoreBlocks`](UTILITY_GUIDE.md#lore-blocks) adds all three, collapses repeated separators, and trims a
+  block that turns out to be empty — so a conditional block never leaves a hole behind. A `""` is still fine *inside*
+  the data lines to split one long list into two groups.
+
+When you build an icon with `itemStack { }` directly — a sort button, a config entry — reach for the same blocks
+through `loreWrapped(...)`, `loreBreak()`, and `loreActions(...)`.
 
 ### Example: A New Menu
 
@@ -1066,7 +1119,8 @@ player.sendPlayerListHeaderAndFooter(Component.empty(), Component.empty())
 ## Utilities
 
 The `utils` package (`net.trilleo.mc.plugins.townymenu.utils`) contains the `itemStack` DSL, `LoreUtil`, `MessageUtil`,
-`TownyUtil`, `TownyConfig`, and `DialogUtil`. See the [Utility Guide](UTILITY_GUIDE.md) for full documentation.
+`TownyUtil`, `Prices`, `TownyConfig`, and `DialogUtil`. See the [Utility Guide](UTILITY_GUIDE.md) for full
+documentation.
 
 ---
 

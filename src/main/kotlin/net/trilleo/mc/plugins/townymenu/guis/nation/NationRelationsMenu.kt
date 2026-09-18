@@ -35,13 +35,11 @@ class NationRelationsMenu(player: Player, private val nation: Nation, back: Menu
     }
 
     private fun relation(other: Nation, label: String, canRemove: Boolean, removeCommand: String): MenuEntry {
-        val lines = listOfNotNull(
-            "",
-            label,
+        val actions = listOfNotNull(
             tr("common.left-details"),
             if (canRemove) tr("nation-relations.right-remove") else null
         )
-        return MenuEntry({ Icons.nation(player, other, *lines.toTypedArray()) }) { click ->
+        return MenuEntry({ Icons.nation(player, other, label, actions = actions) }) { click ->
             if (click.isRightClick && canRemove) run(removeCommand, ::snapshot) else NationInfoMenu(
                 player,
                 other,
@@ -87,8 +85,8 @@ class NationRelationsMenu(player: Player, private val nation: Nation, back: Menu
         button(
             51, Icons.icon(
                 Material.PAPER, tr("nation-relations.sent-requests"), null,
-                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray(),
-                tr("common.pending", "count" to pending.size),
+                tr("common.pending", "count" to pending.size), "",
+                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray()
             )
         )
     }

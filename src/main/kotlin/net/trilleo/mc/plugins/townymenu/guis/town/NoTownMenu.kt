@@ -19,11 +19,7 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
         val reclaimable =
             TownySettings.getTownRuinsReclaimEnabled() && TownySettings.canRuinsBeReclaimedByTownlessPlayers()
         val row = if (reclaimable) layout(10, 12, 14, 16) else layout(11, 13, 15)
-        val price =
-            if (TownyUtil.economy) tr(
-                "common.cost",
-                "cost" to TownyUtil.money(TownySettings.getNewTownPrice())
-            ) else null
+        val price = costLine(TownySettings.getNewTownPrice())
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_NEW,
             Icons.icon(
@@ -56,9 +52,7 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
             InvitesMenu(player, this).open()
         }
         if (reclaimable) {
-            val cost = if (TownyUtil.economy) {
-                tr("common.cost", "cost" to TownyUtil.money(TownySettings.getEcoPriceReclaimTown()))
-            } else null
+            val cost = costLine(TownySettings.getEcoPriceReclaimTown())
             row.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_RECLAIM,
                 Icons.icon(
