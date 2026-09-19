@@ -27,7 +27,7 @@ val serverPlugins: Configuration by configurations.creating {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
+    compileOnly("io.papermc.paper:paper-api:26.3.build.+")
     compileOnly("com.palmergames.bukkit.towny:towny:${providers.gradleProperty("towny_version").get()}")
     serverPlugins("com.palmergames.bukkit.towny:towny:${providers.gradleProperty("towny_version").get()}")
     testImplementation(kotlin("test"))
