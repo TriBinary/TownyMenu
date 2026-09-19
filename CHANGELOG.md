@@ -20,8 +20,8 @@
 #### Bank Menu
 
 + The Deposit, Withdraw, and Bank History buttons now have a blank row above and below them instead of being wedged
-  between the bank icon and the bottom row, so the bank details, the actions, and the navigation read as three
-  separate blocks. The menu is one row taller for it, and the amount menu is laid out the same way.
+  between the bank icon and the bottom row, so the bank details, the actions, and the navigation read as three separate
+  blocks. The menu is one row taller for it, and the amount menu is laid out the same way.
 
 #### Admin Menus
 
@@ -31,9 +31,9 @@
 
 #### Misc
 
-+ New `bank-amounts` setting in `config.yml` lists the preset amounts the deposit and withdraw menus offer. Amounts
-  that are zero or negative are dropped, duplicates removed, and the rest sorted; up to nine fit in the menu row. An
-  empty list leaves players with only Everything and Custom Amount.
++ New `bank-amounts` setting in `config.yml` lists the preset amounts the deposit and withdraw menus offer. Amounts that
+  are zero or negative are dropped, duplicates removed, and the rest sorted; up to nine fit in the menu row. An empty
+  list leaves players with only Everything and Custom Amount.
 
 ## Version 1.0.1
 
@@ -84,8 +84,8 @@
 #### Misc
 
 + Added a `Prices` utility that works out what a menu action costs — claims, outposts, spawn travel, plot types, town
-  merges — from Towny's config and the town or nation involved, and `Menu.costLine` / `Menu.priceLine` to turn an
-  amount into lore.
+  merges — from Towny's config and the town or nation involved, and `Menu.costLine` / `Menu.priceLine` to turn an amount
+  into lore.
 + `Pickers.option` takes a `lines` lambda for per-option lore.
 + Added `LoreBlocks`, which lays an icon's lore out in blocks: a blank line under the display name, single separators
   between blocks, a divider rule sized to the longest line above the actions, and no separator left dangling at either

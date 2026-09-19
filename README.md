@@ -37,8 +37,8 @@
 - **Status pages** — Click your town or nation to see its level, what the next level needs, its limits, the daily
   upkeep, and warnings for debt, ruins, conquest, and overclaiming.
 - **Leaderboards and prices** — Rank towns, nations, and players by residents, land, and money, and see every price on
-  the server with a countdown to the next Towny day. Buttons that spend money show their own price too, so you know
-  what a claim, a teleport, or a plot costs before you click it.
+  the server with a countdown to the next Towny day. Buttons that spend money show their own price too, so you know what
+  a claim, a teleport, or a plot costs before you click it.
 - **Directories** — Browse and rank every town and nation by residents, claims, bank balance, distance, and more; visit,
   join, donate, buy a town that is for sale, or propose alliances.
 - **Invites** — Accept or decline town invites, nation invites for your town, and alliance requests in one place, or
@@ -72,9 +72,9 @@ TownyMenu is an addon: Towny must be installed on the server, or TownyMenu will 
 
 The compiled JAR is placed in `build/libs/`. Run `./gradlew copyPlugin` to copy it, along with the matching Towny jar,
 into `run/plugins/` for the local test server — any older copy of either is deleted first — or `./gradlew startServer`
-to copy them and start the server. Before the
-first start, download a Paper 26.2 jar from [papermc.io](https://papermc.io/downloads/paper) into `run/`, then accept
-the EULA in `run/eula.txt` after the first launch.
+to copy them and start the server. Before the first start, download a Paper 26.2 jar
+from [papermc.io](https://papermc.io/downloads/paper) into `run/`, then accept the EULA in `run/eula.txt` after the
+first launch.
 
 Prebuilt jars are attached to every [GitHub release](https://github.com/TriBinary/TownyMenu/releases); see the
 [change log](CHANGELOG.md) for what changed in each one.
@@ -94,14 +94,14 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 
 ## Configuration
 
-| Key                        | Default | Description                                                                 |
-|:---------------------------|:--------|:----------------------------------------------------------------------------|
-| `message-prefix`           | —       | MiniMessage prefix shown before plugin messages                             |
-| `language`                 | `auto`  | `auto` follows each player's client language; `en_US` or `zh_CN` forces one |
-| `sneak-swap-hand-shortcut` | `true`  | Open the main menu by pressing swap-hand (F) while sneaking                 |
-| `tutorial-join-hint`       | `true`  | Suggest the tutorial to players without a town when they join               |
-| `live-menu-refresh`        | `true`  | Update open menus when Towny changes what they show                         |
-| `towny-alerts`             | `true`  | Announce invites, bankruptcy, and ruin in chat, linked to the right menu    |
+| Key                        | Default                | Description                                                                                   |
+|:---------------------------|:-----------------------|:----------------------------------------------------------------------------------------------|
+| `message-prefix`           | —                      | MiniMessage prefix shown before plugin messages                                               |
+| `language`                 | `auto`                 | `auto` follows each player's client language; `en_US` or `zh_CN` forces one                   |
+| `sneak-swap-hand-shortcut` | `true`                 | Open the main menu by pressing swap-hand (F) while sneaking                                   |
+| `tutorial-join-hint`       | `true`                 | Suggest the tutorial to players without a town when they join                                 |
+| `live-menu-refresh`        | `true`                 | Update open menus when Towny changes what they show                                           |
+| `towny-alerts`             | `true`                 | Announce invites, bankruptcy, and ruin in chat, linked to the right menu                      |
 | `bank-amounts`             | `10, 100, 1000, 10000` | Preset amounts the deposit and withdraw menus offer, alongside Everything and a custom amount |
 
 ## Translations

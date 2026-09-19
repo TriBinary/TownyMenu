@@ -284,8 +284,8 @@ permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/
 - **Say what a button costs.** A button that spends money shows its price in its lore: take the amount from
   [`Prices`](UTILITY_GUIDE.md#prices) and turn it into a line with `costLine` / `priceLine`, so the figure is the
   server's own and not a guess.
-- **Lay every icon's lore out in the same blocks.** A tooltip reads name — description — data — actions. Everything
-  an icon says about clicking goes in the `actions` argument of an `Icons` builder (or `loreActions` in the `itemStack`
+- **Lay every icon's lore out in the same blocks.** A tooltip reads name — description — data — actions. Everything an
+  icon says about clicking goes in the `actions` argument of an `Icons` builder (or `loreActions` in the `itemStack`
   DSL), never among its data lines. Never hand-roll the spacing between blocks. See [Icons](#icons).
 - **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom row;
   leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such as the
@@ -364,7 +364,7 @@ override fun entries(): List<MenuEntry> =
 | `BankMenu`       | Deposit, withdraw, and bank history for a town or nation.                                                                                                                  |
 | `BankAmountMenu` | Picks how much to deposit or withdraw: the `bank-amounts` presets, everything, or a typed figure. Amounts Towny would refuse say why instead of offering a click.          |
 | `RankMenu`       | Grants or revokes town or nation ranks, checking the per-rank permission node.                                                                                             |
-| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options. `option` takes a `lines` lambda for per-option lore, such as what picking that option costs.       |
+| `Pickers`        | Selection menus for online residents, towns, nations, and fixed options. `option` takes a `lines` lambda for per-option lore, such as what picking that option costs.      |
 
 ### Tutorial (`guis/tutorial`)
 
@@ -485,8 +485,8 @@ Two rules keep new icons in line with the rest:
   block that turns out to be empty — so a conditional block never leaves a hole behind. A `""` is still fine *inside*
   the data lines to split one long list into two groups.
 
-When you build an icon with `itemStack { }` directly — a sort button, a config entry — reach for the same blocks
-through `loreWrapped(...)`, `loreBreak()`, and `loreActions(...)`.
+When you build an icon with `itemStack { }` directly — a sort button, a config entry — reach for the same blocks through
+`loreWrapped(...)`, `loreBreak()`, and `loreActions(...)`.
 
 ### Example: A New Menu
 
