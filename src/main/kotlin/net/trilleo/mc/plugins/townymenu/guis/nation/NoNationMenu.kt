@@ -35,10 +35,12 @@ class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nati
                 )
             }
         }
-        button(13, Icons.icon(
-            Material.OAK_DOOR, tr("no-nation.browse"), tr("no-nation.browse-description"),
-            actions = hints("click.browse")
-        )) {
+        button(
+            13, Icons.icon(
+                Material.OAK_DOOR, tr("no-nation.browse"), tr("no-nation.browse-description"),
+                actions = hints("click.browse")
+            )
+        ) {
             NationListMenu(player, this).open()
         }
         val invites = resident?.townOrNull?.receivedInvites?.size ?: 0

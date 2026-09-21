@@ -59,10 +59,12 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         ) {
             FriendsMenu(player, this).open()
         }
-        row.add(Icons.icon(
-            Material.LEVER, tr("profile.settings"), tr("profile.settings-description"),
-            actions = hints("click.open")
-        )) {
+        row.add(
+            Icons.icon(
+                Material.LEVER, tr("profile.settings"), tr("profile.settings-description"),
+                actions = hints("click.open")
+            )
+        ) {
             toggles().open()
         }
         row.add(

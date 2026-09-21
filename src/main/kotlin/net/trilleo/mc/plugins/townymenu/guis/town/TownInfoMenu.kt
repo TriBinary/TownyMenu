@@ -26,10 +26,12 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
         val grid = layout(19, 20, 21, 22, 23, 24, 25)
 
         if (viewer?.townOrNull == town) {
-            grid.add(Icons.icon(
-                Material.WRITABLE_BOOK, tr("town-info.manage"), tr("town-info.manage-description"),
-                actions = hints("click.open")
-            )) {
+            grid.add(
+                Icons.icon(
+                    Material.WRITABLE_BOOK, tr("town-info.manage"), tr("town-info.manage-description"),
+                    actions = hints("click.open")
+                )
+            ) {
                 TownMenu(player, this).open()
             }
         }

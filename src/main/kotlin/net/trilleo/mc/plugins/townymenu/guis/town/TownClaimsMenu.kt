@@ -173,10 +173,12 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         ) {
             run("towny:resident toggle townclaim", { resident?.hasMode("townclaim") })
         }
-        grid.add(Icons.icon(
-            Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
+                actions = hints("click.open")
+            )
+        ) {
             MapMenu(player, this).open()
         }
 

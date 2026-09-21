@@ -35,10 +35,12 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
         } + TownyConfig.settings(section).map { settingEntry(this, it) }
 
     override fun controls() {
-        button(47, Icons.icon(
-            Material.COMPASS, tr("admin-config.search"), tr("admin-config.search-description"),
-            actions = hints("click.search")
-        )) {
+        button(
+            47, Icons.icon(
+                Material.COMPASS, tr("admin-config.search"), tr("admin-config.search-description"),
+                actions = hints("click.search")
+            )
+        ) {
             prompt(tr("admin-config.search-title"), tr("admin-config.search-label")) { query ->
                 ListMenu(player, tr("admin-config.results-title", "query" to TownyUtil.text(query)), this) { list ->
                     TownyConfig.search(query).map { settingEntry(list, it) }

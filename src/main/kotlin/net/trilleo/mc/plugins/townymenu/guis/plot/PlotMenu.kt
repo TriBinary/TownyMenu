@@ -44,16 +44,20 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         ) {
             runAndClose("towny:plot perm hud")
         }
-        button(47, Icons.icon(
-            Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
-            actions = hints("click.open")
-        )) {
+        button(
+            47, Icons.icon(
+                Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
+                actions = hints("click.open")
+            )
+        ) {
             MapMenu(player, this).open()
         }
-        button(50, Icons.icon(
-            Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"),
-            actions = hints("click.refresh")
-        )) { render() }
+        button(
+            50, Icons.icon(
+                Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"),
+                actions = hints("click.refresh")
+            )
+        ) { render() }
         tutorialButton(53, Tutorial.PLOTS)
         backButton(49)
     }
@@ -92,10 +96,12 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 run("towny:town claim outpost", { town.numTownBlocks }, delayTicks = 20)
             }
         }
-        grid.add(Icons.icon(
-            Material.MAP, tr("plot.area"), tr("plot.area-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.MAP, tr("plot.area"), tr("plot.area-description"),
+                actions = hints("click.open")
+            )
+        ) {
             PlotAreaMenu(player, this).open()
         }
     }
@@ -265,10 +271,12 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 }
             }
         }
-        grid.add(Icons.icon(
-            Material.LEVER, tr("plot.settings"), tr("plot.settings-description"), *groupLines,
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.LEVER, tr("plot.settings"), tr("plot.settings-description"), *groupLines,
+                actions = hints("click.open")
+            )
+        ) {
             toggles(plot, group != null).open()
         }
         val permNode =
@@ -356,10 +364,12 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 }
             }
         }
-        grid.add(Icons.icon(
-            Material.CHEST, tr("plot.groups"), tr("plot.groups-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.CHEST, tr("plot.groups"), tr("plot.groups-description"),
+                actions = hints("click.open")
+            )
+        ) {
             PlotGroupMenu(player, this).open()
         }
         grid.add(
@@ -371,17 +381,21 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         ) {
             runAndClose("towny:plot clear")
         }
-        grid.add(Icons.icon(
-            Material.MAP, tr("plot.area"), tr("plot.area-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.MAP, tr("plot.area"), tr("plot.area-description"),
+                actions = hints("click.open")
+            )
+        ) {
             PlotAreaMenu(player, this).open()
         }
         if (town != null) {
-            button(46, Icons.icon(
-                Material.BELL, "<gold>${TownyUtil.name(town.name)}", tr("plot.town-description"),
-                actions = hints("click.view")
-            )) {
+            button(
+                46, Icons.icon(
+                    Material.BELL, "<gold>${TownyUtil.name(town.name)}", tr("plot.town-description"),
+                    actions = hints("click.view")
+                )
+            ) {
                 TownInfoMenu(player, town, this).open()
             }
         }

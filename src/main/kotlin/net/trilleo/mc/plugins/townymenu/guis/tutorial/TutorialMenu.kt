@@ -45,10 +45,12 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
         }
         backButton(49)
         if (read > 0) {
-            button(51, Icons.icon(
-                Material.WATER_BUCKET, tr("tutorial.reset"), tr("tutorial.reset-description"),
-                actions = hints("click.reset")
-            )) {
+            button(
+                51, Icons.icon(
+                    Material.WATER_BUCKET, tr("tutorial.reset"), tr("tutorial.reset-description"),
+                    actions = hints("click.reset")
+                )
+            ) {
                 DialogUtil.confirm(
                     player, MiniMessage.miniMessage().deserialize(tr("tutorial.reset-confirm")), null,
                     onYes = {

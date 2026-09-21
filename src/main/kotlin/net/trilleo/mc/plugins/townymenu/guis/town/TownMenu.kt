@@ -105,22 +105,28 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
         ) {
             TownClaimsMenu(player, this).open()
         }
-        grid.add(Icons.icon(
-            Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
+                actions = hints("click.open")
+            )
+        ) {
             MapMenu(player, this).open()
         }
-        grid.add(Icons.icon(
-            Material.LEVER, tr("town.settings"), tr("town.settings-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.LEVER, tr("town.settings"), tr("town.settings-description"),
+                actions = hints("click.open")
+            )
+        ) {
             toggles().open()
         }
-        grid.add(Icons.icon(
-            Material.WRITABLE_BOOK, tr("town.details"), tr("town.details-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.WRITABLE_BOOK, tr("town.details"), tr("town.details-description"),
+                actions = hints("click.open")
+            )
+        ) {
             TownSettingsMenu(player, this).open()
         }
         grid.add(
@@ -132,10 +138,12 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
         ) {
             permissions().open()
         }
-        grid.add(Icons.icon(
-            Material.TRIPWIRE_HOOK, tr("common.trusted"), tr("town.trusted-description"),
-            actions = hints("click.view")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.TRIPWIRE_HOOK, tr("common.trusted"), tr("town.trusted-description"),
+                actions = hints("click.view")
+            )
+        ) {
             TownTrustMenu(player, town, this).open()
         }
         grid.add(

@@ -26,10 +26,12 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
             return backButton(40)
         }
 
-        button(10, Icons.icon(
-            Material.COMPARATOR, tr("admin.config"), tr("admin.config-description"),
-            actions = hints("click.open")
-        )) {
+        button(
+            10, Icons.icon(
+                Material.COMPARATOR, tr("admin.config"), tr("admin.config-description"),
+                actions = hints("click.open")
+            )
+        ) {
             TownyConfigMenu(player, "", this).open()
         }
         button(
@@ -41,16 +43,20 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
         ) {
             worlds().open()
         }
-        button(14, Icons.icon(
-            Material.COMMAND_BLOCK, tr("admin.server"), tr("admin.server-description"),
-            actions = hints("click.open")
-        )) {
+        button(
+            14, Icons.icon(
+                Material.COMMAND_BLOCK, tr("admin.server"), tr("admin.server-description"),
+                actions = hints("click.open")
+            )
+        ) {
             AdminServerMenu(player, this).open()
         }
-        button(16, Icons.icon(
-            Material.WRITABLE_BOOK, tr("admin.plugin"), tr("admin.plugin-description"),
-            actions = hints("click.open")
-        )) {
+        button(
+            16, Icons.icon(
+                Material.WRITABLE_BOOK, tr("admin.plugin"), tr("admin.plugin-description"),
+                actions = hints("click.open")
+            )
+        ) {
             PluginSettingsMenu(player, this).open()
         }
 
@@ -107,10 +113,12 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
             AdminResidentListMenu(player, this).open()
         }
 
-        button(26, Icons.icon(
-            Material.IRON_DOOR, tr("admin-perms.open"), tr("admin-perms.open-description"),
-            actions = hints("click.open")
-        )) {
+        button(
+            26, Icons.icon(
+                Material.IRON_DOOR, tr("admin-perms.open"), tr("admin-perms.open-description"),
+                actions = hints("click.open")
+            )
+        ) {
             AdminPermsMenu(player, this).open()
         }
 

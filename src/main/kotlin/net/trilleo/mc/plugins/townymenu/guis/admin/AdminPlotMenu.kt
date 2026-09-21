@@ -98,10 +98,12 @@ class AdminPlotMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-
                 run("towny:townyadmin unclaim", { this.plot?.townOrNull })
             }
         }
-        button(50, Icons.icon(
-            Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"),
-            actions = hints("click.refresh")
-        )) { render() }
+        button(
+            50, Icons.icon(
+                Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"),
+                actions = hints("click.refresh")
+            )
+        ) { render() }
 
         backButton(49)
     }

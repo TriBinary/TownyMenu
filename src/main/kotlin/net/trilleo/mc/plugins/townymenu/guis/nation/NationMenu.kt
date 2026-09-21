@@ -82,22 +82,28 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                 BankMenu(player, nation, this).open()
             }
         }
-        grid.add(Icons.icon(
-            Material.SHIELD, tr("nation.relations"), tr("nation.relations-description"),
-            actions = hints("click.view")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.SHIELD, tr("nation.relations"), tr("nation.relations-description"),
+                actions = hints("click.view")
+            )
+        ) {
             NationRelationsMenu(player, nation, this).open()
         }
-        grid.add(Icons.icon(
-            Material.LEVER, tr("nation.settings"), tr("nation.settings-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.LEVER, tr("nation.settings"), tr("nation.settings-description"),
+                actions = hints("click.open")
+            )
+        ) {
             toggles().open()
         }
-        grid.add(Icons.icon(
-            Material.WRITABLE_BOOK, tr("nation.details"), tr("nation.details-description"),
-            actions = hints("click.open")
-        )) {
+        grid.add(
+            Icons.icon(
+                Material.WRITABLE_BOOK, tr("nation.details"), tr("nation.details-description"),
+                actions = hints("click.open")
+            )
+        ) {
             NationSettingsMenu(player, this).open()
         }
         grid.add(

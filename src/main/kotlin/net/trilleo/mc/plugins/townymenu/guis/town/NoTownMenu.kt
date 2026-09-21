@@ -38,10 +38,12 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
                 )
             }
         }
-        row.add(Icons.icon(
-            Material.OAK_DOOR, tr("no-town.browse"), tr("no-town.browse-description"),
-            actions = hints("click.browse")
-        )) {
+        row.add(
+            Icons.icon(
+                Material.OAK_DOOR, tr("no-town.browse"), tr("no-town.browse-description"),
+                actions = hints("click.browse")
+            )
+        ) {
             TownListMenu(player, this).open()
         }
         val invites = resident?.receivedInvites?.size ?: 0

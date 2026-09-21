@@ -76,10 +76,12 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
             }
         }
         backButton(49)
-        button(50, Icons.icon(
-            Material.CLOCK, tr("map.refresh"), tr("map.refresh-description"),
-            actions = hints("click.refresh")
-        )) { render() }
+        button(
+            50, Icons.icon(
+                Material.CLOCK, tr("map.refresh"), tr("map.refresh-description"),
+                actions = hints("click.refresh")
+            )
+        ) { render() }
         tutorialButton(53, Tutorial.GETTING_STARTED)
     }
 

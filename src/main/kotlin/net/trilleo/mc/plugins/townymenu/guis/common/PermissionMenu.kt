@@ -68,17 +68,21 @@ class PermissionMenu(
             }
         }
 
-        guarded(25, node, Icons.icon(
-            Material.WATER_BUCKET, tr("perm.reset"), tr("perm.reset-description"),
-            actions = hints("click.reset")
-        )) {
+        guarded(
+            25, node, Icons.icon(
+                Material.WATER_BUCKET, tr("perm.reset"), tr("perm.reset-description"),
+                actions = hints("click.reset")
+            )
+        ) {
             run("$command reset", ::snapshot)
         }
         overrides?.let { open ->
-            button(34, Icons.icon(
-                Material.PLAYER_HEAD, tr("perm.overrides"), tr("perm.overrides-description"),
-                actions = hints("click.open")
-            )) {
+            button(
+                34, Icons.icon(
+                    Material.PLAYER_HEAD, tr("perm.overrides"), tr("perm.overrides-description"),
+                    actions = hints("click.open")
+                )
+            ) {
                 open(this).open()
             }
         }
