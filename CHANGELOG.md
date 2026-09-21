@@ -2,6 +2,46 @@
 
 ## Unreleased
 
+## Version 1.1.0
+
+### Improvements
+
+#### Menus
+
++ Every menu has a new look inspired by Hypixel SkyBlock. Values are coloured by what they are — money in gold, counts
+  in green, dates and times in yellow, nations in aqua, anything dangerous in red — and descriptions and tutorial lessons
+  pick out their key terms, such as PvP, spawns, outposts, and upkeep, in the same colours everywhere.
++ Every button now tells you what clicking it does, in lines like "Click to open!", "Left-click to edit!", and
+  "Right-click to clear!": yellow for a click or left-click, aqua for a right-click, and red when the click deletes or
+  removes something. Buttons that did two things by button, such as editing or clearing a board, used to explain it in
+  their description; the hints now sit in their own block at the bottom.
++ Switches show a bold ENABLED or DISABLED status and say "Click to enable!" or "Click to disable!" instead of "Click
+  to toggle", and permission cells say "Click to allow!" or "Click to deny!".
++ Progress bars show how far along you are: claims used against the claim limit, outposts, progress towards the next
+  town or nation level, and lessons read in the tutorial.
++ Menus have a black glass background so the icons stand out, the back button is now "Go Back" and names the menu it
+  returns to, and page arrows name the page they lead to.
++ Leaderboards mark the top three with gold, silver, and bronze ranks, sort buttons point at the current order with an
+  aqua arrow, and lists of pending invites use bullet points.
++ Server owners who edited their language files in `plugins/TownyMenu/lang/` keep their own text and colours. To get
+  the new look, move your edits aside and let TownyMenu copy the new files on the next start; the header of
+  `en_US.yml` lists the colour palette.
+
+#### Misc
+
++ The sort button in the town and nation directories now goes both ways: left-click moves to the next sort order and
+  right-click goes back to the previous one, so you no longer have to click all the way around to reach the order you
+  just passed.
+
+### Technical Details
+
+#### Misc
+
++ TownyMenu now builds against Minecraft 26.3 (Paper API 26.3). Run it on a Paper 26.3 server.
++ Menus gain `hints(...)` for click hints from the new shared `click.*` translation keys, `progressBar(current, max)`,
+  `pageArrow(...)`, and a public `title`. The old `common.click-*` keys, `icon.currently`, and `icon.click-toggle` are
+  gone; the developer guide documents the click-hint rules and the colour palette.
+
 ## Version 1.0.2
 
 ### New Features
@@ -20,8 +60,8 @@
 #### Bank Menu
 
 + The Deposit, Withdraw, and Bank History buttons now have a blank row above and below them instead of being wedged
-  between the bank icon and the bottom row, so the bank details, the actions, and the navigation read as three
-  separate blocks. The menu is one row taller for it, and the amount menu is laid out the same way.
+  between the bank icon and the bottom row, so the bank details, the actions, and the navigation read as three separate
+  blocks. The menu is one row taller for it, and the amount menu is laid out the same way.
 
 #### Admin Menus
 
@@ -31,9 +71,9 @@
 
 #### Misc
 
-+ New `bank-amounts` setting in `config.yml` lists the preset amounts the deposit and withdraw menus offer. Amounts
-  that are zero or negative are dropped, duplicates removed, and the rest sorted; up to nine fit in the menu row. An
-  empty list leaves players with only Everything and Custom Amount.
++ New `bank-amounts` setting in `config.yml` lists the preset amounts the deposit and withdraw menus offer. Amounts that
+  are zero or negative are dropped, duplicates removed, and the rest sorted; up to nine fit in the menu row. An empty
+  list leaves players with only Everything and Custom Amount.
 
 ## Version 1.0.1
 
@@ -84,8 +124,8 @@
 #### Misc
 
 + Added a `Prices` utility that works out what a menu action costs — claims, outposts, spawn travel, plot types, town
-  merges — from Towny's config and the town or nation involved, and `Menu.costLine` / `Menu.priceLine` to turn an
-  amount into lore.
+  merges — from Towny's config and the town or nation involved, and `Menu.costLine` / `Menu.priceLine` to turn an amount
+  into lore.
 + `Pickers.option` takes a `lines` lambda for per-option lore.
 + Added `LoreBlocks`, which lays an icon's lore out in blocks: a blank line under the display name, single separators
   between blocks, a divider rule sized to the longest line above the actions, and no separator left dangling at either

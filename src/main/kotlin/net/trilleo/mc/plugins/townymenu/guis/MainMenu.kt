@@ -39,7 +39,12 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
                 TownMenu(player, this).open()
             }
         } else {
-            button(20, Icons.icon(Material.BELL, tr("main.town"), tr("main.town-none"))) {
+            button(
+                20, Icons.icon(
+                    Material.BELL, tr("main.town"), tr("main.town-none"),
+                    actions = hints("click.open")
+                )
+            ) {
                 NoTownMenu(player, this).open()
             }
         }
@@ -52,7 +57,12 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
                 ).open()
             }
 
-            town != null -> button(22, Icons.icon(Material.BEACON, tr("main.nation"), tr("main.nation-none"))) {
+            town != null -> button(
+                22, Icons.icon(
+                    Material.BEACON, tr("main.nation"), tr("main.nation-none"),
+                    actions = hints("click.open")
+                )
+            ) {
                 NoNationMenu(player, this).open()
             }
 
@@ -65,41 +75,70 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
                 Material.GRASS_BLOCK, tr("main.plot"), tr("main.plot-description"),
                 tr(
                     "main.plot-here",
-                    "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))))) {
+                    "town" to (plot?.townOrNull?.let { TownyUtil.name(it.name) } ?: tr("main.wilderness"))),
+                actions = hints("click.open")
+            )
+        ) {
             PlotMenu(player, this).open()
         }
 
         button(
             28, Icons.icon(
                 Material.CLOCK, tr("main.prices"), tr("main.prices-description"),
-                tr("town-status.new-day", "time" to TownyUtil.duration(player, TownyUtil.secondsUntilNewDay()))
+                tr("town-status.new-day", "time" to TownyUtil.duration(player, TownyUtil.secondsUntilNewDay())),
+                actions = hints("click.view")
             )
         ) {
             PricesMenu(player, this).open()
         }
-        button(29, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("main.map-description"))) {
+        button(
+            29, Icons.icon(
+                Material.FILLED_MAP, tr("main.map"), tr("main.map-description"),
+                actions = hints("click.open")
+            )
+        ) {
             MapMenu(
                 player,
                 this
             ).open()
         }
-        button(30, Icons.icon(Material.BELL, tr("main.towns"), tr("main.towns-description"))) {
+        button(
+            30, Icons.icon(
+                Material.BELL, tr("main.towns"), tr("main.towns-description"),
+                actions = hints("click.browse")
+            )
+        ) {
             TownListMenu(
                 player,
                 this
             ).open()
         }
-        button(31, Icons.icon(Material.KNOWLEDGE_BOOK, tr("main.tutorial"), tr("main.tutorial-description"))) {
+        button(
+            31, Icons.icon(
+                Material.KNOWLEDGE_BOOK, tr("main.tutorial"), tr("main.tutorial-description"),
+                actions = hints("click.open")
+            )
+        ) {
             TutorialMenu(player, this).open()
         }
-        button(32, Icons.icon(Material.BEACON, tr("main.nations"), tr("main.nations-description"))) {
+        button(
+            32, Icons.icon(
+                Material.BEACON, tr("main.nations"), tr("main.nations-description"),
+                actions = hints("click.browse")
+            )
+        ) {
             NationListMenu(
                 player,
                 this
             ).open()
         }
 
-        button(34, Icons.icon(Material.LECTERN, tr("main.leaderboards"), tr("main.leaderboards-description"))) {
+        button(
+            34, Icons.icon(
+                Material.LECTERN, tr("main.leaderboards"), tr("main.leaderboards-description"),
+                actions = hints("click.view")
+            )
+        ) {
             LeaderboardMenu(player, this).open()
         }
 
@@ -108,14 +147,20 @@ class MainMenu(player: Player) : Menu(player, player.tr("main.title"), 6) {
         button(
             33, Icons.icon(
                 Material.PAPER, if (invites > 0) tr("main.invites-count", "count" to invites) else tr("main.invites"),
-                tr("main.invites-description")
+                tr("main.invites-description"),
+                actions = hints("click.view")
             )
         ) {
             InvitesMenu(player, this).open()
         }
 
         if (player.hasPermission(AdminMenu.PERMISSION)) {
-            button(53, Icons.icon(Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"))) {
+            button(
+                53, Icons.icon(
+                    Material.COMMAND_BLOCK, tr("main.admin"), tr("main.admin-description"),
+                    actions = hints("click.open")
+                )
+            ) {
                 AdminMenu(
                     player,
                     this

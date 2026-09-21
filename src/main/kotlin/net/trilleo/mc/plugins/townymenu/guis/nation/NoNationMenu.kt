@@ -23,7 +23,8 @@ class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nati
                 Material.BEACON,
                 tr("no-nation.found"),
                 tr("no-nation.found-description"),
-                *listOfNotNull(price).toTypedArray()
+                *listOfNotNull(price).toTypedArray(),
+                actions = hints("click.found")
             )
         ) {
             prompt(tr("no-nation.found-title"), tr("no-nation.nation-name")) { name ->
@@ -34,7 +35,12 @@ class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nati
                 )
             }
         }
-        button(13, Icons.icon(Material.OAK_DOOR, tr("no-nation.browse"), tr("no-nation.browse-description"))) {
+        button(
+            13, Icons.icon(
+                Material.OAK_DOOR, tr("no-nation.browse"), tr("no-nation.browse-description"),
+                actions = hints("click.browse")
+            )
+        ) {
             NationListMenu(player, this).open()
         }
         val invites = resident?.townOrNull?.receivedInvites?.size ?: 0
@@ -44,7 +50,8 @@ class NoNationMenu(player: Player, back: Menu) : Menu(player, player.tr("no-nati
                 Material.PAPER,
                 tr("main.invites"),
                 tr("no-nation.invites-description"),
-                tr("common.pending", "count" to invites)
+                tr("common.pending", "count" to invites),
+                actions = hints("click.view")
             )
         ) {
             InvitesMenu(player, this).open()

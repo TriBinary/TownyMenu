@@ -29,7 +29,8 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
                 Icons.icon(
                     Material.WRITABLE_BOOK,
                     tr("nation-info.manage"),
-                    tr("nation-info.manage-description")
+                    tr("nation-info.manage-description"),
+                    actions = hints("click.open")
                 )
             ) {
                 NationMenu(player, this).open()
@@ -38,7 +39,8 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("nation-info.visit-description"),
-                *listOfNotNull(costLine(Prices.nationSpawn(player, nation))).toTypedArray()
+                *listOfNotNull(costLine(Prices.nationSpawn(player, nation))).toTypedArray(),
+                actions = hints("click.teleport")
             )
         ) {
             runAndClose("towny:nation spawn ${nation.name}")
@@ -48,7 +50,8 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
                 Material.BELL,
                 tr("nation.towns"),
                 null,
-                tr("nation.towns-count", "count" to nation.numTowns)
+                tr("nation.towns-count", "count" to nation.numTowns),
+                actions = hints("click.view")
             )
         ) {
             NationTownsMenu(player, nation, this).open()
@@ -56,7 +59,8 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
         grid.add(
             Icons.icon(
                 Material.SHIELD, tr("nation.relations"), null,
-                tr("icon.nation.relations", "allies" to nation.allies.size, "enemies" to nation.enemies.size)
+                tr("icon.nation.relations", "allies" to nation.allies.size, "enemies" to nation.enemies.size),
+                actions = hints("click.view")
             )
         ) {
             NationRelationsMenu(player, nation, this).open()
@@ -66,7 +70,10 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
         if (viewer != null && town != null && viewer.isMayor && !town.hasNation() && nation.isOpen) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_NATION_JOIN,
-                Icons.icon(Material.OAK_DOOR, tr("nation-info.join"), tr("nation-info.join-description"))
+                Icons.icon(
+                    Material.OAK_DOOR, tr("nation-info.join"), tr("nation-info.join-description"),
+                    actions = hints("click.join")
+                )
             ) {
                 run("towny:nation join ${nation.name}", { town.hasNation() })
             }
@@ -79,7 +86,8 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
                     Icons.icon(
                         Material.SHIELD,
                         tr("nation-info.end-alliance"),
-                        tr("nation-info.end-alliance-description")
+                        tr("nation-info.end-alliance-description"),
+                        actions = hints("click.end-alliance")
                     )
                 ) {
                     run("towny:nation ally remove ${nation.name}", snapshot)
@@ -90,7 +98,8 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
                     Icons.icon(
                         Material.SHIELD,
                         tr("nation.propose-alliance"),
-                        tr("nation-info.propose-alliance-description")
+                        tr("nation-info.propose-alliance-description"),
+                        actions = hints("click.propose")
                     )
                 ) {
                     run("towny:nation ally add ${nation.name}", snapshot)
@@ -101,6 +110,7 @@ class NationInfoMenu(player: Player, private val nation: Nation, back: Menu) :
                     Material.IRON_SWORD,
                     tr(if (own.hasEnemy(nation)) "nation-info.make-peace" else "nation.declare-enemy"),
                     tr(if (own.hasEnemy(nation)) "nation-info.make-peace-description" else "nation-info.declare-enemy-description"),
+                    actions = hints(if (own.hasEnemy(nation)) "click.make-peace" else "click.declare-enemy")
                 )
             ) { run("towny:nation enemy ${if (own.hasEnemy(nation)) "remove" else "add"} ${nation.name}", snapshot) }
         }

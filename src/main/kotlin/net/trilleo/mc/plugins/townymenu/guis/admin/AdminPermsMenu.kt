@@ -26,7 +26,8 @@ class AdminPermsMenu(player: Player, back: Menu) : Menu(player, player.tr("admin
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWNYPERMS,
             Icons.icon(
                 Material.BOOKSHELF, tr("admin-perms.groups"), tr("admin-perms.groups-description"),
-                tr("admin-perms.groups-count", "count" to groups().size)
+                tr("admin-perms.groups-count", "count" to groups().size),
+                actions = hints("click.view")
             )
         ) {
             groupList().open()
@@ -35,7 +36,8 @@ class AdminPermsMenu(player: Player, back: Menu) : Menu(player, player.tr("admin
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWNYPERMS,
             Icons.icon(
                 Material.NAME_TAG, tr("admin-perms.town-ranks"), tr("admin-perms.town-ranks-description"),
-                tr("admin-perms.ranks-count", "count" to TownyPerms.getTownRanks().size)
+                tr("admin-perms.ranks-count", "count" to TownyPerms.getTownRanks().size),
+                actions = hints("click.view")
             )
         ) {
             AdminRanksMenu(player, nation = false, back = this).open()
@@ -44,7 +46,8 @@ class AdminPermsMenu(player: Player, back: Menu) : Menu(player, player.tr("admin
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWNYPERMS,
             Icons.icon(
                 Material.BEACON, tr("admin-perms.nation-ranks"), tr("admin-perms.nation-ranks-description"),
-                tr("admin-perms.ranks-count", "count" to TownyPerms.getNationRanks().size)
+                tr("admin-perms.ranks-count", "count" to TownyPerms.getNationRanks().size),
+                actions = hints("click.view")
             )
         ) {
             AdminRanksMenu(player, nation = true, back = this).open()
@@ -63,7 +66,7 @@ class AdminPermsMenu(player: Player, back: Menu) : Menu(player, player.tr("admin
                 itemStack(Material.BOOKSHELF) {
                     name("<gold>${TownyUtil.text(group)}")
                     lore(tr("admin-perms.node-count", "count" to TownyPerms.getPermsOfGroup(group).size))
-                    loreActions(listOf(tr("common.click-details")))
+                    loreActions(listOf(tr("click.details")))
                 }
             }) { AdminPermGroupMenu(player, group, menu).open() }
         }

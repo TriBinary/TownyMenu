@@ -33,7 +33,8 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_SETTOWNLEVEL,
             Icons.icon(
                 Material.EXPERIENCE_BOTTLE, tr("admin-town-tools.level"), tr("admin-town-tools.level-description"),
-                tr("common.current", "value" to town.levelNumber)
+                tr("common.current", "value" to town.levelNumber),
+                actions = hints("click.set")
             )
         ) {
             prompt(
@@ -50,7 +51,7 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
             Icons.icon(
                 Material.STRUCTURE_VOID, tr("admin-town-tools.merge"),
                 tr("admin-town-tools.merge-description", "town" to TownyUtil.name(town.name)),
-                tr("admin-town-tools.merge-force")
+                actions = hints("click.choose-town", "admin-town-tools.merge-force")
             )
         ) { click ->
             val force = click.isRightClick
@@ -65,7 +66,8 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
                     Icons.icon(
                         Material.RED_BANNER, tr("admin-town-tools.not-for-sale"),
                         tr("admin-town-tools.not-for-sale-description"),
-                        tr("common.price", "price" to TownyUtil.money(town.forSalePrice))
+                        tr("common.price", "price" to TownyUtil.money(town.forSalePrice)),
+                        actions = hints("click.stop-selling")
                     )
                 ) {
                     run("$command notforsale", { town.isForSale })
@@ -75,7 +77,8 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
                     PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_FORSALE,
                     Icons.icon(
                         Material.GREEN_BANNER, tr("admin-town-tools.for-sale"),
-                        tr("admin-town-tools.for-sale-description")
+                        tr("admin-town-tools.for-sale-description"),
+                        actions = hints("click.set-price")
                     )
                 ) {
                     prompt(tr("admin-town-tools.for-sale-title"), tr("common.price-label"), initial = "0") { price ->
@@ -90,7 +93,8 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
                 Icons.icon(
                     Material.IRON_SWORD, tr("admin-town-tools.unconquer"),
                     tr("admin-town-tools.unconquer-description"),
-                    tr("town-status.conquered-days", "days" to town.conqueredDays)
+                    tr("town-status.conquered-days", "days" to town.conqueredDays),
+                    actions = hints("click.free")
                 )
             ) {
                 run("$command toggle conquered off", { town.isConquered })
@@ -100,14 +104,18 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_CHECKOUTPOSTS,
             Icons.icon(
                 Material.RECOVERY_COMPASS, tr("admin-server.check-outposts"),
-                tr("admin-town-tools.check-outposts-description")
+                tr("admin-town-tools.check-outposts-description"),
+                actions = hints("click.run")
             )
         ) {
             runAndClose("$command checkoutposts")
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_RANK,
-            Icons.icon(Material.NAME_TAG, tr("admin-town-tools.ranks"), tr("admin-town-tools.ranks-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("admin-town-tools.ranks"), tr("admin-town-tools.ranks-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             members(town.residents.toList()) { target, list ->
                 RankMenu.create(player, target, nation = false, back = list, admin = town.name).open()
@@ -117,7 +125,8 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_OUTLAW,
             Icons.icon(
                 Material.IRON_BARS, tr("town.outlaws"), tr("admin-town-tools.outlaws-description"),
-                tr("town.outlaws-count", "count" to town.outlaws.size)
+                tr("town.outlaws-count", "count" to town.outlaws.size),
+                actions = hints("click.view")
             )
         ) {
             AdminNamesMenu(
@@ -129,7 +138,8 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_TRUST,
             Icons.icon(
                 Material.TRIPWIRE_HOOK, tr("common.trusted"), tr("admin-town-tools.trust-description"),
-                tr("plot.trusted-count", "count" to town.trustedResidents.size)
+                tr("plot.trusted-count", "count" to town.trustedResidents.size),
+                actions = hints("click.view")
             )
         ) {
             AdminNamesMenu(
@@ -141,7 +151,8 @@ class AdminTownToolsMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_TRUSTTOWN,
             Icons.icon(
                 Material.BELL, tr("admin-town-tools.trusted-towns"), tr("admin-town-tools.trusted-towns-description"),
-                tr("nation.towns-count", "count" to town.trustedTowns.size)
+                tr("nation.towns-count", "count" to town.trustedTowns.size),
+                actions = hints("click.view")
             )
         ) {
             AdminNamesMenu(

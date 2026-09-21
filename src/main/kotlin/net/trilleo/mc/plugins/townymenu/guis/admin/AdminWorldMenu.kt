@@ -30,7 +30,10 @@ class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) 
 
         guarded(
             10, PermissionNodes.TOWNY_COMMAND_TOWNYWORLD_TOGGLE,
-            Icons.icon(Material.LEVER, tr("admin-world.toggles"), tr("admin-world.toggles-description"))
+            Icons.icon(
+                Material.LEVER, tr("admin-world.toggles"), tr("admin-world.toggles-description"),
+                actions = hints("click.open")
+            )
         ) {
             toggles().open()
         }
@@ -38,7 +41,8 @@ class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) 
             12, PermissionNodes.TOWNY_COMMAND_TOWNYWORLD_SET,
             Icons.icon(
                 Material.NAME_TAG, tr("admin-world.rename-wild"), tr("admin-world.rename-wild-description"),
-                tr("common.current", "value" to TownyUtil.text(world.unclaimedZoneName))
+                tr("common.current", "value" to TownyUtil.text(world.unclaimedZoneName)),
+                actions = hints("click.rename")
             )
         ) {
             prompt(tr("admin-world.rename-wild"), tr("common.new-name"), initial = world.unclaimedZoneName) { name ->
@@ -47,7 +51,10 @@ class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) 
         }
         guarded(
             14, PermissionNodes.TOWNY_COMMAND_TOWNYWORLD_SET,
-            Icons.icon(Material.BARRIER, tr("admin-world.reset"), tr("admin-world.reset-description"))
+            Icons.icon(
+                Material.BARRIER, tr("admin-world.reset"), tr("admin-world.reset-description"),
+                actions = hints("click.reset")
+            )
         ) {
             run("$command set usedefault", ::snapshot)
         }

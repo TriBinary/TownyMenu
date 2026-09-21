@@ -30,7 +30,10 @@ class TownStatusMenu(player: Player, private val town: Town, back: Menu) :
             info.add(
                 Icons.icon(
                     Material.COMPASS, tr("town-status.outposts"), tr("town-status.outposts-description"),
-                    tr("claims.outposts", "outposts" to town.maxOutpostSpawn, "limit" to town.outpostLimit)
+                    tr("claims.outposts", "outposts" to town.maxOutpostSpawn, "limit" to town.outpostLimit),
+                    *listOfNotNull(
+                        town.outpostLimit.takeIf { it > 0 }?.let { progressBar(town.maxOutpostSpawn, it) }
+                    ).toTypedArray()
                 )
             )
         }
@@ -40,7 +43,7 @@ class TownStatusMenu(player: Player, private val town: Town, back: Menu) :
                 Icons.icon(
                     Material.BEACON, tr("town-status.nation-zone"), tr("town-status.nation-zone-description"),
                     tr("town-status.nation-zone-size", "size" to town.nationZoneSize),
-                    tr("icon.currently", "value" to TownyUtil.onOff(player, town.isNationZoneEnabled))
+                    tr("icon.status", "value" to tr(if (town.isNationZoneEnabled) "icon.enabled" else "icon.disabled"))
                 )
             )
         }
@@ -78,6 +81,10 @@ class TownStatusMenu(player: Player, private val town: Town, back: Menu) :
                         else -> tr("town-status.next-level-residents", "current" to progress, "needed" to next)
                     }
                 )
+                if (town.manualTownLevel == -1 && next != null) {
+                    val floor = thresholds.getOrElse(number) { 0 }
+                    add(progressBar(progress - floor, next - floor))
+                }
             }.toTypedArray()
         )
     }
@@ -85,6 +92,7 @@ class TownStatusMenu(player: Player, private val town: Town, back: Menu) :
     private fun claims(): ItemStack = Icons.icon(
         Material.GRASS_BLOCK, tr("claims.info"), tr("town-status.claims-description"), *buildList {
             add(tr("claims.claimed", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))
+            if (!town.hasUnlimitedClaims()) add(progressBar(town.numTownBlocks, town.maxTownBlocks))
             add(
                 tr(
                     "claims.available",
@@ -157,6 +165,7 @@ class TownStatusMenu(player: Player, private val town: Town, back: Menu) :
                 warn(
                     Material.TNT, menu.tr("town-status.overclaimed"),
                     menu.tr("claims.claimed", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString),
+                    menu.progressBar(town.numTownBlocks, town.maxTownBlocks),
                     menu.tr(
                         if (TownySettings.isOverClaimingAllowingStolenLand()) "town-status.overclaimed-stealable"
                         else "town-status.overclaimed-description"

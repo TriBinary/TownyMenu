@@ -26,14 +26,20 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
         val grid = layout(19, 20, 21, 22, 23, 24, 25)
 
         if (viewer?.townOrNull == town) {
-            grid.add(Icons.icon(Material.WRITABLE_BOOK, tr("town-info.manage"), tr("town-info.manage-description"))) {
+            grid.add(
+                Icons.icon(
+                    Material.WRITABLE_BOOK, tr("town-info.manage"), tr("town-info.manage-description"),
+                    actions = hints("click.open")
+                )
+            ) {
                 TownMenu(player, this).open()
             }
         }
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town-info.visit"), tr("town-info.visit-description"),
-                *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray()
+                *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray(),
+                actions = hints("click.teleport")
             )
         ) {
             runAndClose("towny:town spawn ${town.name}")
@@ -43,7 +49,8 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                 Material.PLAYER_HEAD,
                 tr("town.residents"),
                 null,
-                tr("icon.town.residents", "count" to town.numResidents)
+                tr("icon.town.residents", "count" to town.numResidents),
+                actions = hints("click.view")
             )
         ) {
             TownMembersMenu(player, town, this).open()
@@ -53,7 +60,8 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                 Icons.icon(
                     Material.BEACON,
                     tr("town-info.nation", "nation" to TownyUtil.name(nation.name)),
-                    tr("town-info.nation-description")
+                    tr("town-info.nation-description"),
+                    actions = hints("click.view")
                 )
             ) {
                 NationInfoMenu(player, nation, this).open()
@@ -62,7 +70,10 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
         if (viewer != null && !viewer.hasTown() && town.isOpen) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_JOIN,
-                Icons.icon(Material.OAK_DOOR, tr("town-info.join"), tr("town-info.join-description"))
+                Icons.icon(
+                    Material.OAK_DOOR, tr("town-info.join"), tr("town-info.join-description"),
+                    actions = hints("click.join")
+                )
             ) {
                 run("towny:town join ${town.name}", { viewer.hasTown() }, returnTo = MainMenu(player))
             }
@@ -70,7 +81,10 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
         if (TownyUtil.economy && viewer?.townOrNull != town) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_DEPOSIT_OTHERTOWN,
-                Icons.icon(Material.EMERALD, tr("town-info.donate"), tr("town-info.donate-description"))
+                Icons.icon(
+                    Material.EMERALD, tr("town-info.donate"), tr("town-info.donate-description"),
+                    actions = hints("click.donate")
+                )
             ) {
                 prompt(
                     tr("town-info.donate-title", "town" to TownyUtil.name(town.name)),
@@ -86,7 +100,8 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_BUYTOWN, Icons.icon(
                     Material.GOLD_BLOCK, tr("town-info.buy"), tr("town-info.buy-description"),
-                    *listOfNotNull(priceLine(town.forSalePrice)).toTypedArray()
+                    *listOfNotNull(priceLine(town.forSalePrice)).toTypedArray(),
+                    actions = hints("click.buy")
                 )
             ) { run("towny:town buytown ${town.name}", { town.mayor }, returnTo = MainMenu(player)) }
         }
@@ -101,7 +116,8 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                         "town" to TownyUtil.name(town.name),
                         "own" to TownyUtil.name(viewerTown.name)
                     ),
-                    *listOfNotNull(costLine(Prices.merge(viewerTown, town))).toTypedArray()
+                    *listOfNotNull(costLine(Prices.merge(viewerTown, town))).toTypedArray(),
+                    actions = hints("click.merge")
                 )
             ) {
                 run("towny:town merge ${town.name}")
@@ -114,7 +130,8 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                 Icons.icon(
                     Material.PAPER,
                     tr("town-info.invite"),
-                    tr("town-info.invite-description", "nation" to TownyUtil.name(nation.name))
+                    tr("town-info.invite-description", "nation" to TownyUtil.name(nation.name)),
+                    actions = hints("click.invite")
                 )
             ) {
                 run("towny:nation add ${town.name}", { nation.sentInvites.size })

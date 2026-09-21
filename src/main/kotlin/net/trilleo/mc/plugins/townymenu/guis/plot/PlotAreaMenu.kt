@@ -30,7 +30,7 @@ class PlotAreaMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-ar
             21, Icons.icon(
                 if (circle) Material.SNOWBALL else Material.PAINTING, tr("plot-area.shape"), null,
                 tr("common.current", "value" to tr(if (circle) "plot-area.circle" else "plot-area.square")),
-                actions = listOf(tr("common.click-change"))
+                actions = listOf(tr("click.change"))
             )
         ) {
             circle = !circle
@@ -40,7 +40,7 @@ class PlotAreaMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-ar
             23, Icons.icon(
                 Material.COMPASS, tr("plot-area.radius"), tr("plot-area.radius-description"),
                 tr("common.current", "value" to radius),
-                actions = listOf(tr("common.click-change"))
+                actions = listOf(tr("click.change"))
             )
         ) {
             prompt(tr("plot-area.radius-title"), tr("claims.radius"), initial = radius, maxLength = 3) {
@@ -53,14 +53,20 @@ class PlotAreaMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-ar
         val actions = layout(29, 30, 31, 32, 33)
         actions.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_CLAIM,
-            Icons.icon(Material.EMERALD, tr("plot-area.buy"), tr("plot-area.buy-description"))
+            Icons.icon(
+                Material.EMERALD, tr("plot-area.buy"), tr("plot-area.buy-description"),
+                actions = hints("click.buy")
+            )
         ) {
             run("towny:plot claim $area", owned, delayTicks = CLAIM_DELAY)
         }
         if (TownyUtil.economy) {
             actions.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_FORSALE,
-                Icons.icon(Material.GREEN_BANNER, tr("plot-area.sell"), tr("plot-area.sell-description"))
+                Icons.icon(
+                    Material.GREEN_BANNER, tr("plot-area.sell"), tr("plot-area.sell-description"),
+                    actions = hints("click.set-price")
+                )
             ) {
                 val price = TownyAPI.getInstance().getTown(player.location)?.plotPrice?.takeIf { it >= 0 } ?: 0.0
                 prompt(
@@ -75,13 +81,19 @@ class PlotAreaMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-ar
         }
         actions.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_NOTFORSALE,
-            Icons.icon(Material.RED_BANNER, tr("plot-area.not-for-sale"), tr("plot-area.not-for-sale-description"))
+            Icons.icon(
+                Material.RED_BANNER, tr("plot-area.not-for-sale"), tr("plot-area.not-for-sale-description"),
+                actions = hints("click.stop-selling")
+            )
         ) {
             run("towny:plot notforsale $area")
         }
         actions.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_UNCLAIM,
-            Icons.icon(Material.COARSE_DIRT, tr("plot-area.give-up"), tr("plot-area.give-up-description"))
+            Icons.icon(
+                Material.COARSE_DIRT, tr("plot-area.give-up"), tr("plot-area.give-up-description"),
+                actions = hints("click.give-up")
+            )
         ) {
             run("towny:plot unclaim $area", owned, delayTicks = CLAIM_DELAY)
         }
@@ -89,7 +101,8 @@ class PlotAreaMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-ar
             PermissionNodes.TOWNY_COMMAND_PLOT_UNCLAIM,
             Icons.icon(
                 Material.LAVA_BUCKET, tr("plot-area.give-up-all"), tr("plot-area.give-up-all-description"),
-                tr("profile.plots-owned", "count" to (resident?.townBlocks?.size ?: 0))
+                tr("profile.plots-owned", "count" to (resident?.townBlocks?.size ?: 0)),
+                actions = hints("click.give-up")
             )
         ) {
             run("towny:plot unclaim all", owned, delayTicks = CLAIM_DELAY)

@@ -4,7 +4,7 @@
 
 TownyMenu is a Minecraft Paper plugin that adds a GUI layer on top of [Towny](https://github.com/TownyAdvanced/Towny):
 players manage their town, nation, and plots through inventory menus instead of typing Towny commands. It targets
-Minecraft 26.2 (Paper API 26.2), hard-depends on Towny, and is written in Kotlin. [README.md](README.md) has the
+Minecraft 26.3 (Paper API 26.3), hard-depends on Towny, and is written in Kotlin. [README.md](README.md) has the
 player-facing overview.
 
 ## Tech Stack
@@ -13,7 +13,7 @@ player-facing overview.
 |:---------------|:-------------------------------------------------|
 | Language       | Kotlin 2.3.10                                    |
 | Build          | Gradle 9.7.1 (Kotlin DSL)                        |
-| Platform       | Paper API 26.2 (MC 26.2)                         |
+| Platform       | Paper API 26.3 (MC 26.3)                         |
 | Towny          | 0.103.2.7 (`towny_version` in gradle.properties) |
 | Java toolchain | JDK 25                                           |
 
@@ -41,7 +41,8 @@ Before finishing any task that changes the plugin, do all of the following:
 
 3. **Translate every new string** — player-facing text never lives in Kotlin. Add each key to **both**
    [en_US.yml](src/main/resources/lang/en_US.yml) and [zh_CN.yml](src/main/resources/lang/zh_CN.yml) in the same task,
-   with a real Simplified Chinese translation, and remove keys the change no longer uses. `LangFilesTest` fails the
+   with a real Simplified Chinese translation coloured the same way as the English (see the colour palette under
+   Translations), and remove keys the change no longer uses. `LangFilesTest` fails the
    build when the files disagree or a key is missing or unused. See the Translations section below.
 
 4. **Check the README** — if the change affects anything [README.md](README.md) mentions (features, commands,
@@ -57,8 +58,8 @@ Before finishing any task that changes the plugin, do all of the following:
 
 The local test server lives in `run/` (gitignored). `copyPlugin` deletes every `TownyMenu-*.jar` and `towny-*.jar`
 already in `run/plugins/` before copying, so a version bump never leaves two copies for Bukkit to load. It puts the
-matching Towny jar there too, but the
-Paper 26.2 jar (`run/paper-*.jar`) must be downloaded by hand from https://papermc.io/downloads/paper, and `eula.txt`
+matching Towny jar there too, but the Paper 26.3 jar (`run/paper-*.jar`) must be downloaded by hand
+from https://papermc.io/downloads/paper, and `eula.txt`
 accepted, before `startServer` works. The server console reads commands from the terminal running Gradle.
 
 ## Repository Layout
@@ -119,14 +120,27 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
 - **Keep `PagedMenu` entries lazy** — pass the icon as a lambda to `MenuEntry` so off-page icons are never built.
 - **Show what a button costs** — a button that spends money takes its amount from `Prices` and turns it into lore with
   `costLine(...)` / `priceLine(...)`, so the figure is this server's and not a guess.
-- **Lay every icon's lore out in the same blocks** — a tooltip reads name → description → data → actions, and a new
-  icon follows that order or it looks out of place beside the others. With an `Icons` builder the description is the
+- **Lay every icon's lore out in the same blocks** — a tooltip reads name → description → data → actions, and a new icon
+  follows that order or it looks out of place beside the others. With an `Icons` builder the description is the
   `description` argument, the data and cost lines are the `extra` varargs, and everything about clicking is
-  `actions = listOf(...)`; with `itemStack { }` directly, use `loreWrapped(...)`, `loreBreak()` between data blocks,
-  and `loreActions(...)` to close. Never hand-roll the spacing: no `""` lore line to separate blocks, no divider drawn
-  by hand, no blank line under the name — `LoreBlocks` adds all three, collapses repeats, and trims a block that turns
-  out empty. The mistake to watch for is a click hint left among the data lines; it belongs in `actions`, which is what
-  puts it below the divider. See [The shape of an icon](docs/DEVELOPER_GUIDE.md#the-shape-of-an-icon).
+  `actions = hints(...)`; with `itemStack { }` directly, use `loreWrapped(...)`, `loreBreak()` between data blocks, and
+  `loreActions(...)` to close. Never hand-roll the spacing: no `""` lore line to separate blocks, no divider drawn by
+  hand, no blank line under the name — `LoreBlocks` adds all three, collapses repeats, and trims a block that turns out
+  empty. The mistake to watch for is a click hint left among the data lines; it belongs in `actions`, which is what puts
+  it below the divider. See [The shape of an icon](docs/DEVELOPER_GUIDE.md#the-shape-of-an-icon).
+- **Tell the player what every click does** — a clickable icon gets a SkyBlock-style hint ending in `!`, taken from the
+  shared `click.*` keys with `hints(...)` (`actions = hints("click.open")`) or a menu-specific key in the same colours:
+  yellow for a click or left-click, aqua for a right-click, red when it deletes or removes something. A button that
+  acts differently per mouse button lists one hint per button, left first (`hints("click.edit", "click.clear")`), and
+  its description never explains the clicks. An on/off setting uses `Icons.toggle`, which writes its own
+  ENABLED/DISABLED status and "Click to enable!"/"Click to disable!" hint. Only purely informational icons go without a
+  hint. See [Click hints](docs/DEVELOPER_GUIDE.md#click-hints).
+- **Show progress as a bar** — any "used of limit" or "towards the next level" figure gets a `progressBar(current, max)`
+  line under its number, and none when the limit is zero or unlimited.
+- **Use the framework's chrome, never your own** — `backButton(slot)` (a "Go Back" arrow naming the parent menu),
+  `pageArrow(...)` for hand-paged menus, `tutorialButton(...)`, and the black glass filler `render()` lays down. Lists of
+  names inside lore use `common.list-entry` (`• name`). No colour tags in Kotlin, not even for a selection marker: add a
+  translation key (as `sort.selected` / `sort.option` do).
 
 ## Translations
 
@@ -135,6 +149,19 @@ Extend `Menu` (or `PagedMenu` for lists) and implement `build()`, which runs on 
   falling back to `en_US`.
 - Values are MiniMessage with `{placeholder}` arguments. Arguments are inserted verbatim, so escape player-written text
   with `TownyUtil.name()` / `TownyUtil.text()` first. Colours belong in the translation, not in Kotlin.
+- **Every new string follows the [colour palette](docs/DEVELOPER_GUIDE.md#colour-palette)** (Hypixel SkyBlock style),
+  in both languages:
+    - Labels and descriptions `<gray>`; the value after a label takes its kind's colour — `<gold>` money and town
+      names, `<aqua>` nations, `<green>` counts, `<yellow>` dates and times, `<white>` player names and other neutral
+      values, `<red>` a count that is bad news (outlaws, prisoners). A ratio greys its slash:
+      `"<gray>Claims: <green>{claims}<gray>/<green>{max}"`.
+    - A description highlights one to three key terms, closing each tag so the grey resumes, and a term always gets
+      the same colour: `<red>` danger (PvP, enemies, outlaws, jail, debt, ruins, "permanently"), `<gold>` money and
+      leadership (bank, taxes, upkeep, price, mayor, capital, home block), `<green>` land and friendship (claims,
+      chunks, plots, land, allies, friends, trust), `<light_purple>` spawns, outposts, teleports, `<aqua>` nation zone,
+      `<yellow>` menu and button names. Example: `"Teleport to your town <light_purple>spawn</light_purple>."`
+    - Click hints end in `!` (Chinese `！`, `点击…！` / `左键…！` / `右键…！`) and are coloured by button as above.
+    - `command.*` help text stays plain: no tags.
 - Keys are grouped by menu (`town.*`, `plot-group.*`); reuse `common.*`, `toggle.*`, and `icon.*` for shared text.
 - Key names must appear as whole string literals (`tr(if (on) "a.on" else "a.off")`, not `"a.$state"`) so
   `LangFilesTest` can see them. The only runtime-built keys are `plot-type.*` and `command.*`.

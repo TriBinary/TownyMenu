@@ -30,7 +30,7 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
                         )
                     ) tr("admin-plugin.language-auto") else TownyUtil.text(language)
                 ),
-                actions = listOf(tr("common.click-change"))
+                actions = listOf(tr("click.change"))
             )
         ) {
             val options =
@@ -44,7 +44,7 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
             Icons.icon(
                 Material.NAME_TAG, tr("admin-plugin.prefix"), tr("admin-plugin.prefix-description"),
                 tr("common.current", "value" to config.messagePrefix),
-                actions = listOf(tr("common.click-change"))
+                actions = listOf(tr("click.change"))
             )
         ) {
             prompt(
@@ -97,7 +97,7 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
             Icons.icon(
                 Material.GOLD_NUGGET, tr("admin-plugin.bank-amounts"), tr("admin-plugin.bank-amounts-description"),
                 tr("common.current", "value" to config.bankAmounts.joinToString(", ").ifEmpty { tr("common.none") }),
-                actions = listOf(tr("common.click-change"))
+                actions = listOf(tr("click.change"))
             )
         ) {
             prompt(

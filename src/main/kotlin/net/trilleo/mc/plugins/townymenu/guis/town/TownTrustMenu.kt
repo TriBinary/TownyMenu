@@ -26,7 +26,7 @@ class TownTrustMenu(player: Player, private val town: Town, back: Menu) :
             MenuEntry({
                 Icons.resident(
                     player, trusted,
-                    actions = listOf(tr(if (canTrust) "common.click-untrust" else "town-trust.resident"))
+                    actions = listOf(tr(if (canTrust) "click.untrust" else "town-trust.resident"))
                 )
             }) {
                 if (canTrust) run("towny:town trust remove ${trusted.name}", ::snapshot)
@@ -36,7 +36,7 @@ class TownTrustMenu(player: Player, private val town: Town, back: Menu) :
             MenuEntry({
                 Icons.town(
                     player, trusted,
-                    actions = listOf(tr(if (canTrustTowns) "common.click-untrust" else "town-trust.town"))
+                    actions = listOf(tr(if (canTrustTowns) "click.untrust" else "town-trust.town"))
                 )
             }) {
                 if (canTrustTowns) run("towny:town trusttown remove ${trusted.name}", ::snapshot)
@@ -49,7 +49,10 @@ class TownTrustMenu(player: Player, private val town: Town, back: Menu) :
         tutorialButton(52, Tutorial.PROTECTION)
         guarded(
             47, PermissionNodes.TOWNY_COMMAND_TOWN_TRUST,
-            Icons.icon(Material.PLAYER_HEAD, tr("common.trust-online"), tr("town-trust.trust-online-description"))
+            Icons.icon(
+                Material.PLAYER_HEAD, tr("common.trust-online"), tr("town-trust.trust-online-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             Pickers.resident(this, tr("common.trust-title"), { !town.hasTrustedResident(it) }) { picked ->
                 run("towny:town trust add ${picked.name}", ::snapshot)
@@ -57,7 +60,10 @@ class TownTrustMenu(player: Player, private val town: Town, back: Menu) :
         }
         guarded(
             48, PermissionNodes.TOWNY_COMMAND_TOWN_TRUST,
-            Icons.icon(Material.NAME_TAG, tr("common.trust-name"), tr("common.trust-name-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("common.trust-name"), tr("common.trust-name-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(
                 tr("common.trust-title"),
@@ -66,7 +72,10 @@ class TownTrustMenu(player: Player, private val town: Town, back: Menu) :
         }
         guarded(
             51, PermissionNodes.TOWNY_COMMAND_TOWN_TRUSTTOWN,
-            Icons.icon(Material.BELL, tr("town-trust.trust-town"), tr("town-trust.trust-town-description"))
+            Icons.icon(
+                Material.BELL, tr("town-trust.trust-town"), tr("town-trust.trust-town-description"),
+                actions = hints("click.choose-town")
+            )
         ) {
             Pickers.town(
                 this,

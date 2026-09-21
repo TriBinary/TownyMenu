@@ -21,6 +21,7 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
             4, Icons.icon(
                 Material.KNOWLEDGE_BOOK, tr("tutorial.hub"), tr("tutorial.hub-description"),
                 tr("tutorial.progress", "read" to read, "total" to total),
+                progressBar(read, total),
                 *listOfNotNull(if (read == total) tr("tutorial.all-read") else null).toTypedArray()
             )
         )
@@ -35,7 +36,8 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
             button(
                 47, Icons.icon(
                     Material.SPECTRAL_ARROW, tr("tutorial.continue"), tr("tutorial.continue-description"),
-                    tr("tutorial.chapter-line", "chapter" to tr(next.title))
+                    tr("tutorial.chapter-line", "chapter" to tr(next.title)),
+                    actions = hints("click.open")
                 )
             ) {
                 TutorialChapterMenu(player, next, this).open()
@@ -43,7 +45,12 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
         }
         backButton(49)
         if (read > 0) {
-            button(51, Icons.icon(Material.WATER_BUCKET, tr("tutorial.reset"), tr("tutorial.reset-description"))) {
+            button(
+                51, Icons.icon(
+                    Material.WATER_BUCKET, tr("tutorial.reset"), tr("tutorial.reset-description"),
+                    actions = hints("click.reset")
+                )
+            ) {
                 DialogUtil.confirm(
                     player, MiniMessage.miniMessage().deserialize(tr("tutorial.reset-confirm")), null,
                     onYes = {
@@ -63,8 +70,9 @@ class TutorialMenu(player: Player, back: Menu?) : Menu(player, player.tr("tutori
         loreWrapped("<gray>${tr(chapter.description)}")
         loreBreak()
         lore(tr("tutorial.progress", "read" to read, "total" to total))
+        lore(progressBar(read, total))
         if (read == total) lore(tr("tutorial.chapter-complete"))
-        loreActions(listOf(tr("tutorial.click-chapter")))
+        loreActions(hints("click.open"))
         glow(read == total)
     }
 }

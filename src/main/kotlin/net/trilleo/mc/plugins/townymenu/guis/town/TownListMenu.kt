@@ -38,7 +38,7 @@ class TownListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("to
                         ?.let { tr("town-list.distance", "blocks" to it.toLong()) },
                 )
                 MenuEntry({
-                    Icons.town(player, town, *lines.toTypedArray(), actions = listOf(tr("common.click-details")))
+                    Icons.town(player, town, *lines.toTypedArray(), actions = listOf(tr("click.details")))
                 }) {
                     TownInfoMenu(player, town, this).open()
                 }
@@ -52,10 +52,10 @@ class TownListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("to
         }
         button(47, itemStack(Material.HOPPER) {
             name(tr("sort.current", "sort" to tr(sort.label)))
-            lore(sorts.map { (if (it == sort) "<green>▶ " else "<gray>  ") + tr(it.label) })
-            loreActions(listOf(tr("common.click-change")))
-        }) {
-            sort = sorts[(sorts.indexOf(sort) + 1) % sorts.size]
+            lore(sorts.map { tr(if (it == sort) "sort.selected" else "sort.option", "sort" to tr(it.label)) })
+            loreActions(hints("click.next", "click.previous"))
+        }) { click ->
+            sort = sorts.cycle(sort, click)
             render()
         }
     }

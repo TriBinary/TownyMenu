@@ -18,7 +18,10 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
     override fun build() {
         guarded(
             10, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NEWDAY,
-            Icons.icon(Material.CLOCK, tr("admin-server.new-day"), tr("admin-server.new-day-description"))
+            Icons.icon(
+                Material.CLOCK, tr("admin-server.new-day"), tr("admin-server.new-day-description"),
+                actions = hints("click.run")
+            )
         ) {
             DialogUtil.confirm(
                 player,
@@ -30,13 +33,19 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
         }
         guarded(
             11, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NEWHOUR,
-            Icons.icon(Material.COMPASS, tr("admin-server.new-hour"), tr("admin-server.new-hour-description"))
+            Icons.icon(
+                Material.COMPASS, tr("admin-server.new-hour"), tr("admin-server.new-hour-description"),
+                actions = hints("click.run")
+            )
         ) {
             runAndClose("towny:townyadmin newhour")
         }
         guarded(
             12, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_BACKUP,
-            Icons.icon(Material.CHEST, tr("admin-server.backup"), tr("admin-server.backup-description"))
+            Icons.icon(
+                Material.CHEST, tr("admin-server.backup"), tr("admin-server.backup-description"),
+                actions = hints("click.run")
+            )
         ) {
             runAndClose("towny:townyadmin backup")
         }
@@ -45,7 +54,8 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
             Icons.icon(
                 Material.ENDER_CHEST,
                 tr("admin-server.save-database"),
-                tr("admin-server.save-database-description")
+                tr("admin-server.save-database-description"),
+                actions = hints("click.run")
             )
         ) {
             runAndClose("towny:townyadmin database save")
@@ -55,7 +65,8 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
             Icons.icon(
                 Material.RECOVERY_COMPASS,
                 tr("admin-server.check-outposts"),
-                tr("admin-server.check-outposts-description")
+                tr("admin-server.check-outposts-description"),
+                actions = hints("click.run")
             )
         ) {
             runAndClose("towny:townyadmin checkoutposts")
@@ -63,7 +74,10 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
 
         guarded(
             15, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_PURGE,
-            Icons.icon(Material.BONE, tr("admin-server.purge"), tr("admin-server.purge-description"))
+            Icons.icon(
+                Material.BONE, tr("admin-server.purge"), tr("admin-server.purge-description"),
+                actions = hints("click.choose-days")
+            )
         ) {
             prompt(
                 tr("admin-server.purge"),
@@ -77,7 +91,10 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
         }
         guarded(
             16, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_CHECKPERM,
-            Icons.icon(Material.SPYGLASS, tr("admin-server.check-perm"), tr("admin-server.check-perm-description"))
+            Icons.icon(
+                Material.SPYGLASS, tr("admin-server.check-perm"), tr("admin-server.check-perm-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             Pickers.resident(this, tr("admin-server.check-perm"), { it.isOnline }) { target ->
                 prompt(tr("admin-server.check-perm"), tr("admin-perms.node-label"), maxLength = 128) { node ->
@@ -121,7 +138,8 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
                 Icons.icon(
                     Material.GOLD_BLOCK,
                     tr("admin-server.deposit-all"),
-                    tr("admin-server.deposit-all-description")
+                    tr("admin-server.deposit-all-description"),
+                    actions = hints("click.type-amount")
                 )
             ) {
                 prompt(
@@ -186,7 +204,10 @@ class AdminServerMenu(player: Player, back: Menu) : Menu(player, player.tr("admi
     }
 
     private fun reload(slot: Int, material: Material, target: String, name: String, description: String) {
-        guarded(slot, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RELOAD, Icons.icon(material, name, description)) {
+        guarded(
+            slot, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RELOAD,
+            Icons.icon(material, name, description, actions = hints("click.reload"))
+        ) {
             runAndClose("towny:townyadmin reload $target")
         }
     }

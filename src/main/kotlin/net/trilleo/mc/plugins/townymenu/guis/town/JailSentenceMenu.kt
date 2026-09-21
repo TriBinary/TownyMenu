@@ -47,7 +47,8 @@ class JailSentenceMenu(player: Player, private val town: Town, private val targe
             Icons.icon(
                 Material.CLOCK, tr("jail-sentence.hours"), tr("jail-sentence.hours-description"),
                 tr("common.current", "value" to hours),
-                tr("jail-sentence.max-hours", "hours" to TownySettings.getJailedMaxHours())
+                tr("jail-sentence.max-hours", "hours" to TownySettings.getJailedMaxHours()),
+                actions = hints("click.set")
             )
         ) {
             prompt(tr("jail-sentence.hours-title"), tr("jail-sentence.hours-label"), initial = hours, maxLength = 5) {
@@ -60,7 +61,8 @@ class JailSentenceMenu(player: Player, private val town: Town, private val targe
                 Icons.icon(
                     Material.GOLD_NUGGET, tr("jail-sentence.bail"), tr("jail-sentence.bail-description"),
                     tr("common.current", "value" to bail),
-                    tr("jail-sentence.max-bail", "bail" to TownyUtil.money(TownySettings.getBailMaxAmount()))
+                    tr("jail-sentence.max-bail", "bail" to TownyUtil.money(TownySettings.getBailMaxAmount())),
+                    actions = hints("click.set")
                 )
             ) {
                 prompt(tr("jail-sentence.bail-title"), tr("common.amount"), initial = bail, maxLength = 12) {
@@ -74,7 +76,7 @@ class JailSentenceMenu(player: Player, private val town: Town, private val targe
                 Icons.icon(
                     Material.IRON_BARS, tr("jail-sentence.jail"), null,
                     tr("common.current", "value" to TownJailMenu.jailName(this, town, jail)),
-                    actions = listOf(tr("common.click-change"))
+                    actions = listOf(tr("click.change"))
                 )
             ) {
                 val options = jails.mapIndexed { index, option ->
@@ -92,7 +94,7 @@ class JailSentenceMenu(player: Player, private val town: Town, private val targe
                 Icons.icon(
                     Material.IRON_CHAIN, tr("jail-sentence.cell"), null,
                     tr("common.current", "value" to cell + 1),
-                    actions = listOf(tr("common.click-change"))
+                    actions = listOf(tr("click.change"))
                 )
             ) {
                 val options = (0 until jail.jailCellCount).map {
@@ -106,7 +108,10 @@ class JailSentenceMenu(player: Player, private val town: Town, private val targe
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_JAIL,
-            Icons.icon(Material.LIME_CONCRETE, tr("jail-sentence.confirm"), tr("jail-sentence.confirm-description"))
+            Icons.icon(
+                Material.LIME_CONCRETE, tr("jail-sentence.confirm"), tr("jail-sentence.confirm-description"),
+                actions = hints("click.jail")
+            )
         ) {
             val bailArgument = if (bailEnabled) " $bail" else ""
             run(

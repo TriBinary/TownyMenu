@@ -40,6 +40,7 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                     if (friend) Material.WITHER_ROSE else Material.POPPY,
                     tr(if (friend) "resident-profile.remove-friend" else "resident-profile.add-friend"),
                     tr("profile.friends-description"),
+                    actions = hints(if (friend) "click.remove" else "click.add")
                 )
             ) {
                 run(
@@ -54,7 +55,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                 Icons.icon(
                     Material.NAME_TAG,
                     tr("resident-profile.town-ranks"),
-                    tr("resident-profile.town-ranks-description")
+                    tr("resident-profile.town-ranks-description"),
+                    actions = hints("click.edit-ranks")
                 )
             ) {
                 RankMenu.create(player, target, false, this).open()
@@ -64,7 +66,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                 Icons.icon(
                     Material.OAK_HANGING_SIGN,
                     tr("resident-profile.title"),
-                    tr("resident-profile.title-description")
+                    tr("resident-profile.title-description"),
+                    actions = hints("click.edit", "click.clear")
                 )
             ) { click ->
                 editTitle(
@@ -79,7 +82,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                 Icons.icon(
                     Material.OAK_SIGN,
                     tr("resident-profile.surname"),
-                    tr("resident-profile.surname-description")
+                    tr("resident-profile.surname-description"),
+                    actions = hints("click.edit", "click.clear")
                 )
             ) { click ->
                 editTitle(
@@ -95,7 +99,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                     Icons.icon(
                         Material.GOLDEN_HELMET,
                         tr("resident-profile.make-mayor"),
-                        tr("resident-profile.make-mayor-description")
+                        tr("resident-profile.make-mayor-description"),
+                        actions = hints("click.make-mayor")
                     )
                 ) {
                     run("towny:town set mayor ${target.name}", { town.mayor })
@@ -105,7 +110,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                     Icons.icon(
                         Material.IRON_BOOTS,
                         tr("resident-profile.kick"),
-                        tr("resident-profile.kick-description")
+                        tr("resident-profile.kick-description"),
+                        actions = hints("click.kick")
                     )
                 ) {
                     run(
@@ -124,6 +130,7 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                     Material.TRIPWIRE_HOOK,
                     tr(if (trusted) "resident-profile.untrust" else "resident-profile.trust"),
                     tr("resident-profile.trust-description"),
+                    actions = hints(if (trusted) "click.untrust" else "click.trust")
                 )
             ) {
                 run(
@@ -139,13 +146,17 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                     Material.IRON_BARS,
                     tr(if (outlaw) "resident-profile.pardon" else "resident-profile.outlaw"),
                     tr("resident-profile.outlaw-description"),
+                    actions = hints(if (outlaw) "click.pardon" else "click.outlaw")
                 )
             ) { run("towny:town outlaw ${if (outlaw) "remove" else "add"} ${target.name}", { town.hasOutlaw(target) }) }
 
             if (!target.hasTown()) {
                 actions.add(
                     PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
-                    Icons.icon(Material.PAPER, tr("resident-profile.invite"), tr("resident-profile.invite-description"))
+                    Icons.icon(
+                        Material.PAPER, tr("resident-profile.invite"), tr("resident-profile.invite-description"),
+                        actions = hints("click.invite")
+                    )
                 ) {
                     run("towny:town add ${target.name}", { town.sentInvites.size })
                 }
@@ -158,7 +169,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                 Icons.icon(
                     Material.NAME_TAG,
                     tr("resident-profile.nation-ranks"),
-                    tr("resident-profile.nation-ranks-description")
+                    tr("resident-profile.nation-ranks-description"),
+                    actions = hints("click.edit-ranks")
                 )
             ) {
                 RankMenu.create(player, target, true, this).open()
@@ -169,7 +181,8 @@ class ResidentProfileMenu(player: Player, private val target: Resident, back: Me
                     Icons.icon(
                         Material.GOLDEN_HELMET,
                         tr("resident-profile.make-leader"),
-                        tr("resident-profile.make-leader-description")
+                        tr("resident-profile.make-leader-description"),
+                        actions = hints("click.make-leader")
                     )
                 ) {
                     run("towny:nation set king ${target.name}", { nation.king })

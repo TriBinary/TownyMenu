@@ -38,14 +38,14 @@ object Icons {
             loreActions(actions)
         }
 
-    /** A toggle switch showing its current [value]; clicking should flip it. */
+    /** A toggle switch showing its current [value]; its action hint names what clicking flips it to. */
     fun toggle(player: Player, material: Material, name: String, value: Boolean, description: String): ItemStack =
         itemStack(material) {
             name(name)
             loreWrapped("<gray>$description")
             loreBreak()
-            lore(player.tr("icon.currently", "value" to TownyUtil.onOff(player, value)))
-            loreActions(listOf(player.tr("icon.click-toggle")))
+            lore(player.tr("icon.status", "value" to player.tr(if (value) "icon.enabled" else "icon.disabled")))
+            loreActions(listOf(player.tr(if (value) "icon.click-disable" else "icon.click-enable")))
             glow(value)
         }
 

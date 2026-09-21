@@ -29,13 +29,18 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                     if (child.description.isNotEmpty()) loreWrapped("<gray>${shorten(child.description)}")
                     loreBreak()
                     lore(tr("admin-config.settings-count", "count" to TownyConfig.count(child.path)))
-                    loreActions(listOf(tr("common.click-view")))
+                    loreActions(listOf(tr("click.view")))
                 }
             }) { TownyConfigMenu(player, child.path, this).open() }
         } + TownyConfig.settings(section).map { settingEntry(this, it) }
 
     override fun controls() {
-        button(47, Icons.icon(Material.COMPASS, tr("admin-config.search"), tr("admin-config.search-description"))) {
+        button(
+            47, Icons.icon(
+                Material.COMPASS, tr("admin-config.search"), tr("admin-config.search-description"),
+                actions = hints("click.search")
+            )
+        ) {
             prompt(tr("admin-config.search-title"), tr("admin-config.search-label")) { query ->
                 ListMenu(player, tr("admin-config.results-title", "query" to TownyUtil.text(query)), this) { list ->
                     TownyConfig.search(query).map { settingEntry(list, it) }
@@ -44,7 +49,10 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
         }
         guarded(
             51, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RELOAD,
-            Icons.icon(Material.REPEATER, tr("admin-config.reload"), tr("admin-config.reload-description"))
+            Icons.icon(
+                Material.REPEATER, tr("admin-config.reload"), tr("admin-config.reload-description"),
+                actions = hints("click.reload")
+            )
         ) {
             run(RELOAD, ::loadedConfig)
         }
@@ -95,8 +103,8 @@ class TownyConfigMenu(player: Player, private val section: String, back: Menu) :
                                 menu.tr(
                                     when {
                                         !editable -> "menu.no-permission"
-                                        kind == Kind.BOOLEAN -> "icon.click-toggle"
-                                        else -> "common.click-change"
+                                        kind == Kind.BOOLEAN -> if (on) "icon.click-disable" else "icon.click-enable"
+                                        else -> "click.change"
                                     }
                                 )
                             )

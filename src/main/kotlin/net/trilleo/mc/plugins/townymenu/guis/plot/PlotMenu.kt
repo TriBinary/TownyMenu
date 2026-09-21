@@ -40,14 +40,24 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         if (plot == null) wilderness() else claimed(plot)
         guarded(
             48, PermissionNodes.TOWNY_COMMAND_PLOT_PERM_HUD,
-            Icons.icon(Material.SPYGLASS, tr("plot.hud"), tr("plot.hud-description"))
+            Icons.icon(Material.SPYGLASS, tr("plot.hud"), tr("plot.hud-description"), actions = hints("click.show-hud"))
         ) {
             runAndClose("towny:plot perm hud")
         }
-        button(47, Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) {
+        button(
+            47, Icons.icon(
+                Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
+                actions = hints("click.open")
+            )
+        ) {
             MapMenu(player, this).open()
         }
-        button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"))) { render() }
+        button(
+            50, Icons.icon(
+                Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"),
+                actions = hints("click.refresh")
+            )
+        ) { render() }
         tutorialButton(53, Tutorial.PLOTS)
         backButton(49)
     }
@@ -69,7 +79,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                     Material.GRASS_BLOCK,
                     tr("plot.claim", "town" to TownyUtil.name(town.name)),
                     tr("plot.claim-description"),
-                    *listOfNotNull(costLine(Prices.claim(town))).toTypedArray()
+                    *listOfNotNull(costLine(Prices.claim(town))).toTypedArray(),
+                    actions = hints("click.claim")
                 )
             ) {
                 run("towny:town claim", { town.numTownBlocks }, delayTicks = 20)
@@ -78,13 +89,19 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_OUTPOST,
                 Icons.icon(
                     Material.COMPASS, tr("plot.claim-outpost"), tr("plot.claim-outpost-description"),
-                    *outpostCost().toTypedArray()
+                    *outpostCost().toTypedArray(),
+                    actions = hints("click.claim")
                 )
             ) {
                 run("towny:town claim outpost", { town.numTownBlocks }, delayTicks = 20)
             }
         }
-        grid.add(Icons.icon(Material.MAP, tr("plot.area"), tr("plot.area-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.MAP, tr("plot.area"), tr("plot.area-description"),
+                actions = hints("click.open")
+            )
+        ) {
             PlotAreaMenu(player, this).open()
         }
     }
@@ -150,14 +167,18 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_CLAIM, Icons.icon(
                     Material.EMERALD, tr("plot.buy"), tr("plot.buy-description"),
-                    *listOfNotNull(priceLine(price)).toTypedArray()
+                    *listOfNotNull(priceLine(price)).toTypedArray(),
+                    actions = hints("click.buy")
                 )
             ) { run("towny:plot claim", ownerProbe) }
         }
         if (owner != null && owner == viewer) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_UNCLAIM,
-                Icons.icon(Material.COARSE_DIRT, tr("plot.give-up"), tr("plot.give-up-description"))
+                Icons.icon(
+                    Material.COARSE_DIRT, tr("plot.give-up"), tr("plot.give-up-description"),
+                    actions = hints("click.give-up")
+                )
             ) {
                 run("towny:plot unclaim", ownerProbe)
             }
@@ -169,7 +190,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                     Material.RED_BANNER,
                     tr("plot.not-for-sale"),
                     tr("plot.not-for-sale-description"),
-                    *groupLines
+                    *groupLines,
+                    actions = hints("click.stop-selling")
                 )
             ) {
                 run("$scope notforsale", saleProbe)
@@ -177,7 +199,10 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         } else {
             grid.add(
                 if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_FORSALE else PermissionNodes.TOWNY_COMMAND_PLOT_FORSALE,
-                Icons.icon(Material.GREEN_BANNER, tr("plot.for-sale"), tr("plot.for-sale-description"), *groupLines)
+                Icons.icon(
+                    Material.GREEN_BANNER, tr("plot.for-sale"), tr("plot.for-sale-description"), *groupLines,
+                    actions = hints("click.set-price")
+                )
             ) {
                 prompt(
                     tr("plot.for-sale-title"),
@@ -197,8 +222,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                     Material.IRON_BOOTS,
                     tr("plot.evict"),
                     tr("plot.evict-description", "owner" to TownyUtil.name(owner.name)),
-                    *listOfNotNull(if (group == null) tr("plot.evict-resell") else null).toTypedArray(),
-                    *groupLines
+                    *groupLines,
+                    actions = listOfNotNull(tr("click.evict"), if (group == null) tr("plot.evict-resell") else null)
                 )
             ) { click ->
                 run(
@@ -211,7 +236,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             Icons.icon(
                 Material.OAK_SIGN, tr("plot.type"), tr("plot.type-description"),
                 tr("common.current", "value" to TownyUtil.plotType(player, plot.type.name)),
-                *groupLines
+                *groupLines,
+                actions = hints("click.choose")
             )
         ) {
             val types = listOf("reset" to "<white>${TownyUtil.plotType(player, "default")}") +
@@ -232,7 +258,10 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_SET_NAME,
-            Icons.icon(Material.NAME_TAG, tr("plot.rename"), tr("plot.rename-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("plot.rename"), tr("plot.rename-description"),
+                actions = hints("click.left-rename", "click.clear")
+            )
         ) { click ->
             if (click.isRightClick) {
                 run("towny:plot set name", { plot.name })
@@ -242,14 +271,22 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 }
             }
         }
-        grid.add(Icons.icon(Material.LEVER, tr("plot.settings"), tr("plot.settings-description"), *groupLines)) {
+        grid.add(
+            Icons.icon(
+                Material.LEVER, tr("plot.settings"), tr("plot.settings-description"), *groupLines,
+                actions = hints("click.open")
+            )
+        ) {
             toggles(plot, group != null).open()
         }
         val permNode =
             if (group != null) PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_SET else PermissionNodes.TOWNY_COMMAND_PLOT_SET_PERM
         grid.add(
             permNode,
-            Icons.icon(Material.IRON_DOOR, tr("common.permissions"), tr("plot.permissions-description"), *groupLines)
+            Icons.icon(
+                Material.IRON_DOOR, tr("common.permissions"), tr("plot.permissions-description"), *groupLines,
+                actions = hints("click.edit-permissions")
+            )
         ) {
             PermissionMenu(
                 player, tr("plot.permissions-title"), this, "$scope set perm", permNode, owner != null,
@@ -261,7 +298,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             Icons.icon(
                 Material.TRIPWIRE_HOOK, tr("plot.trusted"), tr("plot.trusted-description"),
                 tr("plot.trusted-count", "count" to (group?.trustedResidents ?: plot.trustedResidents).size),
-                *groupLines
+                *groupLines,
+                actions = hints("click.view")
             )
         ) { PlotTrustMenu(player, plot, this).open() }
         grid.add(
@@ -269,7 +307,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             Icons.icon(
                 Material.CLOCK, tr("plot.join-days"), tr("plot.join-days-description"),
                 *joinDayLines(plot, group).ifEmpty { listOf(tr("plot.join-days-none")) }.toTypedArray(),
-                *groupLines
+                *groupLines,
+                actions = hints("plot.left-min-days", "plot.right-max-days")
             )
         ) { click ->
             val key = if (click.isRightClick) "maxjoindays" else "minjoindays"
@@ -292,7 +331,8 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                 PermissionNodes.TOWNY_COMMAND_PLOT_JAILCELL,
                 Icons.icon(
                     Material.IRON_CHAIN, tr("plot.jail-cells"), tr("plot.jail-cells-description"),
-                    tr("plot.jail-cells-count", "count" to (plot.jail?.jailCellCount ?: 0))
+                    tr("plot.jail-cells-count", "count" to (plot.jail?.jailCellCount ?: 0)),
+                    actions = hints("plot.left-add-cell", "plot.right-remove-cell")
                 )
             ) { click ->
                 run(
@@ -304,7 +344,10 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
             if (plot.isOutpost) {
                 grid.add(
                     PermissionNodes.TOWNY_COMMAND_TOWN_SET_OUTPOST,
-                    Icons.icon(Material.RESPAWN_ANCHOR, tr("plot.outpost-spawn"), tr("plot.outpost-spawn-description"))
+                    Icons.icon(
+                        Material.RESPAWN_ANCHOR, tr("plot.outpost-spawn"), tr("plot.outpost-spawn-description"),
+                        actions = hints("click.set-here")
+                    )
                 ) {
                     run("towny:plot set outpost spawn", { town.allOutpostSpawns.toList() })
                 }
@@ -313,27 +356,46 @@ class PlotMenu(player: Player, back: Menu?) : Menu(player, player.tr("plot.title
                     PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_OUTPOST,
                     Icons.icon(
                         Material.COMPASS, tr("plot.make-outpost"), tr("plot.make-outpost-description"),
-                        *outpostCost().toTypedArray()
+                        *outpostCost().toTypedArray(),
+                        actions = hints("click.make-outpost")
                     )
                 ) {
                     run("towny:plot set outpost", { plot.isOutpost to town.allOutpostSpawns.size })
                 }
             }
         }
-        grid.add(Icons.icon(Material.CHEST, tr("plot.groups"), tr("plot.groups-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.CHEST, tr("plot.groups"), tr("plot.groups-description"),
+                actions = hints("click.open")
+            )
+        ) {
             PlotGroupMenu(player, this).open()
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_CLEAR,
-            Icons.icon(Material.BRUSH, tr("plot.clear"), tr("plot.clear-description"))
+            Icons.icon(
+                Material.BRUSH, tr("plot.clear"), tr("plot.clear-description"),
+                actions = hints("click.clear-plot")
+            )
         ) {
             runAndClose("towny:plot clear")
         }
-        grid.add(Icons.icon(Material.MAP, tr("plot.area"), tr("plot.area-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.MAP, tr("plot.area"), tr("plot.area-description"),
+                actions = hints("click.open")
+            )
+        ) {
             PlotAreaMenu(player, this).open()
         }
         if (town != null) {
-            button(46, Icons.icon(Material.BELL, "<gold>${TownyUtil.name(town.name)}", tr("plot.town-description"))) {
+            button(
+                46, Icons.icon(
+                    Material.BELL, "<gold>${TownyUtil.name(town.name)}", tr("plot.town-description"),
+                    actions = hints("click.view")
+                )
+            ) {
                 TownInfoMenu(player, town, this).open()
             }
         }

@@ -27,10 +27,10 @@ import net.trilleo.mc.plugins.townymenu.utils.itemStack
 
 val icon = itemStack(Material.EMERALD) {
     name("<green>Deposit")
-    loreWrapped("<gray>Move money from your balance into the town bank.")
+    loreWrapped("<gray>Move <gold>money</gold> from your balance into the town bank.")
     loreBreak()
-    lore("<gray>Balance: <white>$120")
-    loreActions(listOf("<yellow>Click to deposit"))
+    lore("<gray>Balance: <gold>$120")
+    loreActions(listOf("<yellow>Click to deposit!"))
     glow(true)
 }
 ```
@@ -141,24 +141,24 @@ prompt(tr("bank.deposit-title"), tr("common.amount")) { amount ->
 
 ## Prices
 
-`Prices` answers "what will this button cost?" so an icon can say so before the player clicks. Every amount is read
-from Towny's config and from the town or nation involved — never a fixed default — so it matches what the command
-would actually take, and everything returns `0` without an economy.
+`Prices` answers "what will this button cost?" so an icon can say so before the player clicks. Every amount is read from
+Towny's config and from the town or nation involved — never a fixed default — so it matches what the command would
+actually take, and everything returns `0` without an economy.
 
-| Method                                | Description                                                                          |
-|:--------------------------------------|:--------------------------------------------------------------------------------------|
-| `claim(Town, count)`                  | What claiming `count` chunks costs the town, at its current rising claim price       |
-| `outpost()`                           | What claiming an outpost costs                                                       |
-| `unclaimRefund()`                     | What a town gets back per unclaimed chunk; negative when unclaiming costs instead     |
-| `plotType(String, count)`             | What setting `count` plots to a plot type costs (`reset` prices the default type)    |
-| `merge(remaining, succumbing)`        | What merging the second town into the first costs, before any debt it takes on       |
-| `townSpawn(Player, Town, outpost)`    | What travelling to a town's spawn or outpost costs this player                       |
-| `nationSpawn(Player, Nation)`         | What travelling to a nation's spawn costs this player                                |
-| `residentSpawn(Player)`               | What `/resident spawn` costs — Towny prices it as a trip home                        |
+| Method                             | Description                                                                       |
+|:-----------------------------------|:----------------------------------------------------------------------------------|
+| `claim(Town, count)`               | What claiming `count` chunks costs the town, at its current rising claim price    |
+| `outpost()`                        | What claiming an outpost costs                                                    |
+| `unclaimRefund()`                  | What a town gets back per unclaimed chunk; negative when unclaiming costs instead |
+| `plotType(String, count)`          | What setting `count` plots to a plot type costs (`reset` prices the default type) |
+| `merge(remaining, succumbing)`     | What merging the second town into the first costs, before any debt it takes on    |
+| `townSpawn(Player, Town, outpost)` | What travelling to a town's spawn or outpost costs this player                    |
+| `nationSpawn(Player, Nation)`      | What travelling to a nation's spawn costs this player                             |
+| `residentSpawn(Player)`            | What `/resident spawn` costs — Towny prices it as a trip home                     |
 
-Spawn travel is not a single config value: Towny prices it by the traveller's relationship to the destination (own
-town, nation member, ally, outsider) and caps it at the server's price for that relationship, so a visitor and a
-resident see different numbers. `Prices` mirrors that, including the free-spawn admin permissions.
+Spawn travel is not a single config value: Towny prices it by the traveller's relationship to the destination (own town,
+nation member, ally, outsider) and caps it at the server's price for that relationship, so a visitor and a resident see
+different numbers. `Prices` mirrors that, including the free-spawn admin permissions.
 
 Turn an amount into lore with `Menu.costLine` / `Menu.priceLine` rather than formatting it by hand:
 
@@ -334,7 +334,7 @@ import net.trilleo.mc.plugins.townymenu.utils.itemStack
 val item = itemStack(Material.BELL) {
     name("<gold>Town Settings")
     loreWrapped("<gray>PvP, mobs, fire, explosions, and whether the town is open to new residents.")
-    loreActions(listOf("<yellow>Click to open"))
+    loreActions(listOf("<yellow>Click to open!"))
 }
 ```
 

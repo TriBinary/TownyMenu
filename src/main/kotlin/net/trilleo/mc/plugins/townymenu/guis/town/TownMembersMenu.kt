@@ -29,7 +29,7 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
                 .thenBy { it.name.lowercase() })
             .map { member ->
                 MenuEntry({
-                    Icons.resident(player, member, actions = listOf(tr("common.click-view")))
+                    Icons.resident(player, member, actions = listOf(tr("click.view")))
                 }) { ResidentProfileMenu(player, member, this).open() }
             }
 
@@ -42,7 +42,8 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
             Icons.icon(
                 Material.PLAYER_HEAD,
                 tr("town-members.invite-online"),
-                tr("town-members.invite-online-description")
+                tr("town-members.invite-online-description"),
+                actions = hints("click.choose-player")
             )
         ) {
             Pickers.resident(this, tr("town-members.invite-title"), { !it.hasTown() }) { picked ->
@@ -51,7 +52,10 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
         }
         guarded(
             48, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD,
-            Icons.icon(Material.NAME_TAG, tr("town-members.invite-name"), tr("town-members.invite-name-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("town-members.invite-name"), tr("town-members.invite-name-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(
                 tr("town-members.invite-title"),
@@ -60,7 +64,10 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
         }
         guarded(
             50, PermissionNodes.TOWNY_COMMAND_TOWN_SAY,
-            Icons.icon(Material.BELL, tr("town-members.announce"), tr("town-members.announce-description"))
+            Icons.icon(
+                Material.BELL, tr("town-members.announce"), tr("town-members.announce-description"),
+                actions = hints("click.write")
+            )
         ) {
             prompt(tr("town-members.announce-title"), tr("common.message"), maxLength = 200) { text ->
                 run("towny:town say $text")
@@ -71,7 +78,9 @@ class TownMembersMenu(player: Player, private val town: Town, back: Menu) :
             51, PermissionNodes.TOWNY_COMMAND_TOWN_INVITE_ADD, Icons.icon(
                 Material.PAPER, tr("common.sent-invites"), tr("common.sent-invites-description"),
                 tr("common.pending", "count" to pending.size), "",
-                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray()
+                *pending.take(10)
+                    .map { tr("common.list-entry", "entry" to TownyUtil.name(it.receiver.name)) }.toTypedArray(),
+                actions = hints("click.revoke-all")
             )
         ) { click -> if (click.isRightClick) run("towny:town invite sent removeall", sent) }
     }

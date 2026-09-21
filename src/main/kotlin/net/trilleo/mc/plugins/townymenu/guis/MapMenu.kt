@@ -58,19 +58,30 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
             val claims = { town.numTownBlocks }
             guarded(
                 47, PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
-                Icons.icon(Material.GRASS_BLOCK, tr("map.claim"), tr("map.claim-description"))
+                Icons.icon(
+                    Material.GRASS_BLOCK, tr("map.claim"), tr("map.claim-description"),
+                    actions = hints("click.claim")
+                )
             ) {
                 run("towny:town claim", claims, delayTicks = 20)
             }
             guarded(
                 48, PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
-                Icons.icon(Material.COARSE_DIRT, tr("map.unclaim"), tr("map.unclaim-description"))
+                Icons.icon(
+                    Material.COARSE_DIRT, tr("map.unclaim"), tr("map.unclaim-description"),
+                    actions = hints("click.unclaim")
+                )
             ) {
                 run("towny:town unclaim", claims, delayTicks = 20)
             }
         }
         backButton(49)
-        button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("map.refresh-description"))) { render() }
+        button(
+            50, Icons.icon(
+                Material.CLOCK, tr("map.refresh"), tr("map.refresh-description"),
+                actions = hints("click.refresh")
+            )
+        ) { render() }
         tutorialButton(53, Tutorial.GETTING_STARTED)
     }
 

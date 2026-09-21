@@ -49,7 +49,10 @@ class TownJailMenu(player: Player, private val town: Town, back: Menu) :
         if (town.hasJails()) {
             guarded(
                 47, PermissionNodes.TOWNY_COMMAND_TOWN_JAIL,
-                Icons.icon(Material.IRON_BARS, tr("town-jail.jail-player"), tr("town-jail.jail-player-description"))
+                Icons.icon(
+                    Material.IRON_BARS, tr("town-jail.jail-player"), tr("town-jail.jail-player-description"),
+                    actions = hints("click.choose-player")
+                )
             ) {
                 Pickers.resident(this, tr("town-jail.jail-player-title"), ::canJail) { picked ->
                     JailSentenceMenu(player, town, picked, this).open()
@@ -61,7 +64,8 @@ class TownJailMenu(player: Player, private val town: Town, back: Menu) :
         button(
             51, Icons.icon(
                 Material.IRON_CHAIN, tr("town-jail.jails"), tr("town-jail.jails-description"),
-                tr("town-jail.jails-count", "count" to jails(town).size)
+                tr("town-jail.jails-count", "count" to jails(town).size),
+                actions = hints("click.view")
             )
         ) { jailList().open() }
     }

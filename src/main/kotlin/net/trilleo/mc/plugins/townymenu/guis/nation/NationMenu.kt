@@ -54,7 +54,8 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                 Material.BELL,
                 tr("nation.towns"),
                 tr("nation.towns-description"),
-                tr("nation.towns-count", "count" to nation.numTowns)
+                tr("nation.towns-count", "count" to nation.numTowns),
+                actions = hints("click.view")
             )
         ) {
             NationTownsMenu(player, nation, this).open()
@@ -62,7 +63,8 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
         grid.add(
             Icons.icon(
                 Material.PLAYER_HEAD, tr("town.residents"), tr("nation.residents-description"),
-                tr("icon.town.residents", "count" to nation.numResidents)
+                tr("icon.town.residents", "count" to nation.numResidents),
+                actions = hints("click.view")
             )
         ) {
             residents(nation).open()
@@ -73,32 +75,52 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                     Material.GOLD_INGOT,
                     tr("nation.bank"),
                     tr("town.bank-description"),
-                    tr("bank.balance", "balance" to TownyUtil.balance(nation))
+                    tr("bank.balance", "balance" to TownyUtil.balance(nation)),
+                    actions = hints("click.open")
                 )
             ) {
                 BankMenu(player, nation, this).open()
             }
         }
-        grid.add(Icons.icon(Material.SHIELD, tr("nation.relations"), tr("nation.relations-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.SHIELD, tr("nation.relations"), tr("nation.relations-description"),
+                actions = hints("click.view")
+            )
+        ) {
             NationRelationsMenu(player, nation, this).open()
         }
-        grid.add(Icons.icon(Material.LEVER, tr("nation.settings"), tr("nation.settings-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.LEVER, tr("nation.settings"), tr("nation.settings-description"),
+                actions = hints("click.open")
+            )
+        ) {
             toggles().open()
         }
-        grid.add(Icons.icon(Material.WRITABLE_BOOK, tr("nation.details"), tr("nation.details-description"))) {
+        grid.add(
+            Icons.icon(
+                Material.WRITABLE_BOOK, tr("nation.details"), tr("nation.details-description"),
+                actions = hints("click.open")
+            )
+        ) {
             NationSettingsMenu(player, this).open()
         }
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("nation.spawn"), tr("nation.spawn-description"),
-                *listOfNotNull(costLine(Prices.nationSpawn(player, nation))).toTypedArray()
+                *listOfNotNull(costLine(Prices.nationSpawn(player, nation))).toTypedArray(),
+                actions = hints("click.teleport")
             )
         ) {
             runAndClose("towny:nation spawn")
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_NATION_SAY,
-            Icons.icon(Material.GOAT_HORN, tr("nation.announce"), tr("nation.announce-description"))
+            Icons.icon(
+                Material.GOAT_HORN, tr("nation.announce"), tr("nation.announce-description"),
+                actions = hints("click.write")
+            )
         ) {
             prompt(tr("nation.announce-title"), tr("common.message"), maxLength = 200) { text ->
                 run("towny:nation say $text")
@@ -107,14 +129,20 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
         if (viewer.isKing) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_NATION_DELETE,
-                Icons.icon(Material.TNT, tr("nation.delete"), tr("nation.delete-description"))
+                Icons.icon(
+                    Material.TNT, tr("nation.delete"), tr("nation.delete-description"),
+                    actions = hints("click.delete")
+                )
             ) {
                 run("towny:nation delete", { viewer.hasNation() }, returnTo = MainMenu(player))
             }
         } else if (viewer.isMayor) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_NATION_LEAVE,
-                Icons.icon(Material.OAK_DOOR, tr("nation.leave"), tr("nation.leave-description"))
+                Icons.icon(
+                    Material.OAK_DOOR, tr("nation.leave"), tr("nation.leave-description"),
+                    actions = hints("click.leave")
+                )
             ) {
                 run("towny:nation leave", { viewer.hasNation() }, returnTo = MainMenu(player))
             }
@@ -132,7 +160,7 @@ class NationMenu(player: Player, back: Menu?) : Menu(player, player.tr("nation.t
                     .thenBy { it.name.lowercase() })
                 .map { member ->
                     MenuEntry({
-                        Icons.resident(player, member, actions = listOf(tr("common.click-view")))
+                        Icons.resident(player, member, actions = listOf(tr("click.view")))
                     }) { ResidentProfileMenu(player, member, menu).open() }
                 }
         }
