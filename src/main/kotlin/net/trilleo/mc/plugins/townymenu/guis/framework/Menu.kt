@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
+import kotlin.math.roundToInt
 
 /**
  * Base class for every chest menu.
@@ -37,7 +38,7 @@ import org.bukkit.inventory.ItemStack
  */
 abstract class Menu(
     val player: Player,
-    title: String,
+    val title: String,
     rows: Int,
     val back: Menu? = null,
 ) : InventoryHolder {
@@ -124,8 +125,36 @@ abstract class Menu(
         if (target == null) {
             button(slot, itemStack(Material.BARRIER) { name(tr("menu.close")) }) { player.closeInventory() }
         } else {
-            button(slot, itemStack(Material.ARROW) { name(tr("menu.back")) }) { target.open() }
+            button(slot, itemStack(Material.ARROW) {
+                name(tr("menu.back"))
+                lore(tr("menu.back-to", "menu" to target.title))
+            }) { target.open() }
         }
+    }
+
+    /** A page-turning arrow whose lore names the [target] page of [pages]. */
+    protected fun pageArrow(previous: Boolean, target: Int, pages: Int): ItemStack = itemStack(Material.ARROW) {
+        name(tr(if (previous) "menu.previous-page" else "menu.next-page"))
+        lore(tr("menu.page", "page" to target, "pages" to pages))
+        loreActions(hints("click.turn-page"))
+    }
+
+    /** The translated click hints for [keys], ready for an icon's `actions`. */
+    fun hints(vararg keys: String): List<String> = keys.map { tr(it) }
+
+    /**
+     * A progress bar lore line for [current] out of [max], with the percentage after it. A [max] of zero or less
+     * reads as full, so an unlimited allowance never shows as empty.
+     */
+    fun progressBar(current: Number, max: Number): String {
+        val ratio = if (max.toDouble() <= 0) 1.0 else (current.toDouble() / max.toDouble()).coerceIn(0.0, 1.0)
+        val filled = (ratio * BAR_WIDTH).roundToInt()
+        return tr(
+            "common.progress-bar",
+            "filled" to " ".repeat(filled),
+            "empty" to " ".repeat(BAR_WIDTH - filled),
+            "percent" to (ratio * 100).roundToInt()
+        )
     }
 
     /**
@@ -143,13 +172,24 @@ abstract class Menu(
     fun priceLine(amount: Double): String? =
         if (TownyUtil.economy) tr("common.price", "price" to TownyUtil.money(amount)) else null
 
+    /**
+     * The option after [current] in this list on a left click, or the one before it on a right click, wrapping at
+     * either end, for buttons that step through a list of choices such as a sort order.
+     */
+    protected fun <T> List<T>.cycle(current: T, click: ClickType): T {
+        val step = if (click.isRightClick) size - 1 else 1
+        return this[(indexOf(current).coerceAtLeast(0) + step) % size]
+    }
+
     /** Places a help button opening the tutorial [chapter] that explains this menu. */
     protected fun tutorialButton(slot: Int, chapter: Chapter) {
         button(
             slot, Icons.icon(
                 Material.KNOWLEDGE_BOOK, tr("tutorial.help"), tr("tutorial.help-description"),
                 tr("tutorial.chapter-line", "chapter" to tr(chapter.title)),
-                tr("tutorial.progress", "read" to chapter.readCount(player), "total" to chapter.lessons.size)
+                tr("tutorial.progress", "read" to chapter.readCount(player), "total" to chapter.lessons.size),
+                progressBar(chapter.readCount(player), chapter.lessons.size),
+                actions = hints("click.open")
             )
         ) {
             TutorialChapterMenu(player, chapter, this).open()
@@ -194,8 +234,9 @@ abstract class Menu(
     companion object {
         private val CLICK_SOUND = Sound.sound(Key.key("minecraft:ui.button.click"), Sound.Source.UI, 0.5f, 1f)
 
-        private val FILLER = itemStack(Material.GRAY_STAINED_GLASS_PANE) { hideTooltip(true) }
+        private val FILLER = itemStack(Material.BLACK_STAINED_GLASS_PANE) { hideTooltip(true) }
 
+        private const val BAR_WIDTH = 20
     }
 
     private fun locked(item: ItemStack): ItemStack = itemStack(Material.GRAY_DYE) {

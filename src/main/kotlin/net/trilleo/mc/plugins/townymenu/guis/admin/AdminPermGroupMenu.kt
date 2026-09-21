@@ -34,7 +34,10 @@ class AdminPermGroupMenu(player: Player, private val group: String, back: Menu) 
     override fun controls() {
         guarded(
             47, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWNYPERMS,
-            Icons.icon(Material.NAME_TAG, tr("admin-perms.add-node"), tr("admin-perms.add-node-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("admin-perms.add-node"), tr("admin-perms.add-node-description"),
+                actions = hints("click.type-node")
+            )
         ) {
             prompt(tr("admin-perms.add-node"), tr("admin-perms.node-label"), maxLength = 128) { node ->
                 run("$command addperm ${TownyUtil.argument(node)}", { nodes().size })

@@ -47,7 +47,10 @@ class AdminPlotMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-
         val grid = layout(20, 21, 22, 23, 24)
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_PLOT_CLAIM,
-            Icons.icon(Material.PLAYER_HEAD, tr("admin-plot.claim"), tr("admin-plot.claim-description"))
+            Icons.icon(
+                Material.PLAYER_HEAD, tr("admin-plot.claim"), tr("admin-plot.claim-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             Pickers.resident(this, tr("admin-plot.claim-title"), { true }) { target ->
                 run("towny:townyadmin plot claim ${target.name}", { this.plot?.residentOrNull })
@@ -58,7 +61,8 @@ class AdminPlotMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-
                 PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_PLOT_TRUST,
                 Icons.icon(
                     Material.TRIPWIRE_HOOK, tr("plot.trusted"), tr("admin-plot.trust-description"),
-                    tr("plot.trusted-count", "count" to plot.trustedResidents.size)
+                    tr("plot.trusted-count", "count" to plot.trustedResidents.size),
+                    actions = hints("click.view")
                 )
             ) {
                 AdminNamesMenu(
@@ -69,7 +73,10 @@ class AdminPlotMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-
             }
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_PLOT,
-                Icons.icon(Material.BELL, tr("admin-plot.move"), tr("admin-plot.move-description"))
+                Icons.icon(
+                    Material.BELL, tr("admin-plot.move"), tr("admin-plot.move-description"),
+                    actions = hints("click.choose-town")
+                )
             ) {
                 Pickers.town(this, tr("admin-plot.move-title"), { it != this.plot?.townOrNull }) { town ->
                     run("towny:townyadmin set plot ${town.name}", { this.plot?.townOrNull })
@@ -78,7 +85,10 @@ class AdminPlotMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_UNCLAIM,
-            Icons.icon(Material.COARSE_DIRT, tr("admin-plot.unclaim"), tr("admin-plot.unclaim-description"))
+            Icons.icon(
+                Material.COARSE_DIRT, tr("admin-plot.unclaim"), tr("admin-plot.unclaim-description"),
+                actions = hints("admin-plot.left-unclaim", "admin-plot.right-unclaim-area")
+            )
         ) { click ->
             if (click.isRightClick) {
                 prompt(tr("admin-plot.unclaim-title"), tr("claims.radius"), initial = "1", maxLength = 3) { radius ->
@@ -88,7 +98,10 @@ class AdminPlotMenu(player: Player, back: Menu) : Menu(player, player.tr("admin-
                 run("towny:townyadmin unclaim", { this.plot?.townOrNull })
             }
         }
-        button(50, Icons.icon(Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"))) { render() }
+        button(50, Icons.icon(
+            Material.CLOCK, tr("map.refresh"), tr("plot.refresh-description"),
+            actions = hints("click.refresh")
+        )) { render() }
 
         backButton(49)
     }

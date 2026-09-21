@@ -38,15 +38,22 @@ class NationStatusMenu(player: Player, private val nation: Nation, back: Menu) :
         val progress = if (byTowns) nation.numTowns else nation.numResidents
         val next = thresholds.getOrNull(number + 1)
         return Icons.icon(
-            Material.EXPERIENCE_BOTTLE, tr("nation-status.level"), tr("nation-status.level-description"),
-            tr("town-status.level-number", "level" to number, "max" to TownySettings.getNationLevelMax()),
-            tr("town-status.level-name", "name" to TownyUtil.name(nation.formattedName)),
-            when {
-                nation.manualNationLevel > -1 -> tr("town-status.level-manual")
-                next == null -> tr("town-status.level-highest")
-                byTowns -> tr("nation-status.next-level-towns", "current" to progress, "needed" to next)
-                else -> tr("town-status.next-level-residents", "current" to progress, "needed" to next)
-            }
+            Material.EXPERIENCE_BOTTLE, tr("nation-status.level"), tr("nation-status.level-description"), *buildList {
+                add(tr("town-status.level-number", "level" to number, "max" to TownySettings.getNationLevelMax()))
+                add(tr("town-status.level-name", "name" to TownyUtil.name(nation.formattedName)))
+                add(
+                    when {
+                        nation.manualNationLevel > -1 -> tr("town-status.level-manual")
+                        next == null -> tr("town-status.level-highest")
+                        byTowns -> tr("nation-status.next-level-towns", "current" to progress, "needed" to next)
+                        else -> tr("town-status.next-level-residents", "current" to progress, "needed" to next)
+                    }
+                )
+                if (nation.manualNationLevel == -1 && next != null) {
+                    val floor = thresholds.getOrElse(number) { 0 }
+                    add(progressBar(progress - floor, next - floor))
+                }
+            }.toTypedArray()
         )
     }
 

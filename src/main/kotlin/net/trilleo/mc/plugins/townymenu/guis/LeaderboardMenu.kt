@@ -40,7 +40,10 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         val row = layout(19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34)
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_RESIDENTS,
-            Icons.icon(Material.BELL, tr("leaderboard.town-residents"), tr("leaderboard.town-residents-description"))
+            Icons.icon(
+                Material.BELL, tr("leaderboard.town-residents"), tr("leaderboard.town-residents-description"),
+                actions = hints("click.view")
+            )
         ) {
             townList(tr("leaderboard.town-residents")) {
                 it.numResidents to tr(
@@ -54,7 +57,8 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
             Icons.icon(
                 Material.BEACON,
                 tr("leaderboard.nation-residents"),
-                tr("leaderboard.nation-residents-description")
+                tr("leaderboard.nation-residents-description"),
+                actions = hints("click.view")
             )
         ) {
             nationList(tr("leaderboard.nation-residents")) {
@@ -66,7 +70,10 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_LAND,
-            Icons.icon(Material.GRASS_BLOCK, tr("leaderboard.town-land"), tr("leaderboard.town-land-description"))
+            Icons.icon(
+                Material.GRASS_BLOCK, tr("leaderboard.town-land"), tr("leaderboard.town-land-description"),
+                actions = hints("click.view")
+            )
         ) {
             townList(tr("leaderboard.town-land")) {
                 it.numTownBlocks to tr(
@@ -78,7 +85,10 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_TOWNY_TOP_LAND,
-            Icons.icon(Material.OAK_SIGN, tr("leaderboard.resident-land"), tr("leaderboard.resident-land-description"))
+            Icons.icon(
+                Material.OAK_SIGN, tr("leaderboard.resident-land"), tr("leaderboard.resident-land-description"),
+                actions = hints("click.view")
+            )
         ) {
             residentList(
                 tr("leaderboard.resident-land"),
@@ -91,7 +101,8 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                 Icons.icon(
                     Material.GOLD_INGOT,
                     tr("leaderboard.town-balance"),
-                    tr("leaderboard.town-balance-description")
+                    tr("leaderboard.town-balance-description"),
+                    actions = hints("click.view")
                 )
             ) {
                 townList(tr("leaderboard.town-balance")) {
@@ -106,7 +117,8 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                 Icons.icon(
                     Material.GOLD_BLOCK,
                     tr("leaderboard.nation-balance"),
-                    tr("leaderboard.nation-balance-description")
+                    tr("leaderboard.nation-balance-description"),
+                    actions = hints("click.view")
                 )
             ) {
                 nationList(tr("leaderboard.nation-balance")) {
@@ -121,7 +133,8 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                 row.add(
                     Icons.icon(
                         Material.EMERALD, tr("leaderboard.town-baltop"),
-                        tr("leaderboard.town-baltop-description", "town" to TownyUtil.name(town.name))
+                        tr("leaderboard.town-baltop-description", "town" to TownyUtil.name(town.name)),
+                        actions = hints("click.view")
                     )
                 ) {
                     residentList(tr("leaderboard.town-baltop"), town.residents, limit = false)
@@ -133,7 +146,8 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                     PermissionNodes.TOWNY_COMMAND_NATION_BALTOP,
                     Icons.icon(
                         Material.EMERALD_BLOCK, tr("leaderboard.nation-baltop"),
-                        tr("leaderboard.nation-baltop-description", "nation" to TownyUtil.name(nation.name))
+                        tr("leaderboard.nation-baltop-description", "nation" to TownyUtil.name(nation.name)),
+                        actions = hints("click.view")
                     )
                 ) {
                     residentList(tr("leaderboard.nation-baltop"), nation.residents, limit = false)
@@ -145,7 +159,12 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
         backButton(49)
     }
 
-    private fun rank(index: Int) = tr("leaderboard.rank", "rank" to index + 1)
+    private fun rank(index: Int) = when (index) {
+        0 -> tr("leaderboard.rank-first")
+        1 -> tr("leaderboard.rank-second")
+        2 -> tr("leaderboard.rank-third")
+        else -> tr("leaderboard.rank", "rank" to index + 1)
+    }
 
     /** Opens [towns] ranked by the first value of [score], showing its second value as a lore line. */
     private fun <T : Comparable<T>> townList(title: String, score: (Town) -> Pair<T, String>) =
@@ -155,7 +174,7 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                     MenuEntry({
                         Icons.town(
                             player, town, rank(index), value.second,
-                            actions = listOf(tr("common.click-details"))
+                            actions = listOf(tr("click.details"))
                         )
                     }) {
                         TownInfoMenu(player, town, menu).open()
@@ -170,7 +189,7 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                     MenuEntry({
                         Icons.nation(
                             player, nation, rank(index), value.second,
-                            actions = listOf(tr("common.click-details"))
+                            actions = listOf(tr("click.details"))
                         )
                     }) {
                         NationInfoMenu(player, nation, menu).open()
@@ -197,7 +216,7 @@ class LeaderboardMenu(player: Player, back: Menu) : Menu(player, player.tr("lead
                 MenuEntry({
                     Icons.resident(
                         player, target, rank(index), value.second,
-                        actions = listOf(tr("common.click-view"))
+                        actions = listOf(tr("click.view"))
                     )
                 }) {
                     ResidentProfileMenu(player, target, menu).open()

@@ -38,7 +38,10 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
 
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_TOGGLE,
-            Icons.icon(Material.LEVER, tr("admin-nation.toggles"), tr("admin-nation.toggles-description"))
+            Icons.icon(
+                Material.LEVER, tr("admin-nation.toggles"), tr("admin-nation.toggles-description"),
+                actions = hints("click.open")
+            )
         ) {
             toggles().open()
         }
@@ -48,7 +51,8 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
                 Material.NAME_TAG,
                 tr("admin.rename"),
                 null,
-                tr("common.current", "value" to TownyUtil.name(nation.name))
+                tr("common.current", "value" to TownyUtil.name(nation.name)),
+                actions = hints("click.rename")
             )
         ) {
             prompt(tr("admin.rename"), tr("common.new-name"), initial = nation.name) { name ->
@@ -59,7 +63,9 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_SET,
             Icons.icon(
                 Material.PLAYER_HEAD, tr("nation-details.leader"), tr("admin-nation.leader-description"),
-                tr("common.current", "value" to (nation.king?.let { TownyUtil.name(it.name) } ?: "-")))) {
+                tr("common.current", "value" to (nation.king?.let { TownyUtil.name(it.name) } ?: "-")),
+                actions = hints("click.choose-player")
+            )) {
             ListMenu(player, tr("nation-details.leader-title"), this) {
                 nation.capital?.residents.orEmpty().filter { !it.isKing }.sortedBy { it.name.lowercase() }
                     .map { candidate ->
@@ -78,14 +84,19 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_SET,
             Icons.icon(
                 Material.GOLDEN_HELMET, tr("nation-details.capital"), null,
-                tr("common.current", "value" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")))) {
+                tr("common.current", "value" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")),
+                actions = hints("click.choose-town")
+            )) {
             townList(tr("nation-details.capital-title"), tr("nation-details.capital-click")) { town ->
                 run("$command set capital ${town.name}", { nation.capital }, returnTo = this)
             }
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_ADD,
-            Icons.icon(Material.LIME_DYE, tr("admin-nation.add"), tr("admin-nation.add-description"))
+            Icons.icon(
+                Material.LIME_DYE, tr("admin-nation.add"), tr("admin-nation.add-description"),
+                actions = hints("click.choose-town")
+            )
         ) {
             Pickers.town(this, tr("admin-nation.add"), { !it.hasNation() }) { town ->
                 run("$command add ${town.name}", { nation.numTowns })
@@ -95,7 +106,8 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_KICK,
             Icons.icon(
                 Material.IRON_BOOTS, tr("admin-nation.kick"), tr("admin-nation.kick-description"),
-                tr("admin-nation.towns", "count" to nation.numTowns)
+                tr("admin-nation.towns", "count" to nation.numTowns),
+                actions = hints("click.choose-town")
             )
         ) {
             townList(tr("admin-nation.kick"), tr("picker.select")) { town ->
@@ -110,7 +122,8 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
                     Material.EMERALD,
                     tr("bank.deposit"),
                     tr("admin.deposit-description"),
-                    tr("bank.balance", "balance" to TownyUtil.balance(nation))
+                    tr("bank.balance", "balance" to TownyUtil.balance(nation)),
+                    actions = hints("click.type-amount")
                 )
             ) {
                 prompt(tr("bank.deposit-title"), tr("common.amount")) { amount ->
@@ -123,7 +136,8 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
                     Material.REDSTONE,
                     tr("bank.withdraw"),
                     tr("admin.withdraw-description"),
-                    tr("bank.balance", "balance" to TownyUtil.balance(nation))
+                    tr("bank.balance", "balance" to TownyUtil.balance(nation)),
+                    actions = hints("click.type-amount")
                 )
             ) {
                 prompt(tr("bank.withdraw-title"), tr("common.amount")) { amount ->
@@ -132,7 +146,10 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
             }
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_BANKHISTORY,
-                Icons.icon(Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"))
+                Icons.icon(
+                    Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"),
+                    actions = hints("click.view")
+                )
             ) {
                 runAndClose("$command bankhistory")
             }
@@ -140,13 +157,19 @@ class AdminNationMenu(player: Player, private val nation: Nation, back: Menu) :
 
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_DELETE,
-            Icons.icon(Material.TNT, tr("admin-nation.delete"), tr("admin-nation.delete-description"))
+            Icons.icon(
+                Material.TNT, tr("admin-nation.delete"), tr("admin-nation.delete-description"),
+                actions = hints("click.delete")
+            )
         ) {
             run("$command delete", ::exists, returnTo = back ?: this)
         }
 
         grid.add(
-            Icons.icon(Material.ANVIL, tr("admin-nation-tools.open"), tr("admin-nation-tools.open-description"))
+            Icons.icon(
+                Material.ANVIL, tr("admin-nation-tools.open"), tr("admin-nation-tools.open-description"),
+                actions = hints("click.open")
+            )
         ) {
             AdminNationToolsMenu(player, nation, this).open()
         }

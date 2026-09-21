@@ -34,13 +34,16 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
         val town = target.townOrNull
 
         if (town != null) {
-            grid.add(Icons.town(player, town, actions = listOf(tr("common.click-view")))) {
+            grid.add(Icons.town(player, town, actions = listOf(tr("click.view")))) {
                 AdminTownMenu(player, town, this).open()
             }
             if (!target.isMayor) {
                 grid.add(
                     PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_KICK,
-                    Icons.icon(Material.IRON_BOOTS, tr("admin-resident.kick"), tr("admin-resident.kick-description"))
+                    Icons.icon(
+                        Material.IRON_BOOTS, tr("admin-resident.kick"), tr("admin-resident.kick-description"),
+                        actions = hints("click.kick")
+                    )
                 ) {
                     run("towny:townyadmin town ${town.name} kick ${target.name}", { target.hasTown() })
                 }
@@ -51,7 +54,8 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
                 Icons.icon(
                     Material.BELL,
                     tr("admin-resident.add-to-town"),
-                    tr("admin-resident.add-to-town-description")
+                    tr("admin-resident.add-to-town-description"),
+                    actions = hints("click.choose-town")
                 )
             ) {
                 Pickers.town(this, tr("admin-resident.add-to-town"), { true }) { picked ->
@@ -64,7 +68,8 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_RENAME,
             Icons.icon(
                 Material.NAME_TAG, tr("admin.rename"), tr("admin-resident.rename-description"),
-                tr("common.current", "value" to TownyUtil.name(target.name))
+                tr("common.current", "value" to TownyUtil.name(target.name)),
+                actions = hints("click.rename")
             )
         ) {
             prompt(tr("admin.rename"), tr("common.new-name"), initial = target.name, maxLength = 16) { name ->
@@ -75,7 +80,8 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_TITLE,
             Icons.icon(
                 Material.OAK_HANGING_SIGN, tr("resident-profile.title"), tr("resident-profile.title-description"),
-                tr("common.current", "value" to TownyUtil.text(target.title))
+                tr("common.current", "value" to TownyUtil.text(target.title)),
+                actions = hints("click.edit", "click.clear")
             )
         ) { click ->
             editTitle(
@@ -89,7 +95,8 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_SURNAME,
             Icons.icon(
                 Material.OAK_SIGN, tr("resident-profile.surname"), tr("resident-profile.surname-description"),
-                tr("common.current", "value" to TownyUtil.text(target.surname))
+                tr("common.current", "value" to TownyUtil.text(target.surname)),
+                actions = hints("click.edit", "click.clear")
             )
         ) { click ->
             editTitle(
@@ -114,14 +121,20 @@ class AdminResidentMenu(player: Player, private val target: Resident, back: Menu
         if (target.isJailed) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_UNJAIL,
-                Icons.icon(Material.IRON_BARS, tr("admin-resident.unjail"), tr("admin-resident.unjail-description"))
+                Icons.icon(
+                    Material.IRON_BARS, tr("admin-resident.unjail"), tr("admin-resident.unjail-description"),
+                    actions = hints("click.release")
+                )
             ) {
                 run("towny:townyadmin resident ${target.name} unjail", { target.isJailed })
             }
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_RESIDENT_DELETE,
-            Icons.icon(Material.TNT, tr("admin-resident.delete"), tr("admin-resident.delete-description"))
+            Icons.icon(
+                Material.TNT, tr("admin-resident.delete"), tr("admin-resident.delete-description"),
+                actions = hints("click.delete")
+            )
         ) {
             run("towny:townyadmin resident ${target.name} delete", ::exists, returnTo = back ?: this)
         }

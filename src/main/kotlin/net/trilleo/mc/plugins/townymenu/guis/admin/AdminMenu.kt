@@ -26,34 +26,48 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
             return backButton(40)
         }
 
-        button(10, Icons.icon(Material.COMPARATOR, tr("admin.config"), tr("admin.config-description"))) {
+        button(10, Icons.icon(
+            Material.COMPARATOR, tr("admin.config"), tr("admin.config-description"),
+            actions = hints("click.open")
+        )) {
             TownyConfigMenu(player, "", this).open()
         }
         button(
             12, Icons.icon(
                 Material.GRASS_BLOCK, tr("admin.worlds"), tr("admin.worlds-description"),
-                tr("admin.worlds-count", "count" to TownyUniverse.getInstance().townyWorlds.size)
+                tr("admin.worlds-count", "count" to TownyUniverse.getInstance().townyWorlds.size),
+                actions = hints("click.view")
             )
         ) {
             worlds().open()
         }
-        button(14, Icons.icon(Material.COMMAND_BLOCK, tr("admin.server"), tr("admin.server-description"))) {
+        button(14, Icons.icon(
+            Material.COMMAND_BLOCK, tr("admin.server"), tr("admin.server-description"),
+            actions = hints("click.open")
+        )) {
             AdminServerMenu(player, this).open()
         }
-        button(16, Icons.icon(Material.WRITABLE_BOOK, tr("admin.plugin"), tr("admin.plugin-description"))) {
+        button(16, Icons.icon(
+            Material.WRITABLE_BOOK, tr("admin.plugin"), tr("admin.plugin-description"),
+            actions = hints("click.open")
+        )) {
             PluginSettingsMenu(player, this).open()
         }
 
         val towny = TownyAPI.getInstance()
         button(
-            18, Icons.icon(Material.GRASS_BLOCK, tr("admin-plot.open"), tr("admin-plot.open-description"))
+            18, Icons.icon(
+                Material.GRASS_BLOCK, tr("admin-plot.open"), tr("admin-plot.open-description"),
+                actions = hints("click.open")
+            )
         ) {
             AdminPlotMenu(player, this).open()
         }
         button(
             20, Icons.icon(
                 Material.BELL, tr("admin.towns"), tr("admin.towns-description"),
-                tr("admin.count", "count" to towny.towns.size)
+                tr("admin.count", "count" to towny.towns.size),
+                actions = hints("click.browse")
             )
         ) {
             lateinit var list: Menu
@@ -69,7 +83,8 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
         button(
             22, Icons.icon(
                 Material.BEACON, tr("admin.nations"), tr("admin.nations-description"),
-                tr("admin.count", "count" to towny.nations.size)
+                tr("admin.count", "count" to towny.nations.size),
+                actions = hints("click.browse")
             )
         ) {
             lateinit var list: Menu
@@ -85,13 +100,17 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
         button(
             24, Icons.icon(
                 Material.PLAYER_HEAD, tr("admin.residents"), tr("admin.residents-description"),
-                tr("admin.count", "count" to towny.residents.size)
+                tr("admin.count", "count" to towny.residents.size),
+                actions = hints("click.browse")
             )
         ) {
             AdminResidentListMenu(player, this).open()
         }
 
-        button(26, Icons.icon(Material.IRON_DOOR, tr("admin-perms.open"), tr("admin-perms.open-description"))) {
+        button(26, Icons.icon(
+            Material.IRON_DOOR, tr("admin-perms.open"), tr("admin-perms.open-description"),
+            actions = hints("click.open")
+        )) {
             AdminPermsMenu(player, this).open()
         }
 
@@ -113,7 +132,7 @@ class AdminMenu(player: Player, back: Menu?) : Menu(player, player.tr("admin.tit
                         tr("admin-world.using-towny", "value" to TownyUtil.yesNo(player, world.isUsingTowny)),
                         tr("admin-world.towns", "count" to world.townsInWorld.size)
                     )
-                    loreActions(listOf(tr("common.click-view")))
+                    loreActions(listOf(tr("click.view")))
                     glow(world.isUsingTowny)
                 }
             }

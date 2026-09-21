@@ -56,7 +56,7 @@ class BankMenu(
             if (isNation) PermissionNodes.TOWNY_COMMAND_NATION_BANKHISTORY else PermissionNodes.TOWNY_COMMAND_TOWN_BANKHISTORY,
             Icons.icon(
                 Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"),
-                actions = listOf(tr("common.click-view"))
+                actions = listOf(tr("click.view"))
             )
         ) {
             runAndClose("$command bankhistory")

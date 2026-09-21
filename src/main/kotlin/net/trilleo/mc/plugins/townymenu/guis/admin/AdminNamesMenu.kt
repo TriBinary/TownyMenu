@@ -44,7 +44,10 @@ class AdminNamesMenu(
     override fun controls() {
         guarded(
             47, node,
-            Icons.icon(Material.NAME_TAG, tr("admin-tools.add"), tr("admin-tools.add-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("admin-tools.add"), tr("admin-tools.add-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(addTitle, addLabel) { name ->
                 run("$command add ${TownyUtil.argument(name)}", ::count)

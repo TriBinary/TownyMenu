@@ -52,22 +52,34 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         val row = layout(19, 20, 21, 22, 23, 24, 25)
         row.add(
             PermissionNodes.TOWNY_COMMAND_RESIDENT_FRIEND,
-            Icons.icon(Material.POPPY, tr("profile.friends"), tr("profile.friends-description"))
+            Icons.icon(
+                Material.POPPY, tr("profile.friends"), tr("profile.friends-description"),
+                actions = hints("click.view")
+            )
         ) {
             FriendsMenu(player, this).open()
         }
-        row.add(Icons.icon(Material.LEVER, tr("profile.settings"), tr("profile.settings-description"))) {
+        row.add(Icons.icon(
+            Material.LEVER, tr("profile.settings"), tr("profile.settings-description"),
+            actions = hints("click.open")
+        )) {
             toggles().open()
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_RESIDENT_SET_PERM,
-            Icons.icon(Material.IRON_DOOR, tr("profile.permissions"), tr("profile.permissions-description"))
+            Icons.icon(
+                Material.IRON_DOOR, tr("profile.permissions"), tr("profile.permissions-description"),
+                actions = hints("click.edit-permissions")
+            )
         ) {
             permissions().open()
         }
         row.add(
             PermissionNodes.TOWNY_COMMAND_RESIDENT_SET_ABOUT,
-            Icons.icon(Material.WRITABLE_BOOK, tr("profile.about"), tr("profile.about-description"))
+            Icons.icon(
+                Material.WRITABLE_BOOK, tr("profile.about"), tr("profile.about-description"),
+                actions = hints("click.edit", "click.clear")
+            )
         ) { click ->
             if (click.isRightClick) {
                 run("towny:resident set about none", { resident.about })
@@ -86,7 +98,8 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             PermissionNodes.TOWNY_COMMAND_RESIDENT_SPAWN,
             Icons.icon(
                 Material.RED_BED, tr("profile.spawn"), tr("profile.spawn-description"),
-                *listOfNotNull(costLine(Prices.residentSpawn(player))).toTypedArray()
+                *listOfNotNull(costLine(Prices.residentSpawn(player))).toTypedArray(),
+                actions = hints("click.teleport")
             )
         ) {
             runAndClose("towny:resident spawn")
@@ -98,7 +111,8 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
                 tr(
                     "profile.modes-active",
                     "modes" to resident.modes.ifEmpty { listOf(tr("common.none")) }.joinToString(", ")
-                )
+                ),
+                actions = hints("profile.left-modes-off", "profile.right-modes-reset")
             )
         ) { click ->
             run("towny:resident set mode ${if (click.isRightClick) "reset" else "clear"}", { resident.modes.toSet() })
@@ -107,7 +121,8 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             row.add(
                 Icons.icon(
                     Material.IRON_BARS, tr("profile.bail"),
-                    tr("profile.bail-description", "cost" to TownyUtil.money(resident.jailBailCost))
+                    tr("profile.bail-description", "cost" to TownyUtil.money(resident.jailBailCost)),
+                    actions = hints("click.pay")
                 )
             ) {
                 run("towny:resident jail paybail", { resident.isJailed })
@@ -125,7 +140,8 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             37, PermissionNodes.TOWNY_COMMAND_RESIDENT_PLOTLIST,
             Icons.icon(
                 Material.GRASS_BLOCK, tr("profile.plots"), tr("profile.plots-description"),
-                tr("profile.plots-owned", "count" to resident.townBlocks.size)
+                tr("profile.plots-owned", "count" to resident.townBlocks.size),
+                actions = hints("click.view")
             )
         ) {
             ResidentPlotsMenu(player, resident, this).open()
@@ -137,7 +153,8 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             42, PermissionNodes.TOWNY_COMMAND_RESIDENT_OUTLAWLIST,
             Icons.icon(
                 Material.IRON_BARS, tr("profile.outlawed-in"), tr("profile.outlawed-in-description"),
-                tr("profile.towns-count", "count" to resident.townsOutlawedIn.size)
+                tr("profile.towns-count", "count" to resident.townsOutlawedIn.size),
+                actions = hints("click.view")
             )
         ) {
             towns(tr("profile.outlawed-in-title")) { it.townsOutlawedIn }.open()
@@ -146,7 +163,8 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
             43, PermissionNodes.TOWNY_COMMAND_RESIDENT_TRUSTLIST,
             Icons.icon(
                 Material.TRIPWIRE_HOOK, tr("profile.trusted-in"), tr("profile.trusted-in-description"),
-                tr("profile.towns-count", "count" to resident.townsTrustedIn.size)
+                tr("profile.towns-count", "count" to resident.townsTrustedIn.size),
+                actions = hints("click.view")
             )
         ) {
             towns(tr("profile.trusted-in-title")) { it.townsTrustedIn }.open()
@@ -183,7 +201,7 @@ class ResidentMenu(player: Player, back: Menu?) : Menu(player, player.tr("profil
         TownyAPI.getInstance().getResident(player)?.let(source).orEmpty()
             .sortedBy { it.name.lowercase() }
             .map { town ->
-                MenuEntry({ Icons.town(player, town, actions = listOf(tr("common.click-details"))) }) {
+                MenuEntry({ Icons.town(player, town, actions = listOf(tr("click.details"))) }) {
                     TownInfoMenu(player, town, menu).open()
                 }
             }

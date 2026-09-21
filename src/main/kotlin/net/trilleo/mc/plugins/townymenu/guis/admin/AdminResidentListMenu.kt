@@ -20,7 +20,7 @@ class AdminResidentListMenu(player: Player, back: Menu) : PagedMenu(player, play
             .filter { it.name.contains(filter, ignoreCase = true) }
             .sortedWith(compareBy({ !it.isOnline }, { it.name.lowercase() }))
             .map { resident ->
-                MenuEntry({ Icons.resident(player, resident, actions = listOf(tr("common.click-view"))) }) {
+                MenuEntry({ Icons.resident(player, resident, actions = listOf(tr("click.view"))) }) {
                     AdminResidentMenu(player, resident, this).open()
                 }
             }
@@ -29,7 +29,8 @@ class AdminResidentListMenu(player: Player, back: Menu) : PagedMenu(player, play
         button(
             47, Icons.icon(
                 Material.COMPASS, tr("admin.search"), tr("admin.search-description"),
-                tr("admin.filter", "filter" to if (filter.isEmpty()) tr("common.none") else TownyUtil.text(filter))
+                tr("admin.filter", "filter" to if (filter.isEmpty()) tr("common.none") else TownyUtil.text(filter)),
+                actions = hints("click.search", "click.clear")
             )
         ) { click ->
             if (click.isRightClick) {

@@ -36,7 +36,7 @@ class AdminRanksMenu(player: Player, private val nation: Boolean, back: Menu) : 
             itemStack(Material.NAME_TAG) {
                 name("<gold>${TownyUtil.name(rank)}")
                 lore(tr("admin-perms.node-count", "count" to nodes.size))
-                loreActions(listOf(tr("common.left-details"), tr("admin-perms.right-remove")))
+                loreActions(listOf(tr("click.left-details"), tr("admin-perms.right-remove")))
             }
         }) { click ->
             if (click.isRightClick) {
@@ -50,7 +50,10 @@ class AdminRanksMenu(player: Player, private val nation: Boolean, back: Menu) : 
     override fun controls() {
         guarded(
             47, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWNYPERMS,
-            Icons.icon(Material.PAPER, tr("admin-perms.add-rank"), tr("admin-perms.add-rank-description"))
+            Icons.icon(
+                Material.PAPER, tr("admin-perms.add-rank"), tr("admin-perms.add-rank-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(tr("admin-perms.add-rank"), tr("admin-perms.rank-label")) { rank ->
                 run("$command addrank ${TownyUtil.nameArgument(rank)}", { ranks().size })
@@ -58,7 +61,10 @@ class AdminRanksMenu(player: Player, private val nation: Boolean, back: Menu) : 
         }
         guarded(
             48, PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWNYPERMS,
-            Icons.icon(Material.WRITABLE_BOOK, tr("admin-perms.rename-rank"), tr("admin-perms.rename-rank-description"))
+            Icons.icon(
+                Material.WRITABLE_BOOK, tr("admin-perms.rename-rank"), tr("admin-perms.rename-rank-description"),
+                actions = hints("click.choose")
+            )
         ) {
             val options = ranks().sorted().map { it to "<white>${TownyUtil.name(it)}" }
             Pickers.option(this, tr("admin-perms.rename-rank"), options, null, Material.NAME_TAG) { rank ->

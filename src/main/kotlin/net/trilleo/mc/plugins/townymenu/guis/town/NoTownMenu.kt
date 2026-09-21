@@ -26,7 +26,8 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
                 Material.BELL,
                 tr("no-town.found"),
                 tr("no-town.found-description"),
-                *listOfNotNull(price).toTypedArray()
+                *listOfNotNull(price).toTypedArray(),
+                actions = hints("click.found")
             )
         ) {
             prompt(tr("no-town.found-title"), tr("no-town.town-name")) { name ->
@@ -37,7 +38,10 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
                 )
             }
         }
-        row.add(Icons.icon(Material.OAK_DOOR, tr("no-town.browse"), tr("no-town.browse-description"))) {
+        row.add(Icons.icon(
+            Material.OAK_DOOR, tr("no-town.browse"), tr("no-town.browse-description"),
+            actions = hints("click.browse")
+        )) {
             TownListMenu(player, this).open()
         }
         val invites = resident?.receivedInvites?.size ?: 0
@@ -46,7 +50,8 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
                 Material.PAPER,
                 tr("main.invites"),
                 tr("no-town.invites-description"),
-                tr("common.pending", "count" to invites)
+                tr("common.pending", "count" to invites),
+                actions = hints("click.view")
             )
         ) {
             InvitesMenu(player, this).open()
@@ -57,7 +62,8 @@ class NoTownMenu(player: Player, back: Menu) : Menu(player, player.tr("no-town.t
                 PermissionNodes.TOWNY_COMMAND_TOWN_RECLAIM,
                 Icons.icon(
                     Material.MOSSY_STONE_BRICKS, tr("no-town.reclaim"), tr("no-town.reclaim-description"),
-                    *listOfNotNull(cost).toTypedArray()
+                    *listOfNotNull(cost).toTypedArray(),
+                    actions = hints("click.reclaim")
                 )
             ) {
                 run("towny:town reclaim", { resident?.hasTown() }, returnTo = back ?: MainMenu(player))

@@ -20,8 +20,8 @@ import org.bukkit.inventory.meta.SkullMeta
  *     name("<green>Deposit")
  *     loreWrapped("<gray>Move money from your balance into the town bank.")
  *     loreBreak()
- *     lore("<gray>Balance: <white>$120")
- *     loreActions(listOf("<yellow>Click to deposit"))
+ *     lore("<gray>Balance: <gold>$120")
+ *     loreActions(listOf("<yellow>Click to deposit!"))
  * }
  * ```
  *

@@ -32,7 +32,7 @@ class NationListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("
             .sortedWith(sort.comparator)
             .map { nation ->
                 MenuEntry({
-                    Icons.nation(player, nation, actions = listOf(tr("common.click-details")))
+                    Icons.nation(player, nation, actions = listOf(tr("click.details")))
                 }) { NationInfoMenu(player, nation, this).open() }
             }
 
@@ -41,10 +41,10 @@ class NationListMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("
         val sorts = Sort.entries.filter { it != Sort.BALANCE || TownyUtil.economy }
         button(47, itemStack(Material.HOPPER) {
             name(tr("sort.current", "sort" to tr(sort.label)))
-            lore(sorts.map { (if (it == sort) "<green>▶ " else "<gray>  ") + tr(it.label) })
-            loreActions(listOf(tr("common.click-change")))
-        }) {
-            sort = sorts[(sorts.indexOf(sort) + 1) % sorts.size]
+            lore(sorts.map { tr(if (it == sort) "sort.selected" else "sort.option", "sort" to tr(it.label)) })
+            loreActions(hints("click.next", "click.previous"))
+        }) { click ->
+            sort = sorts.cycle(sort, click)
             render()
         }
     }

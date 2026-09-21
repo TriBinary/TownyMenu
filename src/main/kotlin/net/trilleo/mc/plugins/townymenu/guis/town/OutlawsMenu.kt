@@ -37,7 +37,10 @@ class OutlawsMenu(player: Player, private val town: Town, back: Menu) :
         tutorialButton(52, Tutorial.PROTECTION)
         guarded(
             47, PermissionNodes.TOWNY_COMMAND_TOWN_OUTLAW,
-            Icons.icon(Material.PLAYER_HEAD, tr("outlaws.add-online"), tr("outlaws.add-online-description"))
+            Icons.icon(
+                Material.PLAYER_HEAD, tr("outlaws.add-online"), tr("outlaws.add-online-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             Pickers.resident(this, tr("outlaws.declare"), { it.townOrNull != town && !town.hasOutlaw(it) }) { picked ->
                 run("towny:town outlaw add ${picked.name}", ::count)
@@ -45,7 +48,10 @@ class OutlawsMenu(player: Player, private val town: Town, back: Menu) :
         }
         guarded(
             48, PermissionNodes.TOWNY_COMMAND_TOWN_OUTLAW,
-            Icons.icon(Material.NAME_TAG, tr("outlaws.add-name"), tr("outlaws.add-name-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("outlaws.add-name"), tr("outlaws.add-name-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(
                 tr("outlaws.declare"),

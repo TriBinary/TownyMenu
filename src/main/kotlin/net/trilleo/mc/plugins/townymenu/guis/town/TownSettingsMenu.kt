@@ -29,7 +29,8 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                 tr("town-details.rename"),
                 null,
                 tr("common.current", "value" to TownyUtil.name(town.name)),
-                *listOfNotNull(costLine(TownySettings.getTownRenameCost())).toTypedArray()
+                *listOfNotNull(costLine(TownySettings.getTownRenameCost())).toTypedArray(),
+                actions = hints("click.rename")
             )
         ) {
             prompt(tr("town-details.rename-title"), tr("common.new-name"), initial = town.name) { name ->
@@ -38,7 +39,10 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_BOARD,
-            Icons.icon(Material.OAK_SIGN, tr("town-details.board"), tr("town-details.board-description"))
+            Icons.icon(
+                Material.OAK_SIGN, tr("town-details.board"), tr("town-details.board-description"),
+                actions = hints("click.edit", "click.clear")
+            )
         ) { click ->
             if (click.isRightClick) {
                 run("towny:town set board none", { town.board })
@@ -60,7 +64,8 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                 Material.PAPER,
                 tr("town-details.tag"),
                 tr("common.tag-description"),
-                tr("common.current", "value" to TownyUtil.text(town.tag))
+                tr("common.current", "value" to TownyUtil.text(town.tag)),
+                actions = hints("click.set")
             )
         ) {
             prompt(tr("town-details.tag-title"), tr("common.tag"), initial = town.tag, maxLength = 16) { tag ->
@@ -71,7 +76,8 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_MAPCOLOR,
             Icons.icon(
                 Material.LIME_DYE, tr("common.map-color"), tr("town-details.map-color-description"),
-                *listOfNotNull(costLine(TownySettings.getTownSetMapColourCost())).toTypedArray()
+                *listOfNotNull(costLine(TownySettings.getTownSetMapColourCost())).toTypedArray(),
+                actions = hints("click.choose")
             )
         ) {
             val colors = TownySettings.getTownColorsMap().keys.sorted().map { it to "<white>${TownyUtil.name(it)}" }
@@ -81,25 +87,37 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_SPAWN,
-            Icons.icon(Material.RESPAWN_ANCHOR, tr("common.set-spawn"), tr("town-details.set-spawn-description"))
+            Icons.icon(
+                Material.RESPAWN_ANCHOR, tr("common.set-spawn"), tr("town-details.set-spawn-description"),
+                actions = hints("click.set-here")
+            )
         ) {
             run("towny:town set spawn", { town.spawnOrNull })
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_HOMEBLOCK,
-            Icons.icon(Material.LODESTONE, tr("town-details.home-block"), tr("town-details.home-block-description"))
+            Icons.icon(
+                Material.LODESTONE, tr("town-details.home-block"), tr("town-details.home-block-description"),
+                actions = hints("click.set-here")
+            )
         ) {
             run("towny:town set homeblock", { town.homeBlockOrNull })
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_OUTPOST,
-            Icons.icon(Material.COMPASS, tr("town-details.outpost"), tr("town-details.outpost-description"))
+            Icons.icon(
+                Material.COMPASS, tr("town-details.outpost"), tr("town-details.outpost-description"),
+                actions = hints("click.set-here")
+            )
         ) {
             run("towny:town set outpost", { town.allOutpostSpawns.toList() })
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_PRIMARYJAIL,
-            Icons.icon(Material.IRON_BARS, tr("town-details.jail"), tr("town-details.jail-description"))
+            Icons.icon(
+                Material.IRON_BARS, tr("town-details.jail"), tr("town-details.jail-description"),
+                actions = hints("click.set-here")
+            )
         ) {
             run("towny:town set primaryjail")
         }
@@ -187,7 +205,8 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                         Material.RED_BANNER,
                         tr("town-details.not-for-sale"),
                         null,
-                        *listOfNotNull(priceLine(town.forSalePrice)).toTypedArray()
+                        *listOfNotNull(priceLine(town.forSalePrice)).toTypedArray(),
+                        actions = hints("click.stop-selling")
                     )
                 ) {
                     run("towny:town notforsale", { town.isForSale })
@@ -198,7 +217,8 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                     Icons.icon(
                         Material.GREEN_BANNER,
                         tr("town-details.for-sale"),
-                        tr("town-details.for-sale-description")
+                        tr("town-details.for-sale-description"),
+                        actions = hints("click.set-price")
                     )
                 ) {
                     prompt(tr("town-details.for-sale-title"), tr("common.price-label")) { price ->
@@ -228,7 +248,7 @@ class TownSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("tow
                 "<gold>$label",
                 null,
                 tr("common.current", "value" to current),
-                actions = listOf(tr("common.click-change"))
+                actions = listOf(tr("click.change"))
             )
         ) {
             prompt(label, tr("common.amount"), initial = read().toString()) { amount ->

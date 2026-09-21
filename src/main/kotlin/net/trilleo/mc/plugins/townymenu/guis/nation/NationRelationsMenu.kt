@@ -36,7 +36,7 @@ class NationRelationsMenu(player: Player, private val nation: Nation, back: Menu
 
     private fun relation(other: Nation, label: String, canRemove: Boolean, removeCommand: String): MenuEntry {
         val actions = listOfNotNull(
-            tr("common.left-details"),
+            tr("click.left-details"),
             if (canRemove) tr("nation-relations.right-remove") else null
         )
         return MenuEntry({ Icons.nation(player, other, label, actions = actions) }) { click ->
@@ -56,7 +56,8 @@ class NationRelationsMenu(player: Player, private val nation: Nation, back: Menu
             Icons.icon(
                 Material.SHIELD,
                 tr("nation.propose-alliance"),
-                tr("nation-relations.propose-alliance-description")
+                tr("nation-relations.propose-alliance-description"),
+                actions = hints("click.choose-nation")
             )
         ) {
             Pickers.nation(
@@ -71,7 +72,8 @@ class NationRelationsMenu(player: Player, private val nation: Nation, back: Menu
             Icons.icon(
                 Material.IRON_SWORD,
                 tr("nation.declare-enemy"),
-                tr("nation-relations.declare-enemy-description")
+                tr("nation-relations.declare-enemy-description"),
+                actions = hints("click.choose-nation")
             )
         ) {
             Pickers.nation(
@@ -86,7 +88,8 @@ class NationRelationsMenu(player: Player, private val nation: Nation, back: Menu
             51, Icons.icon(
                 Material.PAPER, tr("nation-relations.sent-requests"), null,
                 tr("common.pending", "count" to pending.size), "",
-                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray()
+                *pending.take(10)
+                    .map { tr("common.list-entry", "entry" to TownyUtil.name(it.receiver.name)) }.toTypedArray()
             )
         )
     }

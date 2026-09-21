@@ -55,7 +55,10 @@ class PlotOverridesMenu(player: Player, private val plot: TownBlock, back: Menu)
         val addNode = node(PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_PERM, PermissionNodes.TOWNY_COMMAND_PLOT_PERM_ADD)
         guarded(
             47, addNode,
-            Icons.icon(Material.PLAYER_HEAD, tr("plot-overrides.add-online"), tr("plot-overrides.add-description"))
+            Icons.icon(
+                Material.PLAYER_HEAD, tr("plot-overrides.add-online"), tr("plot-overrides.add-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             Pickers.resident(this, tr("plot-overrides.add-title"), { it !in overrides() }) { picked ->
                 run("$command add ${picked.name}", ::snapshot)
@@ -63,7 +66,10 @@ class PlotOverridesMenu(player: Player, private val plot: TownBlock, back: Menu)
         }
         guarded(
             48, addNode,
-            Icons.icon(Material.NAME_TAG, tr("plot-overrides.add-name"), tr("plot-overrides.add-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("plot-overrides.add-name"), tr("plot-overrides.add-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(tr("plot-overrides.add-title"), tr("common.player-name")) { name ->
                 run("$command add ${TownyUtil.argument(name)}", ::snapshot)
@@ -71,7 +77,10 @@ class PlotOverridesMenu(player: Player, private val plot: TownBlock, back: Menu)
         }
         guarded(
             51, node(PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_PERM, PermissionNodes.TOWNY_COMMAND_PLOT_PERM_GUI),
-            Icons.icon(Material.WRITABLE_BOOK, tr("plot-overrides.edit"), tr("plot-overrides.edit-description"))
+            Icons.icon(
+                Material.WRITABLE_BOOK, tr("plot-overrides.edit"), tr("plot-overrides.edit-description"),
+                actions = hints("click.open-editor")
+            )
         ) {
             runAndClose("$command gui")
         }

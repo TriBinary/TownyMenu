@@ -24,6 +24,7 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
             loreWrapped("<gray>${tr(chapter.description)}")
             loreBreak()
             lore(tr("tutorial.progress", "read" to read, "total" to lessons.size))
+            lore(progressBar(read, lessons.size))
             chapter.link?.let { loreActions(listOf(linkLine(it))) }
             glow(read == lessons.size)
         }) { if (chapter.link?.open(player, this) != true) render() }
@@ -52,7 +53,8 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
                     Material.ARROW,
                     tr("tutorial.previous-chapter"),
                     null,
-                    tr("tutorial.chapter-line", "chapter" to tr(previous.title))
+                    tr("tutorial.chapter-line", "chapter" to tr(previous.title)),
+                    actions = hints("click.open")
                 )
             ) {
                 TutorialChapterMenu(player, previous, back).open()
@@ -65,7 +67,8 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
                     Material.ARROW,
                     tr("tutorial.next-chapter"),
                     null,
-                    tr("tutorial.chapter-line", "chapter" to tr(next.title))
+                    tr("tutorial.chapter-line", "chapter" to tr(next.title)),
+                    actions = hints("click.open")
                 )
             ) {
                 TutorialChapterMenu(player, next, back).open()
@@ -76,7 +79,8 @@ class TutorialChapterMenu(player: Player, private val chapter: Chapter, back: Me
         button(
             51, Icons.icon(
                 if (allRead) Material.BOOK else Material.WRITABLE_BOOK,
-                tr(if (allRead) "tutorial.mark-all-unread" else "tutorial.mark-all-read")
+                tr(if (allRead) "tutorial.mark-all-unread" else "tutorial.mark-all-read"),
+                actions = hints(if (allRead) "tutorial.click-unread" else "tutorial.click-read")
             )
         ) {
             Tutorial.setRead(player, lessons, !allRead)

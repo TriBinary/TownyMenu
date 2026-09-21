@@ -3,7 +3,6 @@ package net.trilleo.mc.plugins.townymenu.guis.common
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
-import net.trilleo.mc.plugins.townymenu.utils.itemStack
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -46,23 +45,18 @@ class ToggleMenu(
 
         val bottom = inventory.size - 9
         if (page > 0) {
-            button(bottom, pageArrow("menu.previous-page", page, pages)) {
+            button(bottom, pageArrow(true, page, pages)) {
                 page--
                 render()
             }
         }
         if (page < pages - 1) {
-            button(bottom + 8, pageArrow("menu.next-page", page + 2, pages)) {
+            button(bottom + 8, pageArrow(false, page + 2, pages)) {
                 page++
                 render()
             }
         }
         backButton(bottom + 4)
-    }
-
-    private fun pageArrow(key: String, target: Int, pages: Int) = itemStack(Material.ARROW) {
-        name(tr(key))
-        lore(tr("menu.page", "page" to target, "pages" to pages))
     }
 
     private companion object {

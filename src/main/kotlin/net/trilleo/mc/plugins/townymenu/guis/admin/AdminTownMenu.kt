@@ -43,13 +43,19 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
 
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_SPAWN,
-            Icons.icon(Material.ENDER_PEARL, tr("admin-town.spawn"), tr("admin-town.spawn-description"))
+            Icons.icon(
+                Material.ENDER_PEARL, tr("admin-town.spawn"), tr("admin-town.spawn-description"),
+                actions = hints("click.teleport")
+            )
         ) {
             runAndClose("$command spawn")
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_TOGGLE,
-            Icons.icon(Material.LEVER, tr("town.settings"), tr("admin-town.toggles-description"))
+            Icons.icon(
+                Material.LEVER, tr("town.settings"), tr("admin-town.toggles-description"),
+                actions = hints("click.open")
+            )
         ) {
             toggles().open()
         }
@@ -59,7 +65,8 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
                 Material.NAME_TAG,
                 tr("admin.rename"),
                 null,
-                tr("common.current", "value" to TownyUtil.name(town.name))
+                tr("common.current", "value" to TownyUtil.name(town.name)),
+                actions = hints("click.rename")
             )
         ) {
             prompt(tr("admin.rename"), tr("common.new-name"), initial = town.name) { name ->
@@ -70,7 +77,9 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_SET_MAYOR,
             Icons.icon(
                 Material.GOLDEN_HELMET, tr("admin-town.mayor"), tr("admin-town.mayor-description"),
-                tr("common.current", "value" to (town.mayor?.let { TownyUtil.name(it.name) } ?: "-")))) {
+                tr("common.current", "value" to (town.mayor?.let { TownyUtil.name(it.name) } ?: "-")),
+                actions = hints("click.choose-player")
+            )) {
             residentList(tr("admin-town.mayor-title"), { !it.isMayor }) { resident ->
                 run(
                     "towny:townyadmin set mayor ${town.name} ${resident.name}",
@@ -81,7 +90,10 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_ADD,
-            Icons.icon(Material.LIME_DYE, tr("admin-town.add"), tr("admin-town.add-description"))
+            Icons.icon(
+                Material.LIME_DYE, tr("admin-town.add"), tr("admin-town.add-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(tr("admin-town.add"), tr("common.player-name")) { name ->
                 run("$command add ${TownyUtil.argument(name)}", { town.numResidents })
@@ -91,7 +103,8 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_KICK,
             Icons.icon(
                 Material.IRON_BOOTS, tr("admin-town.kick"), tr("admin-town.kick-description"),
-                tr("icon.town.residents", "count" to town.numResidents)
+                tr("icon.town.residents", "count" to town.numResidents),
+                actions = hints("click.choose-player")
             )
         ) {
             residentList(tr("admin-town.kick-title"), { !it.isMayor }) { resident ->
@@ -102,7 +115,8 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_GIVEBONUS,
             Icons.icon(
                 Material.GRASS_BLOCK, tr("admin-town.give-bonus"), tr("admin-town.give-bonus-description"),
-                tr("common.current", "value" to town.bonusBlocks)
+                tr("common.current", "value" to town.bonusBlocks),
+                actions = hints("click.type-amount")
             )
         ) {
             prompt(tr("admin-town.give-bonus"), tr("common.amount")) { amount ->
@@ -113,7 +127,8 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_GIVEBOUGHTBLOCKS,
             Icons.icon(
                 Material.MOSS_BLOCK, tr("admin-town.give-bought"), tr("admin-town.give-bought-description"),
-                tr("common.current", "value" to town.purchasedBlocks)
+                tr("common.current", "value" to town.purchasedBlocks),
+                actions = hints("click.type-amount")
             )
         ) {
             prompt(tr("admin-town.give-bought"), tr("common.amount")) { amount ->
@@ -128,7 +143,8 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
                     Material.EMERALD,
                     tr("bank.deposit"),
                     tr("admin.deposit-description"),
-                    tr("bank.balance", "balance" to TownyUtil.balance(town))
+                    tr("bank.balance", "balance" to TownyUtil.balance(town)),
+                    actions = hints("click.type-amount")
                 )
             ) {
                 prompt(tr("bank.deposit-title"), tr("common.amount")) { amount ->
@@ -141,7 +157,8 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
                     Material.REDSTONE,
                     tr("bank.withdraw"),
                     tr("admin.withdraw-description"),
-                    tr("bank.balance", "balance" to TownyUtil.balance(town))
+                    tr("bank.balance", "balance" to TownyUtil.balance(town)),
+                    actions = hints("click.type-amount")
                 )
             ) {
                 prompt(tr("bank.withdraw-title"), tr("common.amount")) { amount ->
@@ -150,7 +167,10 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
             }
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_BANKHISTORY,
-                Icons.icon(Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"))
+                Icons.icon(
+                    Material.WRITTEN_BOOK, tr("bank.history"), tr("bank.history-description"),
+                    actions = hints("click.view")
+                )
             ) {
                 runAndClose("$command bankhistory")
             }
@@ -158,12 +178,15 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
 
         val nation = town.nationOrNull
         if (nation != null) {
-            grid.add(Icons.nation(player, nation, actions = listOf(tr("common.click-view")))) {
+            grid.add(Icons.nation(player, nation, actions = listOf(tr("click.view")))) {
                 AdminNationMenu(player, nation, this).open()
             }
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_LEAVENATION,
-                Icons.icon(Material.OAK_DOOR, tr("admin-town.leave-nation"), tr("admin-town.leave-nation-description"))
+                Icons.icon(
+                    Material.OAK_DOOR, tr("admin-town.leave-nation"), tr("admin-town.leave-nation-description"),
+                    actions = hints("click.remove")
+                )
             ) {
                 run("$command leavenation", { town.hasNation() })
             }
@@ -171,20 +194,29 @@ class AdminTownMenu(player: Player, private val town: Town, back: Menu) :
         if (town.isRuined) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_UNRUIN,
-                Icons.icon(Material.MOSSY_COBBLESTONE, tr("admin-town.unruin"), tr("admin-town.unruin-description"))
+                Icons.icon(
+                    Material.MOSSY_COBBLESTONE, tr("admin-town.unruin"), tr("admin-town.unruin-description"),
+                    actions = hints("click.restore")
+                )
             ) {
                 run("$command unruin", { town.isRuined })
             }
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_TOWN_DELETE,
-            Icons.icon(Material.TNT, tr("admin-town.delete"), tr("admin-town.delete-description"))
+            Icons.icon(
+                Material.TNT, tr("admin-town.delete"), tr("admin-town.delete-description"),
+                actions = hints("click.delete")
+            )
         ) {
             run("$command delete", ::exists, returnTo = back ?: this)
         }
 
         grid.add(
-            Icons.icon(Material.ANVIL, tr("admin-town-tools.open"), tr("admin-town-tools.open-description"))
+            Icons.icon(
+                Material.ANVIL, tr("admin-town-tools.open"), tr("admin-town-tools.open-description"),
+                actions = hints("click.open")
+            )
         ) {
             AdminTownToolsMenu(player, town, this).open()
         }

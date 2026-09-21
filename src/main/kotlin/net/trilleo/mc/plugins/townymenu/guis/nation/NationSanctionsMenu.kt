@@ -30,7 +30,7 @@ class NationSanctionsMenu(player: Player, private val nation: Nation, back: Menu
         val canEdit = canEdit
         return nation.sanctionedTowns.sortedBy { it.name.lowercase() }.map { town ->
             val actions = listOfNotNull(
-                tr("common.left-details"),
+                tr("click.left-details"),
                 if (canEdit) tr("nation-sanctions.right-lift") else null
             )
             MenuEntry({ Icons.town(player, town, actions = actions) }) { click ->
@@ -48,7 +48,10 @@ class NationSanctionsMenu(player: Player, private val nation: Nation, back: Menu
         if (resident?.nationOrNull != nation) return
         guarded(
             47, PermissionNodes.TOWNY_COMMAND_NATION_SANCTIONTOWN,
-            Icons.icon(Material.RED_BANNER, tr("nation-sanctions.add"), tr("nation-sanctions.add-description"))
+            Icons.icon(
+                Material.RED_BANNER, tr("nation-sanctions.add"), tr("nation-sanctions.add-description"),
+                actions = hints("click.choose-town")
+            )
         ) {
             Pickers.town(
                 this,

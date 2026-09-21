@@ -37,7 +37,10 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
         val groups = layout(19, 20, 21, 22, 23, 24, 25)
         groups.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_ADD,
-            Icons.icon(Material.CHEST, tr("plot-group.add"), tr("plot-group.add-description"))
+            Icons.icon(
+                Material.CHEST, tr("plot-group.add"), tr("plot-group.add-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(tr("plot-group.add-title"), tr("plot-group.group-name")) { name ->
                 run("towny:plot group add ${TownyUtil.nameArgument(name)}", groupProbe)
@@ -49,14 +52,15 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
                 Icons.icon(
                     Material.HOPPER,
                     tr("plot-group.remove"),
-                    tr("plot-group.remove-description", "group" to TownyUtil.name(group.name))
+                    tr("plot-group.remove-description", "group" to TownyUtil.name(group.name)),
+                    actions = hints("click.remove")
                 )
             ) {
                 run("towny:plot group remove", groupProbe)
             }
             groups.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_RENAME,
-                Icons.icon(Material.NAME_TAG, tr("plot-group.rename"), null)
+                Icons.icon(Material.NAME_TAG, tr("plot-group.rename"), null, actions = hints("click.rename"))
             ) {
                 prompt(tr("plot-group.rename-title"), tr("common.new-name"), initial = group.name) { name ->
                     run("towny:plot group rename ${TownyUtil.nameArgument(name)}", groupProbe)
@@ -70,7 +74,8 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
                         tr(
                             "common.price",
                             "price" to if (group.price >= 0) TownyUtil.money(group.price) else tr("plot-group.not-for-sale")
-                        )
+                        ),
+                        actions = hints("click.set-price")
                     )
                 ) {
                     prompt(tr("plot-group.sell-title"), tr("common.price-label"), initial = "0") { price ->
@@ -79,7 +84,10 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
                 }
                 groups.add(
                     PermissionNodes.TOWNY_COMMAND_PLOT_GROUP_NOTFORSALE,
-                    Icons.icon(Material.RED_BANNER, tr("plot-group.stop-selling"), null)
+                    Icons.icon(
+                        Material.RED_BANNER, tr("plot-group.stop-selling"), null,
+                        actions = hints("click.stop-selling")
+                    )
                 ) {
                     run("towny:plot group notforsale", groupProbe)
                 }
@@ -89,7 +97,8 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
                 Icons.icon(
                     Material.LAVA_BUCKET,
                     tr("plot-group.delete"),
-                    tr("plot-group.delete-description", "group" to TownyUtil.name(group.name))
+                    tr("plot-group.delete-description", "group" to TownyUtil.name(group.name)),
+                    actions = hints("click.delete")
                 )
             ) {
                 run("towny:plot group delete", groupProbe)
@@ -99,7 +108,10 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
         val districts = layout(28, 29, 30, 31)
         districts.add(
             PermissionNodes.TOWNY_COMMAND_PLOT_DISTRICT_ADD,
-            Icons.icon(Material.BARREL, tr("plot-group.district-add"), tr("plot-group.district-add-description"))
+            Icons.icon(
+                Material.BARREL, tr("plot-group.district-add"), tr("plot-group.district-add-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(tr("plot-group.district-add-title"), tr("plot-group.district-name")) { name ->
                 run("towny:plot district add ${TownyUtil.nameArgument(name)}", districtProbe)
@@ -108,13 +120,13 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
         if (district != null) {
             districts.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_DISTRICT_REMOVE,
-                Icons.icon(Material.HOPPER, tr("plot-group.district-remove"), null)
+                Icons.icon(Material.HOPPER, tr("plot-group.district-remove"), null, actions = hints("click.remove"))
             ) {
                 run("towny:plot district remove", districtProbe)
             }
             districts.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_DISTRICT_RENAME,
-                Icons.icon(Material.NAME_TAG, tr("plot-group.district-rename"), null)
+                Icons.icon(Material.NAME_TAG, tr("plot-group.district-rename"), null, actions = hints("click.rename"))
             ) {
                 prompt(tr("plot-group.district-rename-title"), tr("common.new-name"), initial = district.name) { name ->
                     run("towny:plot district rename ${TownyUtil.nameArgument(name)}", districtProbe)
@@ -122,7 +134,10 @@ class PlotGroupMenu(player: Player, back: Menu) : Menu(player, player.tr("plot-g
             }
             districts.add(
                 PermissionNodes.TOWNY_COMMAND_PLOT_DISTRICT_DELETE,
-                Icons.icon(Material.LAVA_BUCKET, tr("plot-group.district-delete"), null)
+                Icons.icon(
+                    Material.LAVA_BUCKET, tr("plot-group.district-delete"), null,
+                    actions = hints("click.delete")
+                )
             ) {
                 run("towny:plot district delete", districtProbe)
             }

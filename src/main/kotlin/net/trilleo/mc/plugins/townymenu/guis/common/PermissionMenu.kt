@@ -59,8 +59,8 @@ class PermissionMenu(
                 val allowed = perms.getPerm(level, action)
                 val cell = itemStack(if (allowed) Material.LIME_CONCRETE else Material.RED_CONCRETE) {
                     name("${if (allowed) "<green>" else "<red>"}${levelName(level)}: ${actionName(action)}")
-                    lore(tr("icon.currently", "value" to tr(if (allowed) "perm.allowed" else "perm.denied")))
-                    loreActions(listOf(tr("icon.click-toggle")))
+                    lore(tr("icon.status", "value" to tr(if (allowed) "perm.allowed" else "perm.denied")))
+                    loreActions(hints(if (allowed) "perm.click-deny" else "perm.click-allow"))
                 }
                 guarded(11 + row * 9 + column, node, cell) {
                     run("$command ${level.arg} ${action.arg} ${if (allowed) "off" else "on"}", ::snapshot)
@@ -68,11 +68,17 @@ class PermissionMenu(
             }
         }
 
-        guarded(25, node, Icons.icon(Material.WATER_BUCKET, tr("perm.reset"), tr("perm.reset-description"))) {
+        guarded(25, node, Icons.icon(
+            Material.WATER_BUCKET, tr("perm.reset"), tr("perm.reset-description"),
+            actions = hints("click.reset")
+        )) {
             run("$command reset", ::snapshot)
         }
         overrides?.let { open ->
-            button(34, Icons.icon(Material.PLAYER_HEAD, tr("perm.overrides"), tr("perm.overrides-description"))) {
+            button(34, Icons.icon(
+                Material.PLAYER_HEAD, tr("perm.overrides"), tr("perm.overrides-description"),
+                actions = hints("click.open")
+            )) {
                 open(this).open()
             }
         }

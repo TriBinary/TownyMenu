@@ -77,7 +77,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                 Material.PLAYER_HEAD,
                 tr("town.residents"),
                 tr("town.residents-description"),
-                tr("icon.town.residents", "count" to town.numResidents)
+                tr("icon.town.residents", "count" to town.numResidents),
+                actions = hints("click.view")
             )
         ) {
             TownMembersMenu(player, town, this).open()
@@ -88,7 +89,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                     Material.GOLD_INGOT,
                     tr("town.bank"),
                     tr("town.bank-description"),
-                    tr("bank.balance", "balance" to TownyUtil.balance(town))
+                    tr("bank.balance", "balance" to TownyUtil.balance(town)),
+                    actions = hints("click.open")
                 )
             ) {
                 BankMenu(player, town, this).open()
@@ -97,27 +99,43 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
         grid.add(
             Icons.icon(
                 Material.GRASS_BLOCK, tr("claims.info"), tr("town.claims-description"),
-                tr("icon.town.claims", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString)
+                tr("icon.town.claims", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString),
+                actions = hints("click.open")
             )
         ) {
             TownClaimsMenu(player, this).open()
         }
-        grid.add(Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) {
+        grid.add(Icons.icon(
+            Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
+            actions = hints("click.open")
+        )) {
             MapMenu(player, this).open()
         }
-        grid.add(Icons.icon(Material.LEVER, tr("town.settings"), tr("town.settings-description"))) {
+        grid.add(Icons.icon(
+            Material.LEVER, tr("town.settings"), tr("town.settings-description"),
+            actions = hints("click.open")
+        )) {
             toggles().open()
         }
-        grid.add(Icons.icon(Material.WRITABLE_BOOK, tr("town.details"), tr("town.details-description"))) {
+        grid.add(Icons.icon(
+            Material.WRITABLE_BOOK, tr("town.details"), tr("town.details-description"),
+            actions = hints("click.open")
+        )) {
             TownSettingsMenu(player, this).open()
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_SET_PERM,
-            Icons.icon(Material.IRON_DOOR, tr("common.permissions"), tr("town.permissions-description"))
+            Icons.icon(
+                Material.IRON_DOOR, tr("common.permissions"), tr("town.permissions-description"),
+                actions = hints("click.edit-permissions")
+            )
         ) {
             permissions().open()
         }
-        grid.add(Icons.icon(Material.TRIPWIRE_HOOK, tr("common.trusted"), tr("town.trusted-description"))) {
+        grid.add(Icons.icon(
+            Material.TRIPWIRE_HOOK, tr("common.trusted"), tr("town.trusted-description"),
+            actions = hints("click.view")
+        )) {
             TownTrustMenu(player, town, this).open()
         }
         grid.add(
@@ -125,7 +143,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                 Material.IRON_BARS,
                 tr("town.outlaws"),
                 tr("town.outlaws-description"),
-                tr("town.outlaws-count", "count" to town.outlaws.size)
+                tr("town.outlaws-count", "count" to town.outlaws.size),
+                actions = hints("click.view")
             )
         ) {
             OutlawsMenu(player, town, this).open()
@@ -135,7 +154,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                 PermissionNodes.TOWNY_COMMAND_TOWN_RECLAIM,
                 Icons.icon(
                     Material.MOSSY_STONE_BRICKS, tr("town.reclaim"), tr("town.reclaim-description"),
-                    *reclaimLines().toTypedArray()
+                    *reclaimLines().toTypedArray(),
+                    actions = hints("click.reclaim")
                 )
             ) {
                 run("towny:town reclaim", { town.isRuined })
@@ -146,7 +166,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                     Material.IRON_CHAIN,
                     tr("town.jail"),
                     tr("town.jail-description"),
-                    tr("town.jail-count", "count" to town.jailedPlayerCount)
+                    tr("town.jail-count", "count" to town.jailedPlayerCount),
+                    actions = hints("click.open")
                 )
             ) {
                 TownJailMenu(player, town, this).open()
@@ -155,7 +176,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
         grid.add(
             Icons.icon(
                 Material.ENDER_PEARL, tr("town.spawn"), tr("town.spawn-description"),
-                *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray()
+                *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray(),
+                actions = hints("click.teleport")
             )
         ) {
             runAndClose("towny:town spawn")
@@ -166,7 +188,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                     Material.COMPASS,
                     tr("town.outpost-teleport"),
                     tr("town.outpost-teleport-description"),
-                    *listOfNotNull(costLine(Prices.townSpawn(player, town, outpost = true))).toTypedArray()
+                    *listOfNotNull(costLine(Prices.townSpawn(player, town, outpost = true))).toTypedArray(),
+                    actions = hints("click.choose")
                 )
             ) {
                 OutpostsMenu(player, town, this).open()
@@ -179,7 +202,8 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
                 if (nation != null) tr(
                     "town.nation-open",
                     "nation" to TownyUtil.name(nation.name)
-                ) else tr("town.nation-none")
+                ) else tr("town.nation-none"),
+                actions = hints("click.open")
             )
         ) {
             if (town.hasNation()) NationMenu(player, this).open() else NoNationMenu(player, this).open()
@@ -188,14 +212,20 @@ class TownMenu(player: Player, back: Menu?) : Menu(player, player.tr("town.title
         if (viewer.isMayor) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_DELETE,
-                Icons.icon(Material.TNT, tr("town.delete"), tr("town.delete-description"))
+                Icons.icon(
+                    Material.TNT, tr("town.delete"), tr("town.delete-description"),
+                    actions = hints("click.delete")
+                )
             ) {
                 run("towny:town delete", { viewer.hasTown() }, returnTo = MainMenu(player))
             }
         } else {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_LEAVE,
-                Icons.icon(Material.OAK_DOOR, tr("town.leave"), tr("town.leave-description"))
+                Icons.icon(
+                    Material.OAK_DOOR, tr("town.leave"), tr("town.leave-description"),
+                    actions = hints("click.leave")
+                )
             ) {
                 run("towny:town leave", { viewer.hasTown() }, returnTo = MainMenu(player))
             }

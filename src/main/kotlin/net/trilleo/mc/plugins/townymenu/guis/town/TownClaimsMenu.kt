@@ -25,6 +25,7 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
 
         button(4, Icons.icon(Material.GRASS_BLOCK, tr("claims.info"), null, *buildList {
             add(tr("claims.claimed", "claims" to town.numTownBlocks, "max" to town.maxTownBlocksAsAString))
+            if (!town.hasUnlimitedClaims()) add(progressBar(town.numTownBlocks, town.maxTownBlocks))
             add(
                 tr(
                     "claims.available",
@@ -43,7 +44,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN,
             Icons.icon(
                 Material.GRASS_BLOCK, tr("claims.claim"), tr("claims.claim-description"),
-                *listOfNotNull(costLine(Prices.claim(town))).toTypedArray()
+                *listOfNotNull(costLine(Prices.claim(town))).toTypedArray(),
+                actions = hints("click.claim")
             )
         ) {
             run("towny:town claim", claims, delayTicks = CLAIM_DELAY)
@@ -52,7 +54,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_TOWN_MULTIPLE,
             Icons.icon(
                 Material.MOSS_BLOCK, tr("claims.claim-area"), tr("claims.claim-area-description"),
-                *perClaim(town)
+                *perClaim(town),
+                actions = hints("click.choose-radius")
             )
         ) {
             prompt(
@@ -67,7 +70,10 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_FILL,
-            Icons.icon(Material.BONE_MEAL, tr("claims.fill"), tr("claims.fill-description"), *perClaim(town))
+            Icons.icon(
+                Material.BONE_MEAL, tr("claims.fill"), tr("claims.fill-description"), *perClaim(town),
+                actions = hints("click.claim")
+            )
         ) {
             run("towny:town claim fill", claims, delayTicks = CLAIM_DELAY)
         }
@@ -76,7 +82,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
                 PermissionNodes.TOWNY_COMMAND_TOWN_CLAIM_OUTPOST,
                 Icons.icon(
                     Material.COMPASS, tr("claims.outpost"), tr("claims.outpost-description"),
-                    *listOfNotNull(costLine(Prices.outpost())).toTypedArray()
+                    *listOfNotNull(costLine(Prices.outpost())).toTypedArray(),
+                    actions = hints("click.claim")
                 )
             ) {
                 run("towny:town claim outpost", claims, delayTicks = CLAIM_DELAY)
@@ -84,13 +91,19 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
-            Icons.icon(Material.COARSE_DIRT, tr("claims.unclaim"), tr("claims.unclaim-description"), *perUnclaim())
+            Icons.icon(
+                Material.COARSE_DIRT, tr("claims.unclaim"), tr("claims.unclaim-description"), *perUnclaim(),
+                actions = hints("click.unclaim")
+            )
         ) {
             run("towny:town unclaim", claims, delayTicks = CLAIM_DELAY)
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM,
-            Icons.icon(Material.DIRT, tr("claims.unclaim-area"), tr("claims.unclaim-area-description"), *perUnclaim())
+            Icons.icon(
+                Material.DIRT, tr("claims.unclaim-area"), tr("claims.unclaim-area-description"), *perUnclaim(),
+                actions = hints("click.choose-radius")
+            )
         ) {
             prompt(tr("claims.unclaim-area-title"), tr("claims.radius"), initial = "1", maxLength = 3) { radius ->
                 run("towny:town unclaim rect ${TownyUtil.argument(radius)}", claims, delayTicks = CLAIM_DELAY)
@@ -99,7 +112,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_UNCLAIM_ALL,
             Icons.icon(
-                Material.LAVA_BUCKET, tr("claims.unclaim-all"), tr("claims.unclaim-all-description"), *perUnclaim()
+                Material.LAVA_BUCKET, tr("claims.unclaim-all"), tr("claims.unclaim-all-description"), *perUnclaim(),
+                actions = hints("click.unclaim")
             )
         ) {
             run("towny:town unclaim all", claims, delayTicks = CLAIM_DELAY)
@@ -109,7 +123,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
                 PermissionNodes.TOWNY_COMMAND_TOWN_BUY_BONUS,
                 Icons.icon(
                     Material.EMERALD_BLOCK, tr("claims.buy-bonus"), tr("claims.buy-bonus-description"),
-                    tr("claims.price-each", "price" to TownyUtil.money(town.bonusBlockCost))
+                    tr("claims.price-each", "price" to TownyUtil.money(town.bonusBlockCost)),
+                    actions = hints("click.buy")
                 )
             ) {
                 prompt(
@@ -124,7 +139,10 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWN_CEDE_PLOT,
-            Icons.icon(Material.OAK_BOAT, tr("claims.cede"), tr("claims.cede-description"))
+            Icons.icon(
+                Material.OAK_BOAT, tr("claims.cede"), tr("claims.cede-description"),
+                actions = hints("click.choose-town")
+            )
         ) {
             Pickers.town(this, tr("claims.cede-title"), { it != town }) { picked ->
                 run("towny:town cede plot ${picked.name}")
@@ -135,7 +153,8 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
                 PermissionNodes.TOWNY_COMMAND_TOWN_TAKEOVERCLAIM,
                 Icons.icon(
                     Material.IRON_SWORD, tr("claims.takeover"), tr("claims.takeover-description"),
-                    *listOfNotNull(costLine(TownySettings.getTakeoverClaimPrice())).toTypedArray()
+                    *listOfNotNull(costLine(TownySettings.getTakeoverClaimPrice())).toTypedArray(),
+                    actions = hints("click.take-over")
                 )
             ) {
                 run("towny:town takeoverclaim", claims, delayTicks = CLAIM_DELAY)
@@ -154,7 +173,10 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
         ) {
             run("towny:resident toggle townclaim", { resident?.hasMode("townclaim") })
         }
-        grid.add(Icons.icon(Material.FILLED_MAP, tr("main.map"), tr("common.map-description"))) {
+        grid.add(Icons.icon(
+            Material.FILLED_MAP, tr("main.map"), tr("common.map-description"),
+            actions = hints("click.open")
+        )) {
             MapMenu(player, this).open()
         }
 

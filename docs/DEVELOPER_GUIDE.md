@@ -287,6 +287,14 @@ permissions, bank, ranks, pickers) in `guis/common`, and feature menus in `guis/
 - **Lay every icon's lore out in the same blocks.** A tooltip reads name — description — data — actions. Everything an
   icon says about clicking goes in the `actions` argument of an `Icons` builder (or `loreActions` in the `itemStack`
   DSL), never among its data lines. Never hand-roll the spacing between blocks. See [Icons](#icons).
+- **Every clickable icon says what a click does.** Give it a hint from the shared `click.*` keys with `hints(...)`
+  (`actions = hints("click.open")`), or a menu-specific one when no shared hint fits. See
+  [Click hints](#click-hints).
+- **Show progress as a bar.** A "used of limit" or "towards the next level" figure gets a `progressBar(current, max)`
+  line under it, and none when the limit is zero or unlimited.
+- **Use the framework's chrome.** `backButton`, `pageArrow`, `tutorialButton`, and the black filler `render()` lays
+  down; never a hand-built arrow or pane. Lists of names in lore use `common.list-entry`, and even a selection marker
+  comes from a translation key rather than a colour tag in Kotlin.
 - **Keep an empty row above the bottom row.** The back button, tutorial button, and page controls sit in the bottom row;
   leave the row above it empty so they stand apart from the menu's content. Only grids that need every row, such as the
   chunk map and the 4×4 permission grid, skip it.
@@ -305,19 +313,24 @@ open inventory's holder — there is no registry and nothing to clean up when a 
 |:-----------------------------------------|:---------------------------------------------------------------------------------|
 | `build()`                                | Abstract. Place items and click actions. Called on every `render()`.             |
 | `open()`                                 | Renders and opens the menu, or re-renders in place if it is already open.        |
-| `render()`                               | Clears the inventory (grey filler) and calls `build()`.                          |
+| `render()`                               | Clears the inventory (black glass filler) and calls `build()`.                   |
 | `button(slot, item, action?)`            | Places an item; `action` receives the `ClickType`.                               |
 | `guarded(slot, node, item, action)`      | Like `button`, but shows a grey "no permission" icon without `node`.             |
 | `layout(vararg slots)`                   | Fills slots in order, for optional buttons; extra buttons are logged, skipped.   |
-| `backButton(slot)`                       | Back arrow to `back`, or a close button when `back` is `null`.                   |
+| `backButton(slot)`                       | "Go Back" arrow naming `back`'s title, or a close button when `back` is `null`.  |
+| `pageArrow(previous, target, pages)`     | A page-turning arrow naming the page it leads to, for menus that page by hand.   |
 | `tutorialButton(slot, chapter)`          | Help button opening the tutorial `Chapter` that explains this menu.              |
+| `list.cycle(current, click)`             | Next option on a left click, previous on a right; hint `click.next`/`previous`.  |
 | `costLine(amount)`                       | A `Cost: …` lore line, or `null` without an economy or when the action is free.  |
 | `priceLine(amount)`                      | A `Price: …` lore line for something on sale; a price of zero is still shown.    |
+| `progressBar(current, max)`              | A progress bar lore line with its percentage; a `max` of 0 or less reads full.   |
+| `hints(vararg keys)`                     | The translated click hints for `keys`, ready for an icon's `actions`.            |
 | `run(command, probe?, returnTo?, delay)` | Runs a Towny command as the player (see below).                                  |
 | `runAndClose(command)`                   | Closes the menu, then runs the command (teleports, books, chat output).          |
 | `prompt(title, label, …) { text -> }`    | Shows a text-input dialog; Cancel or empty input reopens the menu.               |
 | `tr(key, "name" to value, …)`            | Translates `key` into the viewer's language (see [Translations](#translations)). |
 | `resident`                               | The viewer's Towny `Resident`, or `null`.                                        |
+| `title`                                  | The translated title, which a child menu's back button names.                    |
 
 ### Running Commands: `MenuActions`
 
@@ -347,7 +360,7 @@ visible page are built:
 ```kotlin
 override fun entries(): List<MenuEntry> =
     town.residents.map { member ->
-        MenuEntry({ Icons.resident(player, member, actions = listOf(tr("common.click-view"))) }) {
+        MenuEntry({ Icons.resident(player, member, actions = hints("click.view")) }) {
             ResidentProfileMenu(player, member, this).open()
         }
     }
@@ -453,13 +466,13 @@ place beside the others:
 | **Name**        | `name`                  | What the button is, one translated line.                       |
 | **Description** | `description` (wrapped) | What it does, a sentence or two; `null` when the name says it. |
 | **Data**        | the `extra` varargs     | Current values, counts, and the `costLine` / `priceLine` line. |
-| **Actions**     | `actions = listOf(...)` | What a left- or right-click does, and nothing else.            |
+| **Actions**     | `actions = hints(...)`  | What a left- or right-click does, and nothing else.            |
 
 ```kotlin
 Icons.icon(
     Material.ENDER_PEARL, tr("town.spawn"), tr("town.spawn-description"),
     *listOfNotNull(costLine(Prices.townSpawn(player, town))).toTypedArray(),
-    actions = listOf(tr("common.click-teleport"))
+    actions = hints("click.teleport")
 )
 ```
 
@@ -470,11 +483,20 @@ Teleport to your town's spawn point.   <- description
                                        <- added for you
 Cost: $25                              <- extra
 ------------------------------         <- added for you
-Click to teleport                      <- actions
+Click to teleport!                     <- actions
 ```
 
 `toggle`, `resident`, `town`, and `nation` follow the same order and take the same `actions` argument; they fill the
-data block themselves from Towny and put the caller's extra lines in a block of their own below it.
+data block themselves from Towny and put the caller's extra lines in a block of their own below it. `toggle` writes its
+own hint: its status line reads `ENABLED` or `DISABLED`, and the hint says what a click switches it to.
+
+#### Click hints
+
+Click hints follow Hypixel SkyBlock's style: a short sentence ending in `!`, coloured by the mouse button — yellow for a
+click or left-click, aqua for a right-click, red when the click deletes, removes, or gives something up. The shared
+hints live under `click.*` (`click.open`, `click.view`, `click.teleport`, `click.edit` + `click.clear`, `click.delete`,
+…); `hints("click.edit", "click.clear")` turns keys into the list `actions` expects. A button with a left and a right
+action lists both, left first. Menu-specific hints (`invites.left-accept`) follow the same colours.
 
 Two rules keep new icons in line with the rest:
 
@@ -575,13 +597,34 @@ bank:
   deposit-description: "Move money from your balance into the bank."
 ```
 
-- **Colours go in the translation**, so translators see the whole line.
+- **Colours go in the translation**, so translators see the whole line. Follow the palette below.
 - **Placeholders are inserted verbatim.** Escape player-written text with `TownyUtil.name()` / `TownyUtil.text()`.
 - **Group keys by menu** (`town-details.*`) and reuse `common.*`, `icon.*`, and `toggle.*` for shared text.
 - **Write keys as whole string literals.** `tr(if (held) "rank.assigned" else "rank.not-assigned")` is fine;
   `tr("rank.$state")` is not, because the test below cannot see it. `plot-type.*` and `command.*` are the only
   runtime-built keys (read with `Lang.find`, which returns `null` instead of the key).
 - **Quote YAML keys that YAML 1.1 reads as booleans**: `"on"`, `"off"`, `"yes"`, `"no"`.
+
+### Colour Palette
+
+Every language file uses one palette, so the same kind of text looks the same in every menu. The header of `en_US.yml`
+repeats it for server owners.
+
+| Colour           | Used for                                                                  |
+|:-----------------|:--------------------------------------------------------------------------|
+| `<gray>`         | Labels (`Balance:`) and descriptions.                                     |
+| `<white>`        | Neutral values: player names, locations, plot types, free text.           |
+| `<gold>`         | Money and prices, town names, leadership (mayor, capital, home block).    |
+| `<aqua>`         | Nation names and nation-wide things (nation zone).                        |
+| `<green>`        | Counts, land and plots, allies, friends, trust, "on".                     |
+| `<yellow>`       | Dates and times, menu and button names mentioned in text, click hints.    |
+| `<light_purple>` | Spawns, outposts, and teleports.                                          |
+| `<red>`          | Danger: PvP, enemies, outlaws, jail, debt, ruins, anything permanent.     |
+
+A description stays grey and picks out one to three key terms in their colour, closing each tag so the grey resumes:
+`"Teleport to your town <light_purple>spawn</light_purple>."`. A value line colours only the value:
+`"<gray>Balance: <gold>{balance}"`, and a ratio greys its slash: `"<green>{claims}<gray>/<green>{max}"`. Lists use
+`common.list-entry` (`• name`) and progress uses `Menu.progressBar`.
 
 ### LangFilesTest
 

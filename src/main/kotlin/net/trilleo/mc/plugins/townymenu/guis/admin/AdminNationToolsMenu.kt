@@ -33,7 +33,8 @@ class AdminNationToolsMenu(player: Player, private val nation: Nation, back: Men
             Icons.icon(
                 Material.EXPERIENCE_BOTTLE, tr("admin-nation-tools.level"),
                 tr("admin-nation-tools.level-description"),
-                tr("common.current", "value" to nation.levelNumber)
+                tr("common.current", "value" to nation.levelNumber),
+                actions = hints("click.set")
             )
         ) {
             prompt(
@@ -50,7 +51,7 @@ class AdminNationToolsMenu(player: Player, private val nation: Nation, back: Men
             Icons.icon(
                 Material.STRUCTURE_VOID, tr("admin-nation-tools.merge"),
                 tr("admin-nation-tools.merge-description", "nation" to TownyUtil.name(nation.name)),
-                tr("admin-town-tools.merge-force")
+                actions = hints("click.choose-nation", "admin-town-tools.merge-force")
             )
         ) { click ->
             val force = click.isRightClick
@@ -62,7 +63,8 @@ class AdminNationToolsMenu(player: Player, private val nation: Nation, back: Men
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_TRANSFER,
             Icons.icon(
                 Material.BELL, tr("admin-nation-tools.transfer"),
-                tr("admin-nation-tools.transfer-description", "nation" to TownyUtil.name(nation.name))
+                tr("admin-nation-tools.transfer-description", "nation" to TownyUtil.name(nation.name)),
+                actions = hints("click.choose-town")
             )
         ) {
             Pickers.town(this, tr("admin-nation-tools.transfer-title"), { !nation.hasTown(it) }) { town ->
@@ -73,7 +75,8 @@ class AdminNationToolsMenu(player: Player, private val nation: Nation, back: Men
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_RECHECK,
             Icons.icon(
                 Material.RECOVERY_COMPASS, tr("admin-nation-tools.recheck"),
-                tr("admin-nation-tools.recheck-description")
+                tr("admin-nation-tools.recheck-description"),
+                actions = hints("click.run")
             )
         ) {
             runAndClose("$command recheck")
@@ -82,7 +85,8 @@ class AdminNationToolsMenu(player: Player, private val nation: Nation, back: Men
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_SANCTIONTOWN,
             Icons.icon(
                 Material.RED_BANNER, tr("nation-towns.sanctions"), tr("admin-nation-tools.sanctions-description"),
-                tr("nation-towns.sanctions-count", "count" to nation.sanctionedTowns.size)
+                tr("nation-towns.sanctions-count", "count" to nation.sanctionedTowns.size),
+                actions = hints("click.view")
             )
         ) {
             AdminNamesMenu(
@@ -93,7 +97,10 @@ class AdminNationToolsMenu(player: Player, private val nation: Nation, back: Men
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_TOWNYADMIN_NATION_RANK,
-            Icons.icon(Material.NAME_TAG, tr("admin-nation-tools.ranks"), tr("admin-nation-tools.ranks-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("admin-nation-tools.ranks"), tr("admin-nation-tools.ranks-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             lateinit var list: Menu
             list = ListMenu(player, tr("admin-town-tools.ranks-title"), this) { menu ->

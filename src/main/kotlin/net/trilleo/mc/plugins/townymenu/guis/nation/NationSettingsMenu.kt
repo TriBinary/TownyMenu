@@ -31,7 +31,8 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 tr("nation-details.rename"),
                 null,
                 tr("common.current", "value" to TownyUtil.name(nation.name)),
-                *listOfNotNull(costLine(TownySettings.getNationRenameCost())).toTypedArray()
+                *listOfNotNull(costLine(TownySettings.getNationRenameCost())).toTypedArray(),
+                actions = hints("click.rename")
             )
         ) {
             prompt(tr("nation-details.rename-title"), tr("common.new-name"), initial = nation.name) { name ->
@@ -40,7 +41,10 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_NATION_SET_BOARD,
-            Icons.icon(Material.OAK_SIGN, tr("nation-details.board"), tr("town-details.board-description"))
+            Icons.icon(
+                Material.OAK_SIGN, tr("nation-details.board"), tr("town-details.board-description"),
+                actions = hints("click.edit", "click.clear")
+            )
         ) { click ->
             if (click.isRightClick) {
                 run("towny:nation set board none", { nation.board })
@@ -62,7 +66,8 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 Material.PAPER,
                 tr("nation-details.tag"),
                 tr("common.tag-description"),
-                tr("common.current", "value" to TownyUtil.text(nation.tag))
+                tr("common.current", "value" to TownyUtil.text(nation.tag)),
+                actions = hints("click.set")
             )
         ) {
             prompt(tr("nation-details.tag-title"), tr("common.tag"), initial = nation.tag, maxLength = 16) { tag ->
@@ -75,7 +80,8 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 Material.LIGHT_BLUE_DYE,
                 tr("nation-details.map-color"),
                 tr("nation-details.map-color-description"),
-                *listOfNotNull(costLine(TownySettings.getNationSetMapColourCost())).toTypedArray()
+                *listOfNotNull(costLine(TownySettings.getNationSetMapColourCost())).toTypedArray(),
+                actions = hints("click.choose")
             )
         ) {
             val colors = TownySettings.getNationColorsMap().keys.sorted().map { it to "<white>${TownyUtil.name(it)}" }
@@ -88,7 +94,8 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
             Icons.icon(
                 Material.GOLDEN_HELMET, tr("nation-details.capital"), null,
                 tr("common.current", "value" to (nation.capital?.let { TownyUtil.name(it.name) } ?: "-")),
-                *listOfNotNull(costLine(TownySettings.getNationCapitalChangeCost())).toTypedArray()
+                *listOfNotNull(costLine(TownySettings.getNationCapitalChangeCost())).toTypedArray(),
+                actions = hints("click.choose-town")
             )
         ) {
             ListMenu(player, tr("nation-details.capital-title"), this) {
@@ -103,7 +110,9 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
             PermissionNodes.TOWNY_COMMAND_NATION_SET_KING,
             Icons.icon(
                 Material.PLAYER_HEAD, tr("nation-details.leader"), tr("nation-details.leader-description"),
-                tr("common.current", "value" to (nation.king?.let { TownyUtil.name(it.name) } ?: "-")))) {
+                tr("common.current", "value" to (nation.king?.let { TownyUtil.name(it.name) } ?: "-")),
+                actions = hints("click.choose-player")
+            )) {
             ListMenu(player, tr("nation-details.leader-title"), this) {
                 nation.capital?.residents.orEmpty().filter { !it.isKing }.sortedBy { it.name.lowercase() }
                     .map { candidate ->
@@ -120,7 +129,10 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
         }
         grid.add(
             PermissionNodes.TOWNY_COMMAND_NATION_SET_SPAWN,
-            Icons.icon(Material.RESPAWN_ANCHOR, tr("common.set-spawn"), tr("nation-details.set-spawn-description"))
+            Icons.icon(
+                Material.RESPAWN_ANCHOR, tr("common.set-spawn"), tr("nation-details.set-spawn-description"),
+                actions = hints("click.set-here")
+            )
         ) {
             run("towny:nation set spawn", { runCatching { nation.spawn }.getOrNull() })
         }
@@ -171,7 +183,7 @@ class NationSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("n
                 "<gold>$label",
                 null,
                 tr("common.current", "value" to current),
-                actions = listOf(tr("common.click-change"))
+                actions = listOf(tr("click.change"))
             )
         ) {
             prompt(label, tr("common.amount"), initial = read().toString()) { amount ->

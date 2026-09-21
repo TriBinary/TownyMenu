@@ -27,10 +27,10 @@ import net.trilleo.mc.plugins.townymenu.utils.itemStack
 
 val icon = itemStack(Material.EMERALD) {
     name("<green>Deposit")
-    loreWrapped("<gray>Move money from your balance into the town bank.")
+    loreWrapped("<gray>Move <gold>money</gold> from your balance into the town bank.")
     loreBreak()
-    lore("<gray>Balance: <white>$120")
-    loreActions(listOf("<yellow>Click to deposit"))
+    lore("<gray>Balance: <gold>$120")
+    loreActions(listOf("<yellow>Click to deposit!"))
     glow(true)
 }
 ```
@@ -334,7 +334,7 @@ import net.trilleo.mc.plugins.townymenu.utils.itemStack
 val item = itemStack(Material.BELL) {
     name("<gold>Town Settings")
     loreWrapped("<gray>PvP, mobs, fire, explosions, and whether the town is open to new residents.")
-    loreActions(listOf("<yellow>Click to open"))
+    loreActions(listOf("<yellow>Click to open!"))
 }
 ```
 

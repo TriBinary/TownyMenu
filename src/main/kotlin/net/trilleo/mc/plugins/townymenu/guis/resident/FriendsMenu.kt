@@ -34,7 +34,10 @@ class FriendsMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("fri
 
     override fun controls() {
         tutorialButton(52, Tutorial.PROTECTION)
-        button(47, Icons.icon(Material.PLAYER_HEAD, tr("friends.add-online"), tr("friends.add-online-description"))) {
+        button(47, Icons.icon(
+            Material.PLAYER_HEAD, tr("friends.add-online"), tr("friends.add-online-description"),
+            actions = hints("click.choose-player")
+        )) {
             Pickers.resident(
                 this,
                 tr("friends.add-title"),
@@ -42,7 +45,10 @@ class FriendsMenu(player: Player, back: Menu) : PagedMenu(player, player.tr("fri
                 run("towny:resident friend add ${picked.name}", ::friendNames)
             }.open()
         }
-        button(51, Icons.icon(Material.NAME_TAG, tr("friends.add-name"), tr("friends.add-name-description"))) {
+        button(51, Icons.icon(
+            Material.NAME_TAG, tr("friends.add-name"), tr("friends.add-name-description"),
+            actions = hints("click.type-name")
+        )) {
             prompt(tr("friends.add-title"), tr("common.player-name")) { name ->
                 run("towny:resident friend add ${TownyUtil.argument(name)}", ::friendNames)
             }

@@ -29,7 +29,7 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
             .map { town ->
                 val lines = listOfNotNull(if (nation.isCapital(town)) tr("nation-towns.capital") else null)
                 val actions = listOfNotNull(
-                    tr("common.left-details"),
+                    tr("click.left-details"),
                     if (canKick && !nation.isCapital(town)) tr("nation-towns.right-remove") else null
                 )
                 MenuEntry({ Icons.town(player, town, *lines.toTypedArray(), actions = actions) }) { click ->
@@ -48,7 +48,10 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
         val sent = { nation.sentInvites.size }
         guarded(
             47, PermissionNodes.TOWNY_COMMAND_NATION_INVITE_ADD,
-            Icons.icon(Material.BELL, tr("nation-towns.invite"), tr("nation-towns.invite-description"))
+            Icons.icon(
+                Material.BELL, tr("nation-towns.invite"), tr("nation-towns.invite-description"),
+                actions = hints("click.choose-town")
+            )
         ) {
             Pickers.town(this, tr("nation-towns.invite-title"), { !it.hasNation() }) { picked ->
                 run("towny:nation add ${picked.name}", sent)
@@ -57,7 +60,8 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
         button(
             48, Icons.icon(
                 Material.RED_BANNER, tr("nation-towns.sanctions"), tr("nation-towns.sanctions-description"),
-                tr("nation-towns.sanctions-count", "count" to nation.sanctionedTowns.size)
+                tr("nation-towns.sanctions-count", "count" to nation.sanctionedTowns.size),
+                actions = hints("click.view")
             )
         ) {
             NationSanctionsMenu(player, nation, this).open()
@@ -67,7 +71,8 @@ class NationTownsMenu(player: Player, private val nation: Nation, back: Menu) :
             51, Icons.icon(
                 Material.PAPER, tr("common.sent-invites"), null,
                 tr("common.pending", "count" to pending.size), "",
-                *pending.take(10).map { "<gray>- <white>${TownyUtil.name(it.receiver.name)}" }.toTypedArray()
+                *pending.take(10)
+                    .map { tr("common.list-entry", "entry" to TownyUtil.name(it.receiver.name)) }.toTypedArray()
             )
         )
     }

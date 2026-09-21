@@ -23,7 +23,7 @@ class OutpostsMenu(player: Player, private val town: Town, back: Menu) :
                     tr("outposts.world", "world" to (location.world?.name ?: "-")),
                     tr("outposts.location", "x" to location.blockX, "y" to location.blockY, "z" to location.blockZ),
                     *listOfNotNull(cost).toTypedArray(),
-                    actions = listOf(tr("common.click-teleport"))
+                    actions = listOf(tr("click.teleport"))
                 )
             }
             MenuEntry(icon) { runAndClose("towny:town outpost ${index + 1}") }

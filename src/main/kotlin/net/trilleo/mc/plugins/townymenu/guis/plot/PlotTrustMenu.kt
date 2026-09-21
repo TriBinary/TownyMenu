@@ -37,7 +37,7 @@ class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) :
 
     override fun entries(): List<MenuEntry> =
         trusted().sortedBy { it.name.lowercase() }.map { trusted ->
-            MenuEntry({ Icons.resident(player, trusted, actions = listOf(tr("common.click-untrust"))) }) {
+            MenuEntry({ Icons.resident(player, trusted, actions = listOf(tr("click.untrust"))) }) {
                 run("$command remove ${trusted.name}", ::count)
             }
         }
@@ -46,7 +46,10 @@ class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) :
         tutorialButton(52, Tutorial.PLOTS)
         guarded(
             47, node,
-            Icons.icon(Material.PLAYER_HEAD, tr("common.trust-online"), tr("plot-trust.trust-online-description"))
+            Icons.icon(
+                Material.PLAYER_HEAD, tr("common.trust-online"), tr("plot-trust.trust-online-description"),
+                actions = hints("click.choose-player")
+            )
         ) {
             Pickers.resident(this, tr("plot-trust.trust-title"), { it !in trusted() }) { picked ->
                 run("$command add ${picked.name}", ::count)
@@ -54,7 +57,10 @@ class PlotTrustMenu(player: Player, private val plot: TownBlock, back: Menu) :
         }
         guarded(
             48, node,
-            Icons.icon(Material.NAME_TAG, tr("common.trust-name"), tr("common.trust-name-description"))
+            Icons.icon(
+                Material.NAME_TAG, tr("common.trust-name"), tr("common.trust-name-description"),
+                actions = hints("click.type-name")
+            )
         ) {
             prompt(
                 tr("plot-trust.trust-title"),

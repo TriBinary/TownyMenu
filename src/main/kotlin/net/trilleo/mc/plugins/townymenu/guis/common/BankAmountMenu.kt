@@ -70,7 +70,7 @@ class BankAmountMenu(
         row.add(
             Icons.icon(
                 Material.NAME_TAG, tr("bank.custom"), tr("bank.custom-description"),
-                actions = listOf(tr("common.click-change"))
+                actions = hints("click.type-amount")
             )
         ) {
             prompt(
