@@ -119,7 +119,11 @@ putting them into a MiniMessage string — otherwise a town named `<click:run_co
 | `onOff(Player, Boolean)`   | A coloured On / Off label in the player's language                    |
 | `yesNo(Player, Boolean)`   | A coloured Yes / No label in the player's language                    |
 | `plotType(Player, String)` | A plot type in the player's language (`plot-type.*`), or the raw name |
+| `relation(Resident?, Town)` | A town's `Relation` to the viewer: `TOWN`, `NATION`, `ALLY`, `ENEMY`, `OTHER` |
 | `economy`                  | `true` when Towny's economy is active                                 |
+
+`relation` is what colours a town on the map and its borders in border view, so both always agree; use it for any
+new view that colours towns by how they stand towards the viewer.
 
 ### Permissions and Input
 

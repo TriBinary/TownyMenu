@@ -34,6 +34,13 @@ command:
   invites:
     description: "Answer town, nation, and alliance invitations"
     players-only: "<red>Only players can open the invites menu."
+  borders:
+    description: "Show town and nation borders as particles"
+    players-only: "<red>Only players can see border particles."
+    unavailable: "<red>Border view is turned off on this server."
+    usage: "<gray>Usage: <white>/townymenu borders [on|off|toggle]"
+    "on": "<gray>Border view <green>enabled</green>. Walk near a border to see it."
+    "off": "<gray>Border view <red>disabled</red>."
   category:
     general: "General"
     info: "Info"
@@ -264,6 +271,22 @@ map:
   for-sale: "<green>For sale: <gold>{price}"
   click-town: "<yellow>Click to view the town!"
   right-buy: "<aqua>Right-click to buy this plot!"
+  border-view: "<green>Border View"
+  border-view-description: "See town and nation borders as coloured particles when you walk near them."
+
+border-view:
+  title: "Border View"
+  show: "<green>Show Borders"
+  show-description: "Draw a short wall of particles on town and nation borders when you come near one. Only you can see them."
+  plots: "<yellow>Your Plot Borders"
+  plots-description: "Also outline the <green>plots</green> you own inside a town."
+  range: "<aqua>Range"
+  range-description: "How close you need to be to a border before it appears."
+  range-current: "<gray>Range: <green>{range} blocks"
+  legend-description: "Each side of a border is drawn in the colour of the town it belongs to."
+  legend-nation-border: "<gray>Taller, thicker walls mark a <aqua>nation</aqua> border."
+  unavailable: "<red>Border View Unavailable"
+  unavailable-description: "The server has turned border view off."
 
 invites:
   title: "Invites"
@@ -1286,6 +1309,11 @@ admin-plugin:
   bank-amounts: "<gold>Bank Amounts"
   bank-amounts-description: "The preset amounts the deposit and withdraw menus offer. Players always get an Everything button and a custom amount too."
   bank-amounts-label: "Amounts, separated by commas"
+  border-view: "<green>Border View"
+  border-view-description: "Let players turn on particle borders for the towns and nations near them."
+  border-range: "<aqua>Border View Range"
+  border-range-description: "The farthest a player can set border view to. Larger ranges draw more particles."
+  border-range-label: "Range in blocks (1-64)"
 
 admin-town:
   title: "Admin: {town}"
@@ -1704,6 +1732,8 @@ tutorial:
     others-body: "Click any resident in a town, nation, or <green>friends</green> list to view their profile. From there you can add them as a friend, and <gold>mayors</gold> can invite, <green>trust</green>, rank, or kick them."
     display: "Borders, Titles, and the Info Tool"
     display-body: "<yellow>Personal settings</yellow> change what you see while exploring: a title when you cross into a town, particle borders around <green>plots</green> and towns, a chat map in every new <green>chunk</green>, and an info tool that shows who owns a block. <yellow>Display Modes</yellow> in your profile turns every mode off at once, or restores the server's defaults."
+    border-view: "Border View"
+    border-view-body: "<yellow>Border View</yellow>, on the map or with /townymenu borders, draws a short wall of particles along every border near you, coloured like the map: your town, your nation, <green>allies</green>, <red>enemies</red>, and other towns each get their own colour. <aqua>Nation</aqua> borders are taller and thicker, and the plots you own get a low yellow line."
     spawn: "Spawning"
     spawn-body: "<yellow>Go to Spawn</yellow> teleports you to your town <light_purple>spawn</light_purple>, or to your bed while Bed Spawn is on. Spawning may cost <gold>money</gold> and have a cooldown, depending on the server."
     standing: "Plots, Taxes, and Standing"

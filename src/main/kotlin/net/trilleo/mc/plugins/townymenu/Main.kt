@@ -1,5 +1,6 @@
 package net.trilleo.mc.plugins.townymenu
 
+import net.trilleo.mc.plugins.townymenu.borders.BorderParticles
 import net.trilleo.mc.plugins.townymenu.config.PluginConfig
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.registration.CommandRegistrar
@@ -23,6 +24,7 @@ class Main : JavaPlugin() {
         CommandRegistrar.registerAll(this)
         PermissionRegistrar.registerAll(this)
         ListenerRegistrar.registerAll(this)
+        BorderParticles.start(this)
     }
 
     /** Re-reads `config.yml` and the language files, applying the message prefix and language. */

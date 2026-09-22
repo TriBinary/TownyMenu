@@ -34,6 +34,9 @@
   bypass, and more), and clearing or resetting all modes at once.
 - **Map** — A 9×5 chunk map around you, coloured by your town, your plots, your nation, allies, and enemies, with plots
   for sale highlighted; right-click one to buy it.
+- **Border view** — Turn it on and a short wall of particles appears on every town and nation border you walk near,
+  coloured like the map: your town, your nation, allies, enemies, and other towns. Nation borders stand taller, your
+  own plots can be outlined too, and you pick how close a border must be before it shows. Only you see the particles.
 - **Status pages** — Click your town or nation to see its level, what the next level needs, its limits, the daily
   upkeep, and warnings for debt, ruins, conquest, and overclaiming.
 - **Leaderboards and prices** — Rank towns, nations, and players by residents, land, and money, and see every price on
@@ -89,6 +92,7 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `/tm help`     | List all available commands                         |
 | `/tm tutorial` | Open the tutorial                                   |
 | `/tm invites`  | Answer town, nation, and alliance invitations       |
+| `/tm borders`  | Open border view, or `on` / `off` / `toggle` it     |
 | `/tm reload`   | Reload the configuration and translations (OP only) |
 | `/tm admin`    | Open the admin menu (OP only)                       |
 
@@ -103,6 +107,8 @@ All commands are sub-commands of `/townymenu` (alias `/tm`).
 | `live-menu-refresh`        | `true`                 | Update open menus when Towny changes what they show                                           |
 | `towny-alerts`             | `true`                 | Announce invites, bankruptcy, and ruin in chat, linked to the right menu                      |
 | `bank-amounts`             | `10, 100, 1000, 10000` | Preset amounts the deposit and withdraw menus offer, alongside Everything and a custom amount |
+| `border-view`              | `true`                 | Let players turn on particle borders for nearby towns and nations                             |
+| `border-view-max-range`    | `16`                   | The farthest, in blocks (1–64), a player may set border view to                               |
 
 ## Translations
 

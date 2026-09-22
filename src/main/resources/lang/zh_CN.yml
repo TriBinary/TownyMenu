@@ -33,6 +33,13 @@ command:
   invites:
     description: "处理城镇、国家与结盟邀请"
     players-only: "<red>只有玩家可以打开邀请菜单。"
+  borders:
+    description: "以粒子显示城镇和国家边界"
+    players-only: "<red>只有玩家可以查看边界粒子。"
+    unavailable: "<red>本服务器已关闭边界显示。"
+    usage: "<gray>用法: <white>/townymenu borders [on|off|toggle]"
+    "on": "<gray>边界显示已<green>开启</green>。靠近边界即可看到。"
+    "off": "<gray>边界显示已<red>关闭</red>。"
   category:
     general: "通用"
     info: "信息"
@@ -263,6 +270,22 @@ map:
   for-sale: "<green>出售中: <gold>{price}"
   click-town: "<yellow>点击查看城镇！"
   right-buy: "<aqua>右键购买此地块！"
+  border-view: "<green>边界显示"
+  border-view-description: "靠近城镇和国家边界时，以彩色粒子显示它们。"
+
+border-view:
+  title: "边界显示"
+  show: "<green>显示边界"
+  show-description: "靠近城镇或国家边界时，在边界上显示一小段粒子墙。只有你能看到。"
+  plots: "<yellow>你的地块边界"
+  plots-description: "同时勾勒出你在城镇中拥有的<green>地块</green>。"
+  range: "<aqua>范围"
+  range-description: "你需要离边界多近，边界才会显示。"
+  range-current: "<gray>范围: <green>{range} 格"
+  legend-description: "边界的每一侧都以其所属城镇的颜色显示。"
+  legend-nation-border: "<gray>更高更粗的粒子墙表示<aqua>国家</aqua>边界。"
+  unavailable: "<red>边界显示不可用"
+  unavailable-description: "服务器已关闭边界显示。"
 
 invites:
   title: "邀请"
@@ -1285,6 +1308,11 @@ admin-plugin:
   bank-amounts: "<gold>银行预设金额"
   bank-amounts-description: "存款和取款菜单提供的预设金额。玩家始终还能使用<yellow>“全部”</yellow>按钮和自定义金额。"
   bank-amounts-label: "金额，用逗号分隔"
+  border-view: "<green>边界显示"
+  border-view-description: "允许玩家为附近的城镇和国家开启粒子边界。"
+  border-range: "<aqua>边界显示范围"
+  border-range-description: "玩家可设置的最大边界显示范围。范围越大，绘制的粒子越多。"
+  border-range-label: "范围（格，1-64）"
 
 admin-town:
   title: "管理: {town}"
@@ -1703,6 +1731,8 @@ tutorial:
     others-body: "在城镇、国家或<green>好友</green>列表中点击任意居民即可查看其资料。你可以在那里添加好友，<gold>镇长</gold>还可以邀请、信任、授予职位或踢出对方。"
     display: "边界、标题与信息工具"
     display-body: "<yellow>个人设置</yellow>会改变你探索时看到的内容：进入城镇时的标题、地块和城镇周围的粒子边界、进入新<green>区块</green>时的聊天地图，以及显示方块归属的信息工具。个人资料中的<yellow>“显示模式”</yellow>可以一次关闭所有模式，或恢复服务器默认设置。"
+    border-view: "边界显示"
+    border-view-body: "<yellow>边界显示</yellow>位于地图菜单中，也可使用 /townymenu borders 打开。它会在你附近的每条边界上显示一小段粒子墙，颜色与地图一致：你的城镇、你的国家、<green>盟友</green>、<red>敌人</red>和其他城镇各有各的颜色。<aqua>国家</aqua>边界更高更粗，你拥有的地块则显示一条低矮的黄线。"
     spawn: "出生点"
     spawn-body: "前往<light_purple>出生点</light_purple>会把你<light_purple>传送</light_purple>到城镇出生点；开启床出生点时则传送到你的床。视服务器设置而定，传送可能需要费用并有冷却时间。"
     standing: "地块、税款与处境"

@@ -51,6 +51,23 @@ object TownyUtil {
     fun about(resident: Resident): String? =
         resident.about.takeUnless { it.isNullOrBlank() || it == TownySettings.getDefaultResidentAbout() }
 
+    /** How a town stands towards a viewer, which picks its colour on the map and in border view. */
+    enum class Relation { TOWN, NATION, ALLY, ENEMY, OTHER }
+
+    /** [town]'s [Relation] to [viewer]: their own town, a town of their nation, an ally, an enemy, or neither. */
+    fun relation(viewer: Resident?, town: Town): Relation {
+        val nation = town.nationOrNull
+        val viewerNation = viewer?.nationOrNull
+        return when {
+            viewer != null && town == viewer.townOrNull -> Relation.TOWN
+            viewerNation == null || nation == null -> Relation.OTHER
+            nation == viewerNation -> Relation.NATION
+            viewerNation.hasAlly(nation) -> Relation.ALLY
+            viewerNation.hasEnemy(nation) -> Relation.ENEMY
+            else -> Relation.OTHER
+        }
+    }
+
     /** Formats [amount] with the server economy's currency, or `-` when no economy is active. */
     fun money(amount: Double): String =
         if (TownyEconomyHandler.isActive()) text(TownyEconomyHandler.getFormattedBalance(amount)) else "-"

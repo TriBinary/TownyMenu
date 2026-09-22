@@ -67,6 +67,7 @@ accepted, before `startServer` works. The server console reads commands from the
 ```
 src/main/kotlin/net/trilleo/mc/plugins/townymenu/
 ├── Main.kt                  # Plugin entry point (Main.instance)
+├── borders/                 # Border view: per-player settings (BorderView) and the particle task (BorderParticles)
 ├── commands/                # Sub-commands (auto-registered)
 │   ├── info/
 │   └── moderation/
@@ -77,7 +78,7 @@ src/main/kotlin/net/trilleo/mc/plugins/townymenu/
 │   ├── admin/               # Admin menus (/tm admin): Towny config editor, worlds, server, towns, nations
 │   ├── town/  nation/  plot/  resident/
 │   ├── tutorial/            # Tutorial hub, chapter menu, and all lesson content (Tutorial.kt)
-│   └── MainMenu.kt, MapMenu.kt, InvitesMenu.kt
+│   └── MainMenu.kt, MapMenu.kt, BorderViewMenu.kt, InvitesMenu.kt
 ├── listeners/               # Event listeners (auto-registered)
 ├── registration/            # Auto-registration engine (do not modify lightly)
 └── utils/                   # itemStack DSL, Lang, TownyUtil, Prices, TownyConfig, DialogUtil, MessageUtil, LoreUtil

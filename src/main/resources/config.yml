@@ -24,6 +24,13 @@ live-menu-refresh: true
 # alliance, or a town goes bankrupt or falls into ruin. Each message opens the menu that answers it.
 towny-alerts: true
 
+# Let players see town and nation borders as particles (/townymenu borders, or Border View in the map menu).
+# Each player turns it on for themselves; nearby borders are drawn in the colour of that town's relation to them.
+border-view: true
+
+# The farthest, in blocks, a player may pick for border view. Larger values draw more particles.
+border-view-max-range: 16
+
 # The preset amounts offered by the deposit and withdraw menus, in the server's currency.
 # Every player also gets an "All" button and a custom-amount dialog, so this list is only a shortcut.
 # Towny takes whole numbers only; up to nine amounts fit in the menu row.
