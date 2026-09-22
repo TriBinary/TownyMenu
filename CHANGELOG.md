@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.1.1
+
 ### New Features
 
 #### Border View
