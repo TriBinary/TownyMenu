@@ -7,6 +7,7 @@ import com.palmergames.bukkit.towny.`object`.Resident
 import com.palmergames.bukkit.towny.`object`.Town
 import com.palmergames.bukkit.towny.`object`.TownyPermission
 import net.trilleo.mc.plugins.townymenu.Main
+import net.trilleo.mc.plugins.townymenu.borders.BorderView
 import net.trilleo.mc.plugins.townymenu.guis.*
 import net.trilleo.mc.plugins.townymenu.guis.common.BankMenu
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
@@ -734,6 +735,12 @@ object Tutorial {
             Lesson(
                 "profile/display", Material.GLOWSTONE_DUST, "tutorial.profile.display", "tutorial.profile.display-body",
                 always { player, back -> ResidentMenu(player, back).toggles() }),
+            Lesson(
+                "profile/border-view", Material.ENDER_EYE, "tutorial.profile.border-view",
+                "tutorial.profile.border-view-body",
+                always { player, back -> BorderViewMenu(player, back) },
+                visible = { BorderView.available },
+            ),
             Lesson(
                 "profile/spawn", Material.RED_BED, "tutorial.profile.spawn", "tutorial.profile.spawn-body",
                 always { player, back -> ResidentMenu(player, back) }),

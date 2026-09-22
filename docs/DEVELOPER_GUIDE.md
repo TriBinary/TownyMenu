@@ -420,6 +420,20 @@ and keep the handler a one-liner. Players can turn this off with `live-menu-refr
 `TownyAlertListener` sends the chat alerts for invitations, bankruptcy, and ruin, each linking to the menu that answers
 it (`towny-alerts`).
 
+### Border View (`borders`)
+
+Border view draws particle walls on claim borders near players who turn it on (`BorderViewMenu`, opened from the map
+or `/townymenu borders`).
+
+- `BorderView` holds each player's settings in their persistent data — on/off, whether their own plots are outlined,
+  and the range — and `available`, the server-wide `border-view` switch. `ranges` lists the distances a player may pick,
+  capped by `border-view-max-range`.
+- `BorderParticles.start` (called from `Main.onEnable`) runs a task every 10 ticks. For each player with border view
+  on, it looks up the townblocks within their range and draws, just inside each claim, every edge whose neighbour
+  belongs to another town or the wilderness, coloured by `TownyUtil.relation`. Edges where the nation changes are
+  taller and thicker; the viewer's own plot edges inside their town are a low yellow line. Particles are sent with
+  `Player.spawnParticle`, so only that player sees them, and nothing is cached between runs.
+
 ### Admin Menus (`guis/admin`)
 
 `AdminMenu` is the server admin hub, opened by `/townymenu admin` or a main-menu button. Both entry points require

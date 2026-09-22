@@ -5,11 +5,13 @@ import com.palmergames.bukkit.towny.`object`.Resident
 import com.palmergames.bukkit.towny.`object`.TownBlock
 import com.palmergames.bukkit.towny.`object`.WorldCoord
 import com.palmergames.bukkit.towny.permissions.PermissionNodes
+import net.trilleo.mc.plugins.townymenu.borders.BorderView
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.town.TownInfoMenu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
+import net.trilleo.mc.plugins.townymenu.utils.TownyUtil.Relation
 import net.trilleo.mc.plugins.townymenu.utils.itemStack
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -19,7 +21,7 @@ import org.bukkit.inventory.ItemStack
 /**
  * A 9×5 chunk map centred on the viewer (north is up). Clicking claimed land
  * opens that town, right-clicking a plot for sale buys it, and the bottom row
- * claims or unclaims the viewer's own chunk.
+ * claims or unclaims the viewer's own chunk and opens [BorderViewMenu].
  */
 class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title"), 6, back) {
 
@@ -82,6 +84,17 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
                 actions = hints("click.refresh")
             )
         ) { render() }
+        if (BorderView.available) {
+            button(
+                51, Icons.icon(
+                    Material.ENDER_EYE, tr("map.border-view"), tr("map.border-view-description"),
+                    tr("icon.status", "value" to tr(if (BorderView.isOn(player)) "icon.enabled" else "icon.disabled")),
+                    actions = hints("click.open")
+                )
+            ) {
+                BorderViewMenu(player, this).open()
+            }
+        }
         tutorialButton(53, Tutorial.GETTING_STARTED)
     }
 
@@ -93,15 +106,16 @@ class MapMenu(player: Player, back: Menu?) : Menu(player, player.tr("map.title")
     private fun cell(coord: WorldCoord, plot: TownBlock?, viewer: Resident?, here: Boolean): ItemStack {
         val town = plot?.townOrNull
         val nation = town?.nationOrNull
-        val viewerNation = viewer?.nationOrNull
         val (material, color) = when {
             town == null -> Material.WHITE_STAINED_GLASS_PANE to "<white>"
             viewer != null && plot.residentOrNull == viewer -> Material.YELLOW_STAINED_GLASS_PANE to "<yellow>"
-            town == viewer?.townOrNull -> Material.LIME_STAINED_GLASS_PANE to "<green>"
-            viewerNation != null && nation == viewerNation -> Material.LIGHT_BLUE_STAINED_GLASS_PANE to "<aqua>"
-            viewerNation != null && nation != null && viewerNation.hasAlly(nation) -> Material.BLUE_STAINED_GLASS_PANE to "<blue>"
-            viewerNation != null && nation != null && viewerNation.hasEnemy(nation) -> Material.RED_STAINED_GLASS_PANE to "<red>"
-            else -> Material.ORANGE_STAINED_GLASS_PANE to "<gold>"
+            else -> when (TownyUtil.relation(viewer, town)) {
+                Relation.TOWN -> Material.LIME_STAINED_GLASS_PANE to "<green>"
+                Relation.NATION -> Material.LIGHT_BLUE_STAINED_GLASS_PANE to "<aqua>"
+                Relation.ALLY -> Material.BLUE_STAINED_GLASS_PANE to "<blue>"
+                Relation.ENEMY -> Material.RED_STAINED_GLASS_PANE to "<red>"
+                Relation.OTHER -> Material.ORANGE_STAINED_GLASS_PANE to "<gold>"
+            }
         }
         return itemStack(if (here) Material.PLAYER_HEAD else material) {
             if (here) head(player)

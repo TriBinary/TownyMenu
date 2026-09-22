@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+### New Features
+
+#### Border View
+
++ Turn on Border View and a short wall of particles appears on town and nation borders as you walk near them, so you
+  always know when you are about to cross into someone else's land. Only you see the particles.
++ Each side of a border is drawn in the colour of the town it belongs to, the same colours as the map: green for your
+  town, aqua for your nation, blue for allies, red for enemies, and gold for other towns. A border between two towns
+  shows both colours side by side.
++ Nation borders are taller and thicker than the borders between towns of one nation, and the plots you own can be
+  outlined with a low yellow line.
++ Choose how close a border has to be before it appears, from 4 blocks up to the server's limit.
++ Open it from the new Border View button in the map menu, or with `/townymenu borders`; `/townymenu borders on`, `off`,
+  and `toggle` switch it without opening the menu. Your choices are remembered across restarts.
++ A new tutorial lesson in the Your Profile chapter explains it.
+
+#### Admin Menus
+
++ TownyMenu Settings can turn Border View off for the whole server and set the farthest range players may pick.
+
+### Technical Details
+
+#### Misc
+
++ New `border-view` and `border-view-max-range` settings in `config.yml`. The new `TownyUtil.relation` gives a town's
+  relation to a viewer, and now colours both the map and the border particles.
+
 ## Version 1.1.0
 
 ### Improvements

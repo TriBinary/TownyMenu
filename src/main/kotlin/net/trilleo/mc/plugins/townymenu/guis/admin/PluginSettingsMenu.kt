@@ -17,7 +17,7 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
         get() = Main.instance.pluginConfig
 
     override fun build() {
-        val row = layout(10, 11, 12, 13, 14, 15, 16)
+        val row = layout(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25)
         val language = config.language
         row.add(
             Icons.icon(
@@ -106,6 +106,31 @@ class PluginSettingsMenu(player: Player, back: Menu) : Menu(player, player.tr("a
                 initial = config.bankAmounts.joinToString(", ")
             ) { input ->
                 config.bankAmounts = input.split(',', ' ').mapNotNull { it.trim().toIntOrNull() }
+                apply()
+            }
+        }
+        row.add(
+            Icons.toggle(
+                player, Material.ENDER_EYE, tr("admin-plugin.border-view"), config.borderView,
+                tr("admin-plugin.border-view-description")
+            )
+        ) {
+            config.borderView = !config.borderView
+            apply()
+        }
+        row.add(
+            Icons.icon(
+                Material.SPYGLASS, tr("admin-plugin.border-range"), tr("admin-plugin.border-range-description"),
+                tr("border-view.range-current", "range" to config.borderViewMaxRange),
+                actions = listOf(tr("click.change"))
+            )
+        ) {
+            prompt(
+                tr("admin-plugin.border-range"),
+                tr("admin-plugin.border-range-label"),
+                initial = config.borderViewMaxRange.toString()
+            ) { input ->
+                input.trim().toIntOrNull()?.let { config.borderViewMaxRange = it }
                 apply()
             }
         }

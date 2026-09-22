@@ -56,6 +56,16 @@ class PluginConfig(private val plugin: JavaPlugin) {
         get() = plugin.config.getBoolean("towny-alerts", true)
         set(value) = save("towny-alerts", value)
 
+    /** Whether players may turn on particle borders for towns and nations (`border-view`). */
+    var borderView: Boolean
+        get() = plugin.config.getBoolean("border-view", true)
+        set(value) = save("border-view", value)
+
+    /** The largest border view range, in blocks, a player may pick (`border-view-max-range`), kept within 1–64. */
+    var borderViewMaxRange: Int
+        get() = plugin.config.getInt("border-view-max-range", 16).coerceIn(1, 64)
+        set(value) = save("border-view-max-range", value.coerceIn(1, 64))
+
     /**
      * The preset amounts the deposit and withdraw menus offer (`bank-amounts`).
      *
