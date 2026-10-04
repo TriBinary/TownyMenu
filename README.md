@@ -59,11 +59,11 @@
 
 ## Requirements
 
-| Dependency | Version    |
-|:-----------|:-----------|
-| Paper      | 26.3+      |
-| Java       | 25+        |
-| Towny      | 0.103.2.7+ |
+| Dependency | Version     |
+|:-----------|:------------|
+| Paper      | 26.3+       |
+| Java       | 25+         |
+| Towny      | 0.103.2.10+ |
 
 TownyMenu is an addon: Towny must be installed on the server, or TownyMenu will not load.
 

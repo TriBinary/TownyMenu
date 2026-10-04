@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+## Version 1.1.2
+
+### New Features
+
+#### Town Menu
+
++ A town's page has a new Outposts button that lists where its outposts are, for players with Towny's new
+  `towny.command.town.outpost.list.other` permission. Your own town's outposts still teleport you when clicked.
+
+#### Admin Menus
+
++ Each world's settings have a new Minimum Adjacent Claims button, which sets how many of a town's own chunks a new
+  claim in that world must touch (Towny's new `/townyworld set minadjacency`).
+
+### Improvements
+
+#### Town Menu
+
++ The Cede This Plot button shows what ceding costs when the server charges for it (Towny's new
+  `price_town_cede` setting), and so do the Prices menu and the Ceding Land lesson.
+
+#### Tutorial
+
++ The outposts lesson says when outposts can only be claimed in worlds where your town has no other land, and the
+  jailing lesson says when a nation's capital may jail any resident of the nation. Each line only appears when the
+  server has the matching Towny setting turned on.
+
+### Technical Details
+
+#### Misc
+
++ TownyMenu now needs Towny 0.103.2.10 or newer, which fixes towns' home blocks and war settings not loading. The new
+  `Prices.cede` gives the cost of ceding a plot.
+
 ## Version 1.1.1
 
 ### New Features

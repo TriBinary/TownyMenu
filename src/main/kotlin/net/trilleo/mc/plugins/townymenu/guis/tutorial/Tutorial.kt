@@ -18,6 +18,7 @@ import net.trilleo.mc.plugins.townymenu.guis.plot.PlotMenu
 import net.trilleo.mc.plugins.townymenu.guis.resident.FriendsMenu
 import net.trilleo.mc.plugins.townymenu.guis.resident.ResidentMenu
 import net.trilleo.mc.plugins.townymenu.guis.town.*
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -390,6 +391,7 @@ object Tutorial {
                 } else {
                     buildList {
                         addAll(player.money(TownySettings.getOutpostCost(), "tutorial.fact.outpost-cost"))
+                        if (TownySettings.getOutpostsLimitedPerWorld()) add(player.tr("tutorial.fact.outposts-per-world"))
                         town(player)?.let {
                             add(
                                 player.tr(
@@ -410,7 +412,9 @@ object Tutorial {
             },
             Lesson(
                 "claims/cede", Material.OAK_BOAT, "tutorial.claims.cede", "tutorial.claims.cede-body",
-                withTown { player, _, back -> TownClaimsMenu(player, back) }),
+                withTown { player, _, back -> TownClaimsMenu(player, back) }) { player ->
+                player.money(Prices.cede(), "tutorial.fact.cede-cost")
+            },
             Lesson(
                 "claims/takeover", Material.IRON_SWORD, "tutorial.claims.takeover", "tutorial.claims.takeover-body",
                 withTown { player, _, back -> TownClaimsMenu(player, back) },
@@ -524,6 +528,7 @@ object Tutorial {
                         addAll(player.money(TownySettings.getBailMaxAmount(), "tutorial.fact.max-bail"))
                     }
                     town(player)?.let { add(player.tr("town-jail.jails-count", "count" to it.jails.orEmpty().size)) }
+                    if (TownySettings.canNationLeadersJailNationResidents()) add(player.tr("tutorial.fact.nation-jail"))
                 }
             },
             Lesson(

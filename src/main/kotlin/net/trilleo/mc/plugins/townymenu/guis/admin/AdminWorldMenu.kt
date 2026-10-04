@@ -12,7 +12,10 @@ import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-/** One world's Towny settings (`/townyworld`): toggles, wilderness permissions and name, and resetting to defaults. */
+/**
+ * One world's Towny settings (`/townyworld`): toggles, wilderness permissions and name, the minimum
+ * adjacent claims, and resetting to defaults.
+ */
 class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) :
     Menu(player, player.tr("admin-world.title", "world" to TownyUtil.text(world.name)), 5, back) {
 
@@ -58,6 +61,26 @@ class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) 
         ) {
             run("$command set usedefault", ::snapshot)
         }
+        val adjacency = world.minAdjacentChunks
+        guarded(
+            16, PermissionNodes.TOWNY_COMMAND_TOWNYWORLD_SET,
+            Icons.icon(
+                Material.COMPARATOR, tr("admin-world.min-adjacency"), tr("admin-world.min-adjacency-description"),
+                if (adjacency > 0) tr("admin-world.min-adjacency-current", "count" to adjacency)
+                else tr("common.current", "value" to tr("common.off")),
+                actions = hints("click.change")
+            )
+        ) {
+            prompt(
+                tr("admin-world.min-adjacency"),
+                tr("admin-world.min-adjacency-label"),
+                tr("admin-world.min-adjacency-hint"),
+                initial = adjacency.coerceAtLeast(0).toString(),
+                maxLength = 2
+            ) { value ->
+                run("$command set minadjacency ${TownyUtil.argument(value)}", { world.minAdjacentChunks })
+            }
+        }
 
         WILD_PERMISSIONS.forEachIndexed { index, (type, material, key) ->
             val allowed = world.getUnclaimedZonePerm(type)
@@ -76,7 +99,8 @@ class AdminWorldMenu(player: Player, private val world: TownyWorld, back: Menu) 
         backButton(40)
     }
 
-    private fun snapshot(): List<Any?> = toggleList().map { it.value() } + world.unclaimedZoneName
+    private fun snapshot(): List<Any?> =
+        toggleList().map { it.value() } + world.unclaimedZoneName + world.minAdjacentChunks
 
     private fun toggles(): Menu =
         ToggleMenu(player, tr("admin-world.toggles-title", "world" to TownyUtil.text(world.name)), this, toggleList())
