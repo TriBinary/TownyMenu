@@ -13,7 +13,10 @@ class BorderViewMenu(player: Player, back: Menu?) : Menu(player, player.tr("bord
 
     override fun build() {
         if (!BorderView.available) {
-            button(13, Icons.icon(Material.BARRIER, tr("border-view.unavailable"), tr("border-view.unavailable-description")))
+            button(
+                13,
+                Icons.icon(Material.BARRIER, tr("border-view.unavailable"), tr("border-view.unavailable-description"))
+            )
             backButton(22)
             return
         }
