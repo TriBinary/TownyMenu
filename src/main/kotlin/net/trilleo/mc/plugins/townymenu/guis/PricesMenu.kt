@@ -6,6 +6,7 @@ import com.palmergames.bukkit.towny.permissions.PermissionNodes
 import net.trilleo.mc.plugins.townymenu.guis.framework.Icons
 import net.trilleo.mc.plugins.townymenu.guis.framework.Menu
 import net.trilleo.mc.plugins.townymenu.guis.tutorial.Tutorial
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -55,6 +56,7 @@ class PricesMenu(player: Player, back: Menu) : Menu(player, player.tr("prices.ti
             }
             add(cost("prices.claim-refund", TownySettings.getClaimRefundPrice()))
             add(cost("prices.bonus-claim", town?.bonusBlockCost ?: TownySettings.getPurchasedBonusBlocksCost()))
+            add(cost("prices.cede", Prices.cede()))
             if (TownySettings.isAllowingOutposts()) {
                 add(cost("prices.outpost", TownySettings.getOutpostCost()))
                 if (TownySettings.getPerOutpostUpkeepCost() > 0) {

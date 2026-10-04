@@ -141,6 +141,7 @@ class TownClaimsMenu(player: Player, back: Menu) : Menu(player, player.tr("claim
             PermissionNodes.TOWNY_COMMAND_TOWN_CEDE_PLOT,
             Icons.icon(
                 Material.OAK_BOAT, tr("claims.cede"), tr("claims.cede-description"),
+                *listOfNotNull(costLine(Prices.cede())).toTypedArray(),
                 actions = hints("click.choose-town")
             )
         ) {

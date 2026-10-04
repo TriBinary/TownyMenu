@@ -9,13 +9,13 @@ player-facing overview.
 
 ## Tech Stack
 
-| Tool           | Version                                          |
-|:---------------|:-------------------------------------------------|
-| Language       | Kotlin 2.3.10                                    |
-| Build          | Gradle 9.7.1 (Kotlin DSL)                        |
-| Platform       | Paper API 26.3 (MC 26.3)                         |
-| Towny          | 0.103.2.7 (`towny_version` in gradle.properties) |
-| Java toolchain | JDK 25                                           |
+| Tool           | Version                                           |
+|:---------------|:--------------------------------------------------|
+| Language       | Kotlin 2.3.10                                     |
+| Build          | Gradle 9.7.1 (Kotlin DSL)                         |
+| Platform       | Paper API 26.3 (MC 26.3)                          |
+| Towny          | 0.103.2.10 (`towny_version` in gradle.properties) |
+| Java toolchain | JDK 25                                            |
 
 ## After Every Change: Keep the Changelog and Docs in Sync
 

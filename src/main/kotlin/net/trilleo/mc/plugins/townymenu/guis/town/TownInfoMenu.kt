@@ -67,6 +67,18 @@ class TownInfoMenu(player: Player, private val town: Town, back: Menu) :
                 NationInfoMenu(player, nation, this).open()
             }
         }
+        if (viewer?.townOrNull != town && town.hasOutpostSpawn() && !town.isRuined) {
+            grid.add(
+                PermissionNodes.TOWNY_COMMAND_TOWN_OUTPOST_LIST_OTHER,
+                Icons.icon(
+                    Material.COMPASS, tr("town-info.outposts"), tr("town-info.outposts-description"),
+                    tr("town.outposts", "count" to town.allOutpostSpawns.size),
+                    actions = hints("click.view")
+                )
+            ) {
+                OutpostsMenu(player, town, this).open()
+            }
+        }
         if (viewer != null && !viewer.hasTown() && town.isOpen) {
             grid.add(
                 PermissionNodes.TOWNY_COMMAND_TOWN_JOIN,

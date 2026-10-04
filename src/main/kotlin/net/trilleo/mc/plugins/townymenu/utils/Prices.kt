@@ -28,6 +28,9 @@ object Prices {
     /** What claiming an outpost costs, whatever the town already owns. */
     fun outpost(): Double = TownySettings.getOutpostCost()
 
+    /** What giving a chunk away with `/town cede plot` costs the town that gives it. */
+    fun cede(): Double = TownySettings.getCedePlotCost().toDouble()
+
     /** What a town gets back per unclaimed chunk. Negative when the server charges for unclaiming instead. */
     fun unclaimRefund(): Double = TownySettings.getClaimRefundPrice()
 

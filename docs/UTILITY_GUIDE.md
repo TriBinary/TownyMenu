@@ -153,6 +153,7 @@ actually take, and everything returns `0` without an economy.
 |:-----------------------------------|:----------------------------------------------------------------------------------|
 | `claim(Town, count)`               | What claiming `count` chunks costs the town, at its current rising claim price    |
 | `outpost()`                        | What claiming an outpost costs                                                    |
+| `cede()`                           | What giving a chunk to another town with `/town cede plot` costs the giving town  |
 | `unclaimRefund()`                  | What a town gets back per unclaimed chunk; negative when unclaiming costs instead |
 | `plotType(String, count)`          | What setting `count` plots to a plot type costs (`reset` prices the default type) |
 | `merge(remaining, succumbing)`     | What merging the second town into the first costs, before any debt it takes on    |

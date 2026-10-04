@@ -18,6 +18,7 @@ import net.trilleo.mc.plugins.townymenu.guis.plot.PlotMenu
 import net.trilleo.mc.plugins.townymenu.guis.resident.FriendsMenu
 import net.trilleo.mc.plugins.townymenu.guis.resident.ResidentMenu
 import net.trilleo.mc.plugins.townymenu.guis.town.*
+import net.trilleo.mc.plugins.townymenu.utils.Prices
 import net.trilleo.mc.plugins.townymenu.utils.TownyUtil
 import net.trilleo.mc.plugins.townymenu.utils.tr
 import org.bukkit.Material
@@ -410,7 +411,9 @@ object Tutorial {
             },
             Lesson(
                 "claims/cede", Material.OAK_BOAT, "tutorial.claims.cede", "tutorial.claims.cede-body",
-                withTown { player, _, back -> TownClaimsMenu(player, back) }),
+                withTown { player, _, back -> TownClaimsMenu(player, back) }) { player ->
+                player.money(Prices.cede(), "tutorial.fact.cede-cost")
+            },
             Lesson(
                 "claims/takeover", Material.IRON_SWORD, "tutorial.claims.takeover", "tutorial.claims.takeover-body",
                 withTown { player, _, back -> TownClaimsMenu(player, back) },

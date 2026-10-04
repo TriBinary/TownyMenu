@@ -436,6 +436,7 @@ outlaws:
 
 outposts:
   title: "前哨"
+  title-other: "前哨：{town}"
   outpost: "<light_purple>前哨 #{number}"
   world: "<gray>世界: <white>{world}"
   location: "<gray>坐标: <white>{x}, {y}, {z}"
@@ -537,6 +538,8 @@ town-info:
   invite-description: "邀请该城镇加入 {nation}。"
   merge: "<gold>并入你的城镇"
   merge-description: "请求 {town} 的<gold>镇长</gold>将其城镇并入 {own}。对方必须在线并接受。"
+  outposts: "<light_purple>前哨"
+  outposts-description: "查看该城镇的<light_purple>前哨</light_purple>位于何处。"
 
 town-list:
   title: "城镇列表"
@@ -770,6 +773,7 @@ prices:
   claim: "<gray>每块领地：<gold>{cost}"
   claim-refund: "<gray>放弃每块领地退还：<gold>{cost}"
   bonus-claim: "<gray>每块额外领地：<gold>{cost}"
+  cede: "<gray>割让地块：<gold>{cost}"
   outpost: "<gray>每个前哨：<gold>{cost}"
   outpost-upkeep: "<gray>每个前哨每日维护费：<gold>{cost}"
   upkeep: "<gold>每日维护费"
@@ -1193,6 +1197,11 @@ admin-world:
   rename-wild-description: "玩家进入未声明<green>土地</green>时显示的名称。"
   reset: "<red>恢复默认"
   reset-description: "用 Towny 配置中的新世界默认值替换此世界的设置。"
+  min-adjacency: "<green>最少相邻领地"
+  min-adjacency-description: "在此世界中，新<green>领地</green>必须与城镇自己的多少个<green>区块</green>相邻。前哨不受此限制。"
+  min-adjacency-current: "<gray>当前：<green>{count}"
+  min-adjacency-label: "相邻区块数"
+  min-adjacency-hint: "输入 1、2 或 3，输入 0 则关闭此规则。"
   wild-build: "<gold>荒野建造"
   wild-destroy: "<gold>荒野破坏"
   wild-switch: "<gold>荒野开关"
@@ -1536,6 +1545,7 @@ tutorial:
     claim-refund: "<gray>每放弃一个区块退款: <gold>{cost}"
     outposts-disabled: "<red>本服务器未启用前哨。"
     outpost-cost: "<gray>每个前哨价格: <gold>{cost}"
+    cede-cost: "<gray>每次割让地块价格: <gold>{cost}"
     bonus-cost: "<gray>每块额外领地价格: <gold>{cost}"
     jail-hours: "<gray>最长刑期: <yellow>{hours} 小时"
     jailed: "<red>你正在服刑，剩余 {hours} 小时。"
@@ -1624,7 +1634,7 @@ tutorial:
     unclaim: "放弃土地"
     unclaim-body: "放弃不再需要的<green>区块</green>可以腾出领地名额。<gold>主区块</gold>不能被放弃。有些服务器会慢慢把被放弃的土地恢复原貌。"
     outposts: "前哨"
-    outposts-body: "前哨是远离城镇的领地，例如远处的矿场或农场。每个前哨都有居民可以传送过去的出生点，还可以在其周围继续占领土地。<gold>镇长</gold>也可以在<yellow>地块菜单</yellow>中把现有领地设为前哨，或移动前哨的出生点。"
+    outposts-body: "前哨是远离城镇的领地，例如远处的矿场或农场。每个前哨都有居民可以传送过去的出生点，还可以在其周围继续占领土地。<gold>镇长</gold>也可以在<yellow>地块菜单</yellow>中把现有领地设为前哨，或移动前哨的出生点。在其他城镇的页面中点击<yellow>“前哨”</yellow>按钮，可以查看其前哨的位置。"
     bonus: "额外领地"
     bonus-body: "领地达到上限了？用城镇<gold>银行</gold>的钱购买额外领地。每次购买后<gold>价格</gold>可能上涨。"
     cede: "割让土地"
