@@ -391,6 +391,7 @@ object Tutorial {
                 } else {
                     buildList {
                         addAll(player.money(TownySettings.getOutpostCost(), "tutorial.fact.outpost-cost"))
+                        if (TownySettings.getOutpostsLimitedPerWorld()) add(player.tr("tutorial.fact.outposts-per-world"))
                         town(player)?.let {
                             add(
                                 player.tr(
@@ -527,6 +528,7 @@ object Tutorial {
                         addAll(player.money(TownySettings.getBailMaxAmount(), "tutorial.fact.max-bail"))
                     }
                     town(player)?.let { add(player.tr("town-jail.jails-count", "count" to it.jails.orEmpty().size)) }
+                    if (TownySettings.canNationLeadersJailNationResidents()) add(player.tr("tutorial.fact.nation-jail"))
                 }
             },
             Lesson(

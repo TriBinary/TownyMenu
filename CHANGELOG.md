@@ -21,6 +21,12 @@
 + The Cede This Plot button shows what ceding costs when the server charges for it (Towny's new
   `price_town_cede` setting), and so do the Prices menu and the Ceding Land lesson.
 
+#### Tutorial
+
++ The outposts lesson says when outposts can only be claimed in worlds where your town has no other land, and the
+  jailing lesson says when a nation's capital may jail any resident of the nation. Each line only appears when the
+  server has the matching Towny setting turned on.
+
 ### Technical Details
 
 #### Misc
