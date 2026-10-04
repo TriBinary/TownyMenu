@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## Version 1.1.2
+
 ### New Features
 
 #### Town Menu
